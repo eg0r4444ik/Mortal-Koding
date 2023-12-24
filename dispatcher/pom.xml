@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>Mortal-Koding</artifactId>
-        <groupId>org.example</groupId>
+        <groupId>ru.vsu.rogachev</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -14,7 +14,7 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <telegrambot.starter.version>5.0.1</telegrambot.starter.version>
+        <telegrambot.starter.version>6.0.1</telegrambot.starter.version>
     </properties>
 
     <dependencies>
@@ -32,6 +32,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.vsu.rogachev</groupId>
+            <artifactId>common-rabbitmq</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
