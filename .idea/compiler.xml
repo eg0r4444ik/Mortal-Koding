@@ -7,14 +7,20 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="battle" />
+        <module name="common-jpa" />
         <module name="dispatcher" />
         <module name="common-rabbitmq" />
-        <module name="node" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="node" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="battle" options="-parameters" />
+      <module name="common-jpa" options="-parameters" />
       <module name="common-rabbitmq" options="-parameters" />
       <module name="dispatcher" options="-parameters" />
       <module name="node" options="-parameters" />
