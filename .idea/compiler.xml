@@ -11,6 +11,7 @@
         <module name="common-jpa" />
         <module name="dispatcher" />
         <module name="common-rabbitmq" />
+        <module name="mail-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -23,6 +24,7 @@
       <module name="common-jpa" options="-parameters" />
       <module name="common-rabbitmq" options="-parameters" />
       <module name="dispatcher" options="-parameters" />
+      <module name="mail-service" options="-parameters" />
       <module name="node" options="-parameters" />
     </option>
   </component>
