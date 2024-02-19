@@ -19,17 +19,36 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
+
+    @Column(name = "telegram_user_id")
     private Long telegramUserId;
+
     @CreationTimestamp
+    @Column(name = "first_login_date")
     private LocalDateTime firstLoginDate;
+
+    @Column(name = "firstname")
     private String firstName;
+
+    @Column(name = "lastname")
     private String lastName;
+
+    @Column(name = "username")
     private String username;
+
+    @Column(name = "email")
     private String email;
+
+    @Column(name = "codeforces_username")
     private String codeforcesUsername;
+
+    @Column(name = "active")
     private Boolean isActive;
+
     @Enumerated(EnumType.STRING)
+    @Column(name = "state")
     private UserState state;
 
 }

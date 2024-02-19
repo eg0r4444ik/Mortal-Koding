@@ -15,6 +15,8 @@
         <module>battle</module>
         <module>common-jpa</module>
         <module>mail-service</module>
+        <module>common-ru.vsu.rogachev.utils</module>
+        <module>common-utils</module>
     </modules>
 
     <properties>
