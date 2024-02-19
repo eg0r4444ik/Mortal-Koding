@@ -31,4 +31,10 @@ public class Task {
     @Column(name = "time")
     private Long time;
 
+    public Task(Long gameId, Long solverId, String taskUrl, Long time) {
+        this.gameId = gameId;
+        this.solverId = solverId;
+        this.taskUrl = taskUrl;
+        this.time = time;
+    }
 }

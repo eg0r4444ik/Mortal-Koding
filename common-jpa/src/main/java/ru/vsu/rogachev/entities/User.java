@@ -51,4 +51,12 @@ public class User {
     @Column(name = "state")
     private UserState state;
 
+    public User(Long telegramUserId, String firstName, String lastName, String username, String email, String codeforcesUsername) {
+        this.telegramUserId = telegramUserId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.email = email;
+        this.codeforcesUsername = codeforcesUsername;
+    }
 }

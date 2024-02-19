@@ -39,4 +39,9 @@ public class GameSession {
     @JoinColumn(name = "game_id")
     private List<Task> tasks;
 
+    public GameSession(Long time, Long firstUserId, Long secondUserId) {
+        this.time = time;
+        this.firstUserId = firstUserId;
+        this.secondUserId = secondUserId;
+    }
 }

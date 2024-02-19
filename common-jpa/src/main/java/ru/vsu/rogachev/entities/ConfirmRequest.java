@@ -31,4 +31,8 @@ public class ConfirmRequest {
     @Column(name = "confirmation_code")
     private String confirmationCode;
 
+    public ConfirmRequest(Long userId, String confirmationCode) {
+        this.userId = userId;
+        this.confirmationCode = confirmationCode;
+    }
 }
