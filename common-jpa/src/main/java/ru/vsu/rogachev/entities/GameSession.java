@@ -1,5 +1,6 @@
 package ru.vsu.rogachev.entities;
 
+import com.sun.istack.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -29,19 +30,21 @@ public class GameSession {
     @Column(name = "time")
     private Long time;
 
-    @Column(name = "first_user_id")
-    private Long firstUserId;
+    @JoinColumn(name = "first_user_id", referencedColumnName = "user_id")
+    @NotNull
+    private User firstUser;
 
-    @Column(name = "second_user_id")
-    private Long secondUserId;
+    @JoinColumn(name = "second_user_id", referencedColumnName = "user_id")
+    @NotNull
+    private User secondUser;
 
     @OneToMany
     @JoinColumn(name = "game_id")
     private List<Task> tasks;
 
-    public GameSession(Long time, Long firstUserId, Long secondUserId) {
+    public GameSession(Long time, User firstUser, User secondUser) {
         this.time = time;
-        this.firstUserId = firstUserId;
-        this.secondUserId = secondUserId;
+        this.firstUser = firstUser;
+        this.secondUser = secondUser;
     }
 }

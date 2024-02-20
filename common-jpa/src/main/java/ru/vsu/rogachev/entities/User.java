@@ -1,5 +1,6 @@
 package ru.vsu.rogachev.entities;
 
+import com.sun.istack.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import ru.vsu.rogachev.entities.enums.UserState;
@@ -22,7 +23,8 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
-    @Column(name = "telegram_user_id")
+    @Column(name = "telegram_user_id", unique = true)
+    @NotNull
     private Long telegramUserId;
 
     @CreationTimestamp
@@ -38,10 +40,10 @@ public class User {
     @Column(name = "username")
     private String username;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
-    @Column(name = "codeforces_username")
+    @Column(name = "codeforces_username", unique = true)
     private String codeforcesUsername;
 
     @Column(name = "active")

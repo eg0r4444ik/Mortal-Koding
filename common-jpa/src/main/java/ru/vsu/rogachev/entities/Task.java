@@ -1,5 +1,6 @@
 package ru.vsu.rogachev.entities;
 
+import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,21 +20,23 @@ public class Task {
     @Column(name = "task_id")
     private Long id;
 
-    @Column(name = "game_id")
-    private Long gameId;
+    @JoinColumn(name = "game_id", referencedColumnName = "game_id")
+    @NotNull
+    private GameSession game;
 
-    @Column(name = "solver_id")
-    private Long solverId;
+    @JoinColumn(name = "solver_id", referencedColumnName = "user_id")
+    private User solver;
 
     @Column(name = "task_url")
+    @NotNull
     private String taskUrl;
 
     @Column(name = "time")
     private Long time;
 
-    public Task(Long gameId, Long solverId, String taskUrl, Long time) {
-        this.gameId = gameId;
-        this.solverId = solverId;
+    public Task(GameSession game, User solver, String taskUrl, Long time) {
+        this.game = game;
+        this.solver = solver;
         this.taskUrl = taskUrl;
         this.time = time;
     }

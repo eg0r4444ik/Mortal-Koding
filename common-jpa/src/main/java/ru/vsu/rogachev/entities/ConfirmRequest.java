@@ -1,5 +1,6 @@
 package ru.vsu.rogachev.entities;
 
+import com.sun.istack.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -25,14 +26,16 @@ public class ConfirmRequest {
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @NotNull
+    private User user;
 
     @Column(name = "confirmation_code")
+    @NotNull
     private String confirmationCode;
 
-    public ConfirmRequest(Long userId, String confirmationCode) {
-        this.userId = userId;
+    public ConfirmRequest(User user, String confirmationCode) {
+        this.user = user;
         this.confirmationCode = confirmationCode;
     }
 }

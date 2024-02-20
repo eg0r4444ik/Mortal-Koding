@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.vsu.rogachev.entities.User;
 import ru.vsu.rogachev.entities.enums.UserState;
+import ru.vsu.rogachev.exceptions.DbDontContainObjectException;
 import ru.vsu.rogachev.repositories.UserRepository;
 
 @Service
@@ -26,11 +27,17 @@ public class UserService {
         return userRepository.getById(id);
     }
 
-    public User getUserByTelegramId(Long id){
+    public User getUserByTelegramId(Long id) throws DbDontContainObjectException {
+        if(userRepository.findUserByTelegramUserId(id).isEmpty()){
+            throw new DbDontContainObjectException();
+        }
         return userRepository.findUserByTelegramUserId(id).get();
     }
 
-    public User getUserByCodeforcesUsername(String username){
+    public User getUserByCodeforcesUsername(String username) throws DbDontContainObjectException {
+        if(userRepository.findUserByCodeforcesUsername(username).isEmpty()){
+            throw new DbDontContainObjectException();
+        }
         return userRepository.findUserByCodeforcesUsername(username).get();
     }
 
