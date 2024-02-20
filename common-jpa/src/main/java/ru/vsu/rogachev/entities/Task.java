@@ -20,10 +20,12 @@ public class Task {
     @Column(name = "task_id")
     private Long id;
 
+    @ManyToOne
     @JoinColumn(name = "game_id", referencedColumnName = "game_id")
     @NotNull
     private GameSession game;
 
+    @ManyToOne
     @JoinColumn(name = "solver_id", referencedColumnName = "user_id")
     private User solver;
 

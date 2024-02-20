@@ -1,51 +1,23 @@
 package ru.vsu.rogachev.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import ru.vsu.rogachev.entities.ConfirmRequest;
 import ru.vsu.rogachev.entities.User;
 import ru.vsu.rogachev.exceptions.DbDontContainObjectException;
-import ru.vsu.rogachev.repositories.ConfirmRepository;
 
-@Service
-public class ConfirmService {
+public interface ConfirmService {
 
-    @Autowired
-    private ConfirmRepository confirmRepository;
-    @Autowired
-    private UserService userService;
+    void add(ConfirmRequest confirmRequest);
 
-    public void add(ConfirmRequest confirmRequest){
-        confirmRepository.save(confirmRequest);
-    }
+    void add(Long userId, String confirmationCode);
 
-    public void add(Long userId, String confirmationCode){
-        ConfirmRequest confirmRequest = new ConfirmRequest(userService.getUserById(userId), confirmationCode);
-        confirmRepository.save(confirmRequest);
-    }
+    void add(User user, String confirmationCode);
 
-    public void add(User user, String confirmationCode){
-        ConfirmRequest confirmRequest = new ConfirmRequest(user, confirmationCode);
-        confirmRepository.save(confirmRequest);
-    }
+    ConfirmRequest getById(Long id);
 
-    public ConfirmRequest getById(Long id){
-        return confirmRepository.getById(id);
-    }
+    ConfirmRequest getByUserId(Long id) throws DbDontContainObjectException;
 
-    public ConfirmRequest getByUserId(Long id) throws DbDontContainObjectException {
-        if(confirmRepository.findByUserId(id).isEmpty()){
-            throw new DbDontContainObjectException();
-        };
-        return confirmRepository.findByUserId(id).get();
-    }
+    void deleteById(Long id);
 
-    public void deleteById(Long id){
-        confirmRepository.deleteById(id);
-    }
-
-    public void deleteByUserId(Long id){
-        confirmRepository.deleteByUserId(id);
-    }
+    void deleteByUserId(Long id);
 
 }

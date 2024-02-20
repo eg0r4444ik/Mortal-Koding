@@ -30,10 +30,12 @@ public class GameSession {
     @Column(name = "time")
     private Long time;
 
+    @OneToOne
     @JoinColumn(name = "first_user_id", referencedColumnName = "user_id")
     @NotNull
     private User firstUser;
 
+    @OneToOne
     @JoinColumn(name = "second_user_id", referencedColumnName = "user_id")
     @NotNull
     private User secondUser;

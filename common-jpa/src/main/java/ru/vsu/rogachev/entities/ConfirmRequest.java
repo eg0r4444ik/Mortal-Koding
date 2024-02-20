@@ -26,6 +26,7 @@ public class ConfirmRequest {
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
+    @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     @NotNull
     private User user;
