@@ -6,7 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import ru.vsu.rogachev.dto.MailParams;
+import ru.vsu.rogachev.entities.ConfirmRequest;
+import ru.vsu.rogachev.generator.CodeGenerator;
 import ru.vsu.rogachev.services.MailSenderService;
 
 @Service
@@ -18,14 +19,15 @@ public class MailServiceSenderImpl implements MailSenderService {
     @Value("${spring.mail.username}")
     private String emailFrom;
 
-    @Value("${service.activation.uri}")
-    private String activationServiceUri;
+    @Autowired
+    private CodeGenerator generator;
 
     @Override
-    public void send(MailParams mailParams) {
+    public void send(ConfirmRequest request) {
         var subject = "Активация учетной записи";
-        var messageBody = getActivationMailBody(mailParams.getId());
-        var emailTo = mailParams.getEmailTo();
+        String activationCode = generator.generateActivationCode();
+        var messageBody = getActivationMailBody(activationCode);
+        var emailTo = request.getUser().getEmail();
 
         var mailMessage = new SimpleMailMessage();
         mailMessage.setFrom(emailFrom);
@@ -36,9 +38,9 @@ public class MailServiceSenderImpl implements MailSenderService {
         javaMailSender.send(mailMessage);
     }
 
-    private String getActivationMailBody(String id) {
-        var msg = String.format("Для завершения регистрации перейдите по ссылке:\n%s",
-                activationServiceUri);
-        return msg.replace("{id}", id);
+    private String getActivationMailBody(String code) {
+        var msg = String.format("Для завершения регистрации введите полученный код в чат:\n%s",
+                code);
+        return msg;
     }
 }

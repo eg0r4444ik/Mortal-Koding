@@ -9,13 +9,13 @@
         <outputRelativeToContentRoot value="true" />
         <module name="battle" />
         <module name="common-jpa" />
-        <module name="common-utils" />
         <module name="dispatcher" />
-        <module name="common-rabbitmq" />
         <module name="mail-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="common-rabbitmq" target="17" />
+      <module name="common-utils" target="17" />
       <module name="node" target="17" />
     </bytecodeTargetLevel>
   </component>

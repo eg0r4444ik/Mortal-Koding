@@ -1,7 +1,8 @@
 package ru.vsu.rogachev.services;
 
-import ru.vsu.rogachev.dto.MailParams;
+
+import ru.vsu.rogachev.entities.ConfirmRequest;
 
 public interface MailSenderService {
-    void send(MailParams mailParams);
+    void send(ConfirmRequest request);
 }
