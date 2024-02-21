@@ -13,8 +13,6 @@
         <module>battle</module>
         <module>common-jpa</module>
         <module>mail-service</module>
-        <module>common-utils</module>
-        <module>common-utils</module>
     </modules>
 
     <properties>
@@ -42,6 +40,11 @@
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
         </dependency>
     </dependencies>
 
