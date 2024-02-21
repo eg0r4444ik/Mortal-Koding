@@ -9,8 +9,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.vsu.rogachev.services.UpdateProducer;
 import ru.vsu.rogachev.utils.MessageUtils;
 
-import static ru.vsu.rogachev.model.RabbitQueue.*;
-
 @Component
 @Log4j
 public class UpdateController {
@@ -40,15 +38,7 @@ public class UpdateController {
 
     private void distributeMessagesByType(Update update) {
         var message = update.getMessage();
-        if (message.hasText()) {
-            processTextMessage(update);
-        } else if (message.hasDocument()) {
-            processDocMessage(update);
-        } else if (message.hasPhoto()) {
-            processPhotoMessage(update);
-        } else {
-            setUnsupportedMessageTypeView(update);
-        }
+
     }
 
     private void setUnsupportedMessageTypeView(Update update) {
@@ -65,19 +55,6 @@ public class UpdateController {
 
     private void setView(SendMessage sendMessage) {
         telegramBot.sendAnswerMessage(sendMessage);
-    }
-
-    private void processPhotoMessage(Update update) {
-        updateProducer.produce(PHOTO_MESSAGE_UPDATE, update);
-        setFileReceivedView(update);
-    }
-
-    private void processDocMessage(Update update) {
-        updateProducer.produce(DOC_MESSAGE_UPDATE, update);
-    }
-
-    private void processTextMessage(Update update) {
-        updateProducer.produce(TEXT_MESSAGE_UPDATE, update);
     }
 
 }
