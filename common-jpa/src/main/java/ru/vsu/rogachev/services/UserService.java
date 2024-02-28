@@ -6,7 +6,7 @@ import ru.vsu.rogachev.exceptions.DbDontContainObjectException;
 
 public interface UserService {
     void addUser(Long telegramUserId, String firstName, String lastName, String username,
-                        String email, String codeforcesUsername);
+                        String email, Long rating, String codeforcesUsername);
 
     void addUser(User user);
 

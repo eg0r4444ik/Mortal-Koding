@@ -14,8 +14,14 @@ public class CodeGenerator {
         StringBuilder code = new StringBuilder();
 
         for(int i = 0; i < CODE_LENGTH; i++){
-            char sym = (char)(rnd.nextInt(26) + 'a');
-            code.append(sym);
+            int var = rnd.nextInt(2);
+            if(var == 0){
+                char sym = (char)(rnd.nextInt(26) + 'a');
+                code.append(sym);
+            }else{
+                char sym = (char)(rnd.nextInt(26) + 'A');
+                code.append(sym);
+            }
         }
 
         return code.toString();

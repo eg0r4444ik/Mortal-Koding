@@ -43,6 +43,14 @@ public class User {
     @Column(name = "email", unique = true)
     private String email;
 
+    @Column(name = "rating")
+    private Long rating;
+
+    @ManyToOne
+    @JoinColumn(name = "game_id", referencedColumnName = "game_id")
+    @NotNull
+    private GameSession game;
+
     @Column(name = "codeforces_username", unique = true)
     private String codeforcesUsername;
 
@@ -53,12 +61,13 @@ public class User {
     @Column(name = "state")
     private UserState state;
 
-    public User(Long telegramUserId, String firstName, String lastName, String username, String email, String codeforcesUsername) {
+    public User(Long telegramUserId, String firstName, String lastName, String username, String email, Long rating, String codeforcesUsername) {
         this.telegramUserId = telegramUserId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
         this.email = email;
+        this.rating = rating;
         this.codeforcesUsername = codeforcesUsername;
     }
 }

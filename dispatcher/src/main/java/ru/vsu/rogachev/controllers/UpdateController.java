@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.vsu.rogachev.services.UpdateProducer;
 import ru.vsu.rogachev.utils.MessageUtils;
 
 @Component
@@ -16,9 +15,7 @@ public class UpdateController {
     private TelegramBot telegramBot;
     @Autowired
     private MessageUtils messageUtils;
-    @Autowired
-    private UpdateProducer updateProducer;
-
+    
     public void registerBot(TelegramBot telegramBot){
         this.telegramBot = telegramBot;
     }

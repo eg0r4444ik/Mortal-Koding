@@ -13,6 +13,7 @@ import ru.vsu.rogachev.kafka.enums.Operation;
 public class JpaKafkaRequest {
 
     private Operation operation;
-    private Table model;
+    private Table table;
+    private String fieldName;
 
 }

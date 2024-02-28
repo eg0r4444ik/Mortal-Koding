@@ -21,13 +21,8 @@ public class GameSessionServiceImpl implements GameSessionService {
         gameSessionRepository.save(gameSession);
     }
 
-    public void add(Long time, Long firstUserId, Long secondUserId){
-        GameSession gameSession = new GameSession(time, userService.getUserById(firstUserId), userService.getUserById(secondUserId));
-        gameSessionRepository.save(gameSession);
-    }
-
-    public void add(Long time, User firstUser, User secondUser){
-        GameSession gameSession = new GameSession(time, firstUser, secondUser);
+    public void add(Long time, Long playersCount) {
+        GameSession gameSession = new GameSession(time, playersCount);
         gameSessionRepository.save(gameSession);
     }
 
@@ -35,30 +30,7 @@ public class GameSessionServiceImpl implements GameSessionService {
         return gameSessionRepository.getById(id);
     }
 
-    public GameSession getByFirstUserId(Long id) throws DbDontContainObjectException {
-        if(gameSessionRepository.findByFirstUserId(id).isEmpty()){
-            throw new DbDontContainObjectException();
-        }
-        return gameSessionRepository.findByFirstUserId(id).get();
-    }
-
-    public GameSession getBySecondUserId(Long id) throws DbDontContainObjectException {
-        if(gameSessionRepository.findBySecondUserId(id).isEmpty()){
-            throw new DbDontContainObjectException();
-        }
-        return gameSessionRepository.findBySecondUserId(id).get();
-    }
-
     public void deleteById(Long id){
         gameSessionRepository.deleteById(id);
     }
-
-    public void deleteByFirstUserId(Long id){
-        gameSessionRepository.deleteByFirstUserId(id);
-    }
-
-    public void deleteBySecondUserId(Long id){
-        gameSessionRepository.deleteBySecondUserId(id);
-    }
-
 }

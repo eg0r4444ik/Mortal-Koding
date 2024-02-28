@@ -9,8 +9,4 @@ import java.util.Optional;
 
 @Repository
 public interface GameSessionRepository extends JpaRepository<GameSession, Long> {
-    Optional<GameSession> findByFirstUserId(Long id);
-    Optional<GameSession> findBySecondUserId(Long id);
-    void deleteByFirstUserId(Long id);
-    void deleteBySecondUserId(Long id);
 }
