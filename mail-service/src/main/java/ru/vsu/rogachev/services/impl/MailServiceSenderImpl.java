@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import ru.vsu.rogachev.db.DbService;
+import ru.vsu.rogachev.entities.User;
 import ru.vsu.rogachev.generator.CodeGenerator;
 import ru.vsu.rogachev.services.MailSenderService;
 
@@ -21,18 +23,22 @@ public class MailServiceSenderImpl implements MailSenderService {
     @Autowired
     private CodeGenerator generator;
 
+    @Autowired
+    private DbService dbService;
+
     @Override
-    public void send(String email) {
+    public void send(User user) {
         var subject = "Активация учетной записи";
         String activationCode = generator.generateActivationCode();
         var messageBody = getActivationMailBody(activationCode);
 
         var mailMessage = new SimpleMailMessage();
         mailMessage.setFrom(emailFrom);
-        mailMessage.setTo(email);
+        mailMessage.setTo(user.getEmail());
         mailMessage.setSubject(subject);
         mailMessage.setText(messageBody);
 
+        dbService.addConfirmRequest(user, activationCode);
         javaMailSender.send(mailMessage);
     }
 

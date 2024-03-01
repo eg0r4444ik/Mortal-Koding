@@ -16,7 +16,8 @@ public class UserServiceImpl implements UserService {
 
     public void addUser(Long telegramUserId, String firstName, String lastName, String username,
                         String email, Long rating, String codeforcesUsername){
-        User user = new User(telegramUserId, firstName, lastName, username, email, rating, codeforcesUsername);
+        User user = new User(telegramUserId, firstName, lastName, username, email, rating,
+                codeforcesUsername, false, UserState.BASIC_STATE);
         userRepository.save(user);
     }
 

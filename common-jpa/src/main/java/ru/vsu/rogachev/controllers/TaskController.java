@@ -23,20 +23,20 @@ public class TaskController {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @PostMapping("/add")
-    public void add(@RequestParam String taskJSON, Model model) throws JsonProcessingException {
+    public void add(@RequestBody String taskJSON, Model model) throws JsonProcessingException {
         Task task = objectMapper.readValue(taskJSON, Task.class);
         taskService.add(task);
     }
 
     @PostMapping("/addByParams")
-    public void add(@RequestParam Long gameId, @RequestParam Long solverId,
-                    @RequestParam String taskUrl,  @RequestParam Long time){
+    public void add(@RequestBody Long gameId, @RequestBody Long solverId,
+                    @RequestBody String taskUrl,  @RequestBody Long time){
         taskService.add(gameId, solverId, taskUrl, time);
     }
 
     @PostMapping("/addByParamsObj")
-    public void add(@RequestParam GameSession game, @RequestParam User solver,
-                    @RequestParam String taskUrl, @RequestParam Long time){
+    public void add(@RequestBody GameSession game, @RequestBody User solver,
+                    @RequestBody String taskUrl, @RequestBody Long time){
         taskService.add(game, solver, taskUrl, time);
     }
 

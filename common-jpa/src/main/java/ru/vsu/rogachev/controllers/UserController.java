@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.vsu.rogachev.dto.UserDTO;
 import ru.vsu.rogachev.entities.User;
 import ru.vsu.rogachev.entities.enums.UserState;
 import ru.vsu.rogachev.exceptions.DbDontContainObjectException;
@@ -22,16 +23,16 @@ public class UserController {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @PostMapping("/add")
-    public void add(@RequestParam String userJSON) throws JsonProcessingException {
+    public void add(@RequestBody String userJSON) throws JsonProcessingException {
         User user = objectMapper.readValue(userJSON, User.class);
         userService.addUser(user);
     }
 
     @PostMapping("/addByParams")
-    public void add(@RequestParam Long telegramUserId, @RequestParam String firstName, @RequestParam String lastName,
-                            @RequestParam String username, @RequestParam String email, @RequestParam Long rating,
-                            @RequestParam String codeforcesUsername){
-        userService.addUser(telegramUserId, firstName, lastName, username, email, rating, codeforcesUsername);
+    public void add(@RequestBody UserDTO userDTO){
+        userService.addUser(userDTO.getTelegramUserId(), userDTO.getFirstName(),
+                userDTO.getLastName(), userDTO.getUsername(),
+                userDTO.getEmail(), userDTO.getRating(), userDTO.getCodeforcesUsername());
     }
 
     @GetMapping("/get/{id}")

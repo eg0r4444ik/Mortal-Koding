@@ -21,25 +21,25 @@ public class GameController {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @PostMapping("/add")
-    public void add(@RequestParam String gameJSON) throws JsonProcessingException {
+    public void add(@RequestBody String gameJSON) throws JsonProcessingException {
         GameSession game = objectMapper.readValue(gameJSON, GameSession.class);
         gameSessionService.add(game);
     }
 
     @PostMapping("/addByParams")
-    public void add(@RequestParam Long time, @RequestParam Long playersCount) {
+    public void add(@RequestBody Long time, @RequestBody Long playersCount) {
         gameSessionService.add(time, playersCount);
     }
 
     @GetMapping("/get")
-    public String getById(@RequestParam Long id) throws JsonProcessingException {
+    public String getById(@RequestBody Long id) throws JsonProcessingException {
         GameSession game = gameSessionService.getById(id);
         String response = objectMapper.writeValueAsString(game);
         return response;
     }
 
     @GetMapping("/delete")
-    public void deleteById(@RequestParam Long id){
+    public void deleteById(@RequestBody Long id){
         gameSessionService.deleteById(id);
     }
 }

@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 public class User {
 
     @Id
@@ -48,7 +48,6 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name = "game_id", referencedColumnName = "game_id")
-    @NotNull
     private GameSession game;
 
     @Column(name = "codeforces_username", unique = true)
@@ -61,7 +60,8 @@ public class User {
     @Column(name = "state")
     private UserState state;
 
-    public User(Long telegramUserId, String firstName, String lastName, String username, String email, Long rating, String codeforcesUsername) {
+    public User(Long telegramUserId, String firstName, String lastName, String username,
+                String email, Long rating, String codeforcesUsername, boolean isActive, UserState userState) {
         this.telegramUserId = telegramUserId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -69,5 +69,7 @@ public class User {
         this.email = email;
         this.rating = rating;
         this.codeforcesUsername = codeforcesUsername;
+        this.isActive = isActive;
+        this.state = userState;
     }
 }
