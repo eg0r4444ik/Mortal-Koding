@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.vsu.rogachev.dto.GameDTO;
 import ru.vsu.rogachev.entities.GameSession;
 import ru.vsu.rogachev.services.GameSessionService;
 import ru.vsu.rogachev.services.UserService;
@@ -21,14 +22,13 @@ public class GameController {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @PostMapping("/add")
-    public void add(@RequestBody String gameJSON) throws JsonProcessingException {
-        GameSession game = objectMapper.readValue(gameJSON, GameSession.class);
+    public void add(@RequestBody GameSession game) throws JsonProcessingException {
         gameSessionService.add(game);
     }
 
     @PostMapping("/addByParams")
-    public void add(@RequestBody Long time, @RequestBody Long playersCount) {
-        gameSessionService.add(time, playersCount);
+    public void add(@RequestBody GameDTO gameDTO) {
+        gameSessionService.add(gameDTO.getTime(), gameDTO.getPlayersCount());
     }
 
     @GetMapping("/get")

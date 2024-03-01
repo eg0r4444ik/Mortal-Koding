@@ -23,8 +23,7 @@ public class UserController {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @PostMapping("/add")
-    public void add(@RequestBody String userJSON) throws JsonProcessingException {
-        User user = objectMapper.readValue(userJSON, User.class);
+    public void add(@RequestBody User user) throws JsonProcessingException {
         userService.addUser(user);
     }
 

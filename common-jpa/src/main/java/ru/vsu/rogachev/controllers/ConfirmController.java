@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.vsu.rogachev.dto.ConfirmDTO;
 import ru.vsu.rogachev.entities.ConfirmRequest;
 import ru.vsu.rogachev.entities.User;
 import ru.vsu.rogachev.exceptions.DbDontContainObjectException;
@@ -22,8 +23,7 @@ public class ConfirmController {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @PostMapping("/add")
-    public void add(@RequestBody String confirmJSON) throws JsonProcessingException {
-        ConfirmRequest request = objectMapper.readValue(confirmJSON, ConfirmRequest.class);
+    public void add(@RequestBody ConfirmRequest request) throws JsonProcessingException {
         confirmService.add(request);
     }
 
@@ -33,9 +33,8 @@ public class ConfirmController {
     }
 
     @PostMapping("/addByParamsObj")
-    public void add(@RequestBody String userJSON, @RequestBody String confirmationCode) throws JsonProcessingException {
-        User user = objectMapper.readValue(userJSON, User.class);
-       confirmService.add(user, confirmationCode);
+    public void add(@RequestBody ConfirmDTO confirmDTO) throws JsonProcessingException {
+       confirmService.add(confirmDTO.getUser(), confirmDTO.getConfirmationCode());
     }
 
     @GetMapping("/getById/{id}")

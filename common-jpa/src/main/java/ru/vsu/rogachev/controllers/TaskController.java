@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.vsu.rogachev.dto.TaskDTO;
 import ru.vsu.rogachev.entities.GameSession;
 import ru.vsu.rogachev.entities.Task;
 import ru.vsu.rogachev.entities.User;
@@ -23,8 +24,7 @@ public class TaskController {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @PostMapping("/add")
-    public void add(@RequestBody String taskJSON, Model model) throws JsonProcessingException {
-        Task task = objectMapper.readValue(taskJSON, Task.class);
+    public void add(@RequestBody Task task) throws JsonProcessingException {
         taskService.add(task);
     }
 
@@ -35,9 +35,8 @@ public class TaskController {
     }
 
     @PostMapping("/addByParamsObj")
-    public void add(@RequestBody GameSession game, @RequestBody User solver,
-                    @RequestBody String taskUrl, @RequestBody Long time){
-        taskService.add(game, solver, taskUrl, time);
+    public void add(@RequestBody TaskDTO taskDTO){
+        taskService.add(taskDTO.getGame(), taskDTO.getSolver(), taskDTO.getTaskUrl(), taskDTO.getTime());
     }
 
     @GetMapping("/get/{id}")
