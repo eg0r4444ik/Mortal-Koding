@@ -5,7 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -24,7 +24,7 @@ public class ConfirmRequest {
 
     @CreationTimestamp
     @Column(name = "creation_date")
-    private LocalDateTime creationDate;
+    private Date creationDate;
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")

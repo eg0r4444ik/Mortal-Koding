@@ -6,7 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import ru.vsu.rogachev.entities.enums.UserState;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -29,7 +29,7 @@ public class User {
 
     @CreationTimestamp
     @Column(name = "first_login_date")
-    private LocalDateTime firstLoginDate;
+    private Date firstLoginDate;
 
     @Column(name = "firstname")
     private String firstName;

@@ -2,6 +2,7 @@ package ru.vsu.rogachev.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.rogachev.entities.ConfirmRequest;
 import ru.vsu.rogachev.entities.User;
 import ru.vsu.rogachev.exceptions.DbDontContainObjectException;
@@ -9,6 +10,7 @@ import ru.vsu.rogachev.repositories.ConfirmRepository;
 import ru.vsu.rogachev.services.ConfirmService;
 import ru.vsu.rogachev.services.UserService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -48,10 +50,12 @@ public class ConfirmServiceImpl implements ConfirmService {
         return confirmRepository.findByUserId(id).get();
     }
 
+    @Transactional
     public void deleteById(Long id){
         confirmRepository.deleteById(id);
     }
 
+    @Transactional
     public void deleteByUserId(Long id){
         confirmRepository.deleteByUserId(id);
     }

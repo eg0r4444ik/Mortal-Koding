@@ -1,6 +1,7 @@
 package ru.vsu.rogachev.dto;
 
 import lombok.*;
+import ru.vsu.rogachev.entities.GameSession;
 
 @Getter
 @Setter
@@ -14,4 +15,9 @@ public class GameDTO {
     private Long time;
     private Long playersCount;
 
+    public GameDTO(GameSession gameSession) {
+        this.id = gameSession.getId();
+        this.time = gameSession.getTime();
+        this.playersCount = gameSession.getPlayersCount();
+    }
 }

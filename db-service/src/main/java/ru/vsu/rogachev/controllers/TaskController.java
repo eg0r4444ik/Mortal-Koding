@@ -31,7 +31,8 @@ public class TaskController {
     @GetMapping("/get/{id}")
     public String get(@PathVariable(value = "id") long id) throws JsonProcessingException {
         Task task = taskService.get(id);
-        String response = objectMapper.writeValueAsString(task);
+        TaskDTO dto = new TaskDTO(task);
+        String response = objectMapper.writeValueAsString(dto);
         return response;
     }
 

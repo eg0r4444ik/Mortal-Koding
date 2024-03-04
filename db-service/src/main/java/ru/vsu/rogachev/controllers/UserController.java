@@ -32,21 +32,24 @@ public class UserController {
     @GetMapping("/get/{id}")
     public String getById(@PathVariable(value = "id") long id) throws JsonProcessingException {
         User user = userService.getUserById(id);
-        String response = objectMapper.writeValueAsString(user);
+        UserDTO dto = new UserDTO(user);
+        String response = objectMapper.writeValueAsString(dto);
         return response;
     }
 
     @GetMapping("/getByTelegramId/{id}")
     public String getByTelegramId(@PathVariable(value = "id") long tgId) throws DbDontContainObjectException, JsonProcessingException {
         User user = userService.getUserByTelegramId(tgId);
-        String response = objectMapper.writeValueAsString(user);
+        UserDTO dto = new UserDTO(user);
+        String response = objectMapper.writeValueAsString(dto);
         return response;
     }
 
     @GetMapping("/getByCodeforcesUsername/{username}")
     public String getByCodeforcesUsername(@PathVariable(value = "username") String username) throws DbDontContainObjectException, JsonProcessingException {
         User user = userService.getUserByCodeforcesUsername(username);
-        String response = objectMapper.writeValueAsString(user);
+        UserDTO dto = new UserDTO(user);
+        String response = objectMapper.writeValueAsString(dto);
         return response;
     }
 

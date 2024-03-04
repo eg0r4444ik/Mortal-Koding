@@ -12,6 +12,7 @@ import ru.vsu.rogachev.exceptions.DbDontContainObjectException;
 import ru.vsu.rogachev.services.ConfirmService;
 import ru.vsu.rogachev.services.UserService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -32,21 +33,27 @@ public class ConfirmController {
     @GetMapping("/getAll")
     public String getAll() throws JsonProcessingException {
         List<ConfirmRequest> requests = confirmService.getAll();
-        String response = objectMapper.writeValueAsString(requests);
+        List<ConfirmDTO> result = new ArrayList<>();
+        for(ConfirmRequest request : requests){
+            result.add(new ConfirmDTO(request));
+        }
+        String response = objectMapper.writeValueAsString(result);
         return response;
     }
 
     @GetMapping("/getById/{id}")
     public String getById(@PathVariable(value = "id") long id) throws JsonProcessingException {
         ConfirmRequest request = confirmService.getById(id);
-        String response = objectMapper.writeValueAsString(request);
+        ConfirmDTO dto = new ConfirmDTO(request);
+        String response = objectMapper.writeValueAsString(dto);
         return response;
     }
 
     @GetMapping("/getByUserId/{id}")
     public String getByUserId(@PathVariable(value = "id") long id) throws DbDontContainObjectException, JsonProcessingException {
         ConfirmRequest request = confirmService.getByUserId(id);
-        String response = objectMapper.writeValueAsString(request);
+        ConfirmDTO dto = new ConfirmDTO(request);
+        String response = objectMapper.writeValueAsString(dto);
         return response;
     }
 

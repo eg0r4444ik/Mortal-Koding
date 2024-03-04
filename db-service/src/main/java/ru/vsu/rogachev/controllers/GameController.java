@@ -30,7 +30,8 @@ public class GameController {
     @GetMapping("/get")
     public String getById(@RequestBody Long id) throws JsonProcessingException {
         GameSession game = gameSessionService.getById(id);
-        String response = objectMapper.writeValueAsString(game);
+        GameDTO dto = new GameDTO(game);
+        String response = objectMapper.writeValueAsString(dto);
         return response;
     }
 
