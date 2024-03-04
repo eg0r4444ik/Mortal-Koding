@@ -1,16 +1,16 @@
 package ru.vsu.rogachev.scheduler;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
+import lombok.extern.log4j.Log4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-//@Service
+@Service
+@Log4j
 public class Scheduler {
 
-//    @Scheduled(fixedRate = 5000)
-//    public void print(){
-//        System.out.println(5);
-//    }
+    @Scheduled(fixedRate = 5000)
+    public void print(){
+        System.out.println("Hi");
+    }
 
 }

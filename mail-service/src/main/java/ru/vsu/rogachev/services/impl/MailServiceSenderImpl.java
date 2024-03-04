@@ -7,7 +7,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import ru.vsu.rogachev.db.DbService;
-import ru.vsu.rogachev.entities.User;
+import ru.vsu.rogachev.db.dto.UserDTO;
 import ru.vsu.rogachev.generator.CodeGenerator;
 import ru.vsu.rogachev.services.MailSenderService;
 
@@ -27,7 +27,7 @@ public class MailServiceSenderImpl implements MailSenderService {
     private DbService dbService;
 
     @Override
-    public void send(User user) {
+    public void send(UserDTO user) {
         var subject = "Активация учетной записи";
         String activationCode = generator.generateActivationCode();
         var messageBody = getActivationMailBody(activationCode);

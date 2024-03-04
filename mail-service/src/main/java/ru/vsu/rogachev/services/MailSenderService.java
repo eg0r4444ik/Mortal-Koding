@@ -1,7 +1,7 @@
 package ru.vsu.rogachev.services;
 
-import ru.vsu.rogachev.entities.User;
+import ru.vsu.rogachev.db.dto.UserDTO;
 
 public interface MailSenderService {
-    void send(User user);
+    void send(UserDTO user);
 }
