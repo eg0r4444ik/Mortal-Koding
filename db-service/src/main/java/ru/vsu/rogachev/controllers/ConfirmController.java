@@ -23,18 +23,8 @@ public class ConfirmController {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @PostMapping("/add")
-    public void add(@RequestBody ConfirmRequest request) throws JsonProcessingException {
-        confirmService.add(request);
-    }
-
-    @PostMapping("/addByParams")
-    public void add(@RequestBody Long userId, @RequestBody String confirmationCode){
-        confirmService.add(userId, confirmationCode);
-    }
-
-    @PostMapping("/addByParamsObj")
     public void add(@RequestBody ConfirmDTO confirmDTO) throws JsonProcessingException {
-       confirmService.add(confirmDTO.getUser(), confirmDTO.getConfirmationCode());
+       confirmService.add(confirmDTO.getUser().getId(), confirmDTO.getConfirmationCode());
     }
 
     @GetMapping("/getById/{id}")

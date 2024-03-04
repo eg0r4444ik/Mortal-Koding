@@ -1,14 +1,6 @@
 package ru.vsu.rogachev.dto;
 
-import com.sun.istack.NotNull;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import ru.vsu.rogachev.entities.GameSession;
-
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -18,7 +10,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class UserDTO {
 
-    @NotNull
+    private Long id;
     private Long telegramUserId;
     private String firstName;
     private String lastName;

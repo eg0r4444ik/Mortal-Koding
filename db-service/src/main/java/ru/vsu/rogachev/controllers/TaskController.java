@@ -24,19 +24,8 @@ public class TaskController {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @PostMapping("/add")
-    public void add(@RequestBody Task task) throws JsonProcessingException {
-        taskService.add(task);
-    }
-
-    @PostMapping("/addByParams")
-    public void add(@RequestBody Long gameId, @RequestBody Long solverId,
-                    @RequestBody String taskUrl,  @RequestBody Long time){
-        taskService.add(gameId, solverId, taskUrl, time);
-    }
-
-    @PostMapping("/addByParamsObj")
     public void add(@RequestBody TaskDTO taskDTO){
-        taskService.add(taskDTO.getGame(), taskDTO.getSolver(), taskDTO.getTaskUrl(), taskDTO.getTime());
+        taskService.add(taskDTO.getGame().getId(), taskDTO.getSolver().getId(), taskDTO.getTaskUrl(), taskDTO.getTime());
     }
 
     @GetMapping("/get/{id}")

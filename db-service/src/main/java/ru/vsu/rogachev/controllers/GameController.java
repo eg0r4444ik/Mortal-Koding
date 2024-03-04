@@ -21,12 +21,8 @@ public class GameController {
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    @PostMapping("/add")
-    public void add(@RequestBody GameSession game) throws JsonProcessingException {
-        gameSessionService.add(game);
-    }
 
-    @PostMapping("/addByParams")
+    @PostMapping("/add")
     public void add(@RequestBody GameDTO gameDTO) {
         gameSessionService.add(gameDTO.getTime(), gameDTO.getPlayersCount());
     }

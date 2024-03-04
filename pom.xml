@@ -11,7 +11,7 @@
     <modules>
         <module>dispatcher</module>
         <module>battle</module>
-        <module>common-jpa</module>
+        <module>db-service</module>
         <module>mail-service</module>
     </modules>
 

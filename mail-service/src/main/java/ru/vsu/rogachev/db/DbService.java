@@ -1,11 +1,8 @@
 package ru.vsu.rogachev.db;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import ru.vsu.rogachev.entities.ConfirmRequest;
-import ru.vsu.rogachev.entities.User;
 
 @Service
 public class DbService {
@@ -21,7 +18,7 @@ public class DbService {
     final RestTemplate restTemplate = new RestTemplate();
 
     public void addConfirmRequest(User user, String activationCode){
-        restTemplate.postForObject(path + "/add", new ConfirmRequest(user, activationCode), ConfirmRequest.class);
+        restTemplate.postForObject(path + "/add", new ConfirmDTO(user, activationCode), ConfirmDTO.class);
     }
 
     public ConfirmRequest getConfirmRequest(User user){

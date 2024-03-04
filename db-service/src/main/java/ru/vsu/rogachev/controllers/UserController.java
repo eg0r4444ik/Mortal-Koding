@@ -23,11 +23,6 @@ public class UserController {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @PostMapping("/add")
-    public void add(@RequestBody User user) throws JsonProcessingException {
-        userService.addUser(user);
-    }
-
-    @PostMapping("/addByParams")
     public void add(@RequestBody UserDTO userDTO){
         userService.addUser(userDTO.getTelegramUserId(), userDTO.getFirstName(),
                 userDTO.getLastName(), userDTO.getUsername(),
