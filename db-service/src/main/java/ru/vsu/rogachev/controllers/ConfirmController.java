@@ -12,6 +12,8 @@ import ru.vsu.rogachev.exceptions.DbDontContainObjectException;
 import ru.vsu.rogachev.services.ConfirmService;
 import ru.vsu.rogachev.services.UserService;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/confirm")
@@ -25,6 +27,13 @@ public class ConfirmController {
     @PostMapping("/add")
     public void add(@RequestBody ConfirmDTO confirmDTO) throws JsonProcessingException {
        confirmService.add(confirmDTO.getUser().getId(), confirmDTO.getConfirmationCode());
+    }
+
+    @GetMapping("/getAll")
+    public String getAll() throws JsonProcessingException {
+        List<ConfirmRequest> requests = confirmService.getAll();
+        String response = objectMapper.writeValueAsString(requests);
+        return response;
     }
 
     @GetMapping("/getById/{id}")

@@ -9,6 +9,8 @@ import ru.vsu.rogachev.repositories.ConfirmRepository;
 import ru.vsu.rogachev.services.ConfirmService;
 import ru.vsu.rogachev.services.UserService;
 
+import java.util.List;
+
 @Service
 public class ConfirmServiceImpl implements ConfirmService {
 
@@ -29,6 +31,10 @@ public class ConfirmServiceImpl implements ConfirmService {
     public void add(User user, String confirmationCode){
         ConfirmRequest confirmRequest = new ConfirmRequest(user, confirmationCode);
         confirmRepository.save(confirmRequest);
+    }
+
+    public List<ConfirmRequest> getAll(){
+        return confirmRepository.findAll().stream().toList();
     }
 
     public ConfirmRequest getById(Long id){

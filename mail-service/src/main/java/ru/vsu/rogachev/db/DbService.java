@@ -1,5 +1,6 @@
 package ru.vsu.rogachev.db;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -16,12 +17,11 @@ public class DbService {
     @Value("${db.port}")
     private String port;
 
-    private String path = "http://" + host + ":" + port + "/confirm";
+    private final String path;
 
     final RestTemplate restTemplate = new RestTemplate();
 
     public void addConfirmRequest(UserDTO user, String activationCode){
-        System.out.println(path);
         restTemplate.postForObject(path + "/add", new ConfirmDTO(user, activationCode), ConfirmDTO.class);
     }
 
@@ -32,5 +32,12 @@ public class DbService {
 
     public void deleteConfirmRequest(UserDTO user){
         restTemplate.getForObject(path + "/deleteById/" + user.getId(), ConfirmDTO.class);
+    }
+
+    @Autowired
+    public DbService(@Value("${db.host}") final String host, @Value("${db.port}") final String port) {
+        this.host = host;
+        this.port = port;
+        this.path = "http://" + host + ":" + port + "/confirm";
     }
 }
