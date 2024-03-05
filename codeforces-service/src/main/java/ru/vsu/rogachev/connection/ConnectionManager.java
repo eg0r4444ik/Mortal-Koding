@@ -1,5 +1,6 @@
 package ru.vsu.rogachev.connection;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.vsu.rogachev.converter.ObjectConverter;
@@ -14,7 +15,9 @@ import java.util.List;
 public class ConnectionManager {
 
     final RestTemplate restTemplate = new RestTemplate();
-    ObjectConverter objectConverter = new ObjectConverterImpl();
+
+    @Autowired
+    private ObjectConverter objectConverter;
 
     public User getUser(String handle){
         String response = restTemplate.getForObject("https://codeforces.com/api/user.info?handles=" + handle, String.class);

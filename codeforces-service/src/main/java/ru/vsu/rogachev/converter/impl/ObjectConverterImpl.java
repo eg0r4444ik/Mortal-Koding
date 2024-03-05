@@ -1,5 +1,6 @@
 package ru.vsu.rogachev.converter.impl;
 
+import org.springframework.stereotype.Service;
 import ru.vsu.rogachev.converter.ObjectConverter;
 import ru.vsu.rogachev.models.Problem;
 import ru.vsu.rogachev.models.Submission;
@@ -8,11 +9,13 @@ import ru.vsu.rogachev.models.User;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class ObjectConverterImpl implements ObjectConverter {
+
     @Override
     public User getUser(String response) {
         String[] userInfo = response.split("\"");
-        String handle = "", email = "";
+        String handle = "", email = null;
         long rating = 0;
 
         for(int i = 0; i < userInfo.length; i++){
