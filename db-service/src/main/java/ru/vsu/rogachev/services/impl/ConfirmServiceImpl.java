@@ -60,4 +60,12 @@ public class ConfirmServiceImpl implements ConfirmService {
         confirmRepository.deleteByUserId(id);
     }
 
+    public boolean existById(Long id) {
+        return confirmRepository.existsById(id);
+    }
+
+    public boolean existByUserId(Long id) {
+        return confirmRepository.existsByUserId(id);
+    }
+
 }

@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface ConfirmRepository extends JpaRepository<ConfirmRequest, Long> {
     Optional<ConfirmRequest> findByUserId(Long id);
     void deleteByUserId(Long id);
+    boolean existsByUserId(Long id);
 }

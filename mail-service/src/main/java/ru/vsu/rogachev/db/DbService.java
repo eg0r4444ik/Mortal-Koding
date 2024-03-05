@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import ru.vsu.rogachev.db.dto.ConfirmDTO;
 import ru.vsu.rogachev.db.dto.UserDTO;
 
+import java.awt.desktop.UserSessionEvent;
 import java.util.List;
 
 @Service
@@ -45,6 +46,11 @@ public class DbService {
 
     public void deleteConfirmRequest(UserDTO user){
         restTemplate.getForObject(path + "/deleteByUserId/" + user.getId(), ConfirmDTO.class);
+    }
+
+    public boolean exist(UserDTO user){
+        Boolean response = restTemplate.getForObject(path + "/existByUserId/" + user.getId(), Boolean.class);
+        return response;
     }
 
     @Autowired

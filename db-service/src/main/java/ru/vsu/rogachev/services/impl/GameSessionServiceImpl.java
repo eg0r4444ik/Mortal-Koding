@@ -2,6 +2,7 @@ package ru.vsu.rogachev.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.rogachev.entities.GameSession;
 import ru.vsu.rogachev.entities.User;
 import ru.vsu.rogachev.exceptions.DbDontContainObjectException;
@@ -30,6 +31,7 @@ public class GameSessionServiceImpl implements GameSessionService {
         return gameSessionRepository.getById(id);
     }
 
+    @Transactional
     public void deleteById(Long id){
         gameSessionRepository.deleteById(id);
     }

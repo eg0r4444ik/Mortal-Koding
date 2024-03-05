@@ -24,4 +24,8 @@ public interface ConfirmService {
 
     void deleteByUserId(Long id);
 
+    boolean existById(Long id);
+
+    boolean existByUserId(Long id);
+
 }

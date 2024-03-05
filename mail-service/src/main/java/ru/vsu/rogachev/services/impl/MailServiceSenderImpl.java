@@ -28,6 +28,10 @@ public class MailServiceSenderImpl implements MailSenderService {
 
     @Override
     public void send(UserDTO user) {
+        if(dbService.exist(user)){
+            dbService.deleteConfirmRequest(user);
+        }
+
         var subject = "Активация учетной записи";
         String activationCode = generator.generateActivationCode();
         var messageBody = getActivationMailBody(activationCode);

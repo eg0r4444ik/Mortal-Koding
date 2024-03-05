@@ -66,4 +66,14 @@ public class ConfirmController {
     public void deleteByUserId(@PathVariable(value = "id") long id){
         confirmService.deleteByUserId(id);
     }
+
+    @GetMapping("/existById/{id}")
+    public String existById(@PathVariable(value = "id") long id){
+        return String.valueOf(confirmService.existById(id));
+    }
+
+    @GetMapping("/existByUserId/{id}")
+    public String existByUserId(@PathVariable(value = "id") long id){
+        return String.valueOf(confirmService.existByUserId(id));
+    }
 }
