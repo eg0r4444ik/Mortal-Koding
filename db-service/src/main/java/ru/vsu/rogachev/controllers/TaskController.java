@@ -4,14 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.vsu.rogachev.dto.TaskDTO;
-import ru.vsu.rogachev.entities.GameSession;
 import ru.vsu.rogachev.entities.Task;
-import ru.vsu.rogachev.entities.User;
+import ru.vsu.rogachev.dto.TaskDTO;
 import ru.vsu.rogachev.services.TaskService;
-import ru.vsu.rogachev.services.UserService;
 
 @RestController
 @RequiredArgsConstructor

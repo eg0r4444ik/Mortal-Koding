@@ -5,13 +5,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.vsu.rogachev.db.dto.ConfirmDTO;
 import ru.vsu.rogachev.db.dto.UserDTO;
 
-import java.awt.desktop.UserSessionEvent;
 import java.util.List;
 
 @Service

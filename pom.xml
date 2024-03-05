@@ -10,9 +10,10 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>dispatcher</module>
-        <module>battle</module>
+        <module>battle-service</module>
         <module>db-service</module>
         <module>mail-service</module>
+        <module>codeforces-service</module>
     </modules>
 
     <properties>

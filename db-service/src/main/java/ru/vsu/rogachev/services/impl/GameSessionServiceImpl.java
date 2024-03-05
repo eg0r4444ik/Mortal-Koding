@@ -4,8 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.rogachev.entities.GameSession;
-import ru.vsu.rogachev.entities.User;
-import ru.vsu.rogachev.exceptions.DbDontContainObjectException;
 import ru.vsu.rogachev.repositories.GameSessionRepository;
 import ru.vsu.rogachev.services.GameSessionService;
 import ru.vsu.rogachev.services.UserService;
