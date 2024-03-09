@@ -1,11 +1,12 @@
 package ru.vsu.rogachev.services;
 
-import ru.vsu.rogachev.models.Submission;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import ru.vsu.rogachev.dto.SubmissionDTO;
 
 import java.util.List;
 
 public interface SubmissionService {
 
-    List<Submission> getUserSubmissions(String handle) throws InterruptedException;
+    List<SubmissionDTO> getPlayerSubmissions(String handle) throws InterruptedException, JsonProcessingException;
 
 }

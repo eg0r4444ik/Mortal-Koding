@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.vsu.rogachev.converter.ObjectConverter;
-import ru.vsu.rogachev.models.Problem;
-import ru.vsu.rogachev.models.Submission;
-import ru.vsu.rogachev.models.Player;
+import ru.vsu.rogachev.dto.Problem;
+import ru.vsu.rogachev.dto.Submission;
+import ru.vsu.rogachev.dto.Player;
 
 import java.util.List;
 

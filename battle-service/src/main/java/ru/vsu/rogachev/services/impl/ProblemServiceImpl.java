@@ -1,6 +1,9 @@
 package ru.vsu.rogachev.services.impl;
 
-import ru.vsu.rogachev.models.Problem;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.beans.factory.annotation.Autowired;
+import ru.vsu.rogachev.codeforces.CodeforcesConnection;
+import ru.vsu.rogachev.dto.ProblemDTO;
 import org.springframework.stereotype.Service;
 import ru.vsu.rogachev.services.ProblemService;
 
@@ -10,17 +13,20 @@ import java.util.List;
 @Service
 public class ProblemServiceImpl implements ProblemService {
 
-    public String getProblemUrl(Problem problem){
+    @Autowired
+    private CodeforcesConnection codeforcesConnection;
+
+    public String getProblemUrl(ProblemDTO problem){
         return "https://codeforces.com/problemset/problem/" + problem.getContestId() + "/" + problem.getIndex();
     }
 
-    public List<Problem> getProblems() throws InterruptedException {
-        return connectionManager.getProblemSet();
+    public List<ProblemDTO> getProblems() throws InterruptedException, JsonProcessingException {
+        return codeforcesConnection.getProblemSet();
     }
 
-    public List<String> getProblemSet(List<Problem> problems){
+    public List<String> getProblemSet(List<ProblemDTO> problems){
         List<String> result = new ArrayList<>();
-        for(Problem problem : problems){
+        for(ProblemDTO problem : problems){
             result.add(getProblemUrl(problem));
         }
 

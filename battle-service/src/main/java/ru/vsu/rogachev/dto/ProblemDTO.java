@@ -1,4 +1,4 @@
-package ru.vsu.rogachev.models;
+package ru.vsu.rogachev.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Problem implements Comparable<Problem>{
+public class ProblemDTO implements Comparable<ProblemDTO>{
 
     public enum Type{
         PROGRAMMING,
@@ -27,7 +27,7 @@ public class Problem implements Comparable<Problem>{
     private List<String> tags;
 
     @Override
-    public int compareTo(Problem o) {
+    public int compareTo(ProblemDTO o) {
         return Long.compare(this.rating, o.rating);
     }
 

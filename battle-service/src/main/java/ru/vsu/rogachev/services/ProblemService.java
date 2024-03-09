@@ -1,14 +1,15 @@
 package ru.vsu.rogachev.services;
 
-import ru.vsu.rogachev.models.Problem;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import ru.vsu.rogachev.dto.ProblemDTO;
 
 import java.util.List;
 
 public interface ProblemService {
 
-    String getProblemUrl(Problem problem);
+    String getProblemUrl(ProblemDTO problem);
 
-    List<Problem> getProblems() throws InterruptedException;
+    List<ProblemDTO> getProblems() throws InterruptedException, JsonProcessingException;
 
-    List<String> getProblemSet(List<Problem> problems);
+    List<String> getProblemSet(List<ProblemDTO> problems);
 }

@@ -27,7 +27,6 @@ public class Task {
 
     @ManyToOne
     @JoinColumn(name = "solver_handle", referencedColumnName = "handle")
-    @Column(name = "solver_handle")
     private Player solver;
 
     @Column(name = "task_url")

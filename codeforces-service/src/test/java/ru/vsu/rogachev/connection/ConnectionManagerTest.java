@@ -3,9 +3,9 @@ package ru.vsu.rogachev.connection;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.vsu.rogachev.models.Problem;
-import ru.vsu.rogachev.models.Submission;
-import ru.vsu.rogachev.models.Player;
+import ru.vsu.rogachev.dto.Problem;
+import ru.vsu.rogachev.dto.Submission;
+import ru.vsu.rogachev.dto.Player;
 
 import java.util.List;
 

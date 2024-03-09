@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import ru.vsu.rogachev.connection.ConnectionManager;
-import ru.vsu.rogachev.models.Problem;
-import ru.vsu.rogachev.models.Submission;
-import ru.vsu.rogachev.models.Player;
+import ru.vsu.rogachev.dto.Problem;
+import ru.vsu.rogachev.dto.Submission;
+import ru.vsu.rogachev.dto.Player;
 
 import java.util.List;
 

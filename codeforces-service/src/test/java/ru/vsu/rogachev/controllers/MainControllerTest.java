@@ -7,9 +7,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.vsu.rogachev.connection.ConnectionManager;
-import ru.vsu.rogachev.models.Problem;
-import ru.vsu.rogachev.models.Submission;
-import ru.vsu.rogachev.models.Player;
+import ru.vsu.rogachev.dto.Problem;
+import ru.vsu.rogachev.dto.Submission;
+import ru.vsu.rogachev.dto.Player;
 
 import java.util.ArrayList;
 import java.util.List;

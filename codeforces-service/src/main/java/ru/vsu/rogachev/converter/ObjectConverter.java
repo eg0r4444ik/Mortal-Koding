@@ -1,8 +1,8 @@
 package ru.vsu.rogachev.converter;
 
-import ru.vsu.rogachev.models.Problem;
-import ru.vsu.rogachev.models.Submission;
-import ru.vsu.rogachev.models.Player;
+import ru.vsu.rogachev.dto.Problem;
+import ru.vsu.rogachev.dto.Submission;
+import ru.vsu.rogachev.dto.Player;
 
 import java.util.List;
 

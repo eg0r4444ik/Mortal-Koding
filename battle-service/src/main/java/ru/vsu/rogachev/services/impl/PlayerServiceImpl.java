@@ -1,11 +1,12 @@
 package ru.vsu.rogachev.services.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.vsu.rogachev.Game;
-import ru.vsu.rogachev.entities.GameSession;
+import ru.vsu.rogachev.codeforces.CodeforcesConnection;
+import ru.vsu.rogachev.dto.PlayerDTO;
 import ru.vsu.rogachev.entities.Player;
-import ru.vsu.rogachev.models.Problem;
-import ru.vsu.rogachev.models.Submission;
+import ru.vsu.rogachev.dto.ProblemDTO;
+import ru.vsu.rogachev.dto.SubmissionDTO;
 import org.springframework.stereotype.Service;
 import ru.vsu.rogachev.repositories.PlayerRepository;
 import ru.vsu.rogachev.services.GameSessionService;
@@ -28,14 +29,17 @@ public class PlayerServiceImpl implements PlayerService {
     @Autowired
     private WaitingGameService waitingGameService;
 
+    @Autowired
+    private CodeforcesConnection codeforcesConnection;
+
     private SubmissionServiceImpl submissionService = new SubmissionServiceImpl();
     private ProblemServiceImpl problemService = new ProblemServiceImpl();
 
-    public Set<Problem> getUserProblems(String handle) throws InterruptedException {
-        Set<Problem> res = new HashSet<>();
-        List<Submission> submissions = submissionService.getUserSubmissions(handle);
-        for(Submission submission : submissions){
-            if(submission.getVerdict() == Submission.Verdict.OK){
+    public Set<ProblemDTO> getPlayerProblems(String handle) throws InterruptedException, JsonProcessingException {
+        Set<ProblemDTO> res = new HashSet<>();
+        List<SubmissionDTO> submissions = submissionService.getPlayerSubmissions(handle);
+        for(SubmissionDTO submission : submissions){
+            if(submission.getVerdict() == SubmissionDTO.Verdict.OK){
                 res.add(submission.getProblem());
             }
         }
@@ -43,18 +47,18 @@ public class PlayerServiceImpl implements PlayerService {
         return res;
     }
 
-    public Set<String> getUserProblemSet(String handle) throws InterruptedException {
+    public Set<String> getPlayerProblemSet(String handle) throws InterruptedException, JsonProcessingException {
         Set<String> res = new HashSet<>();
-        Set<Problem> problems = getUserProblems(handle);
-        for(Problem problem : problems){
+        Set<ProblemDTO> problems = getPlayerProblems(handle);
+        for(ProblemDTO problem : problems){
             res.add(problemService.getProblemUrl(problem));
         }
 
         return res;
     }
 
-    public Player getUser(String handle) throws InterruptedException {
-        return connectionManager.getUser(handle);
+    public PlayerDTO getPlayer(String handle) throws InterruptedException, JsonProcessingException {
+        return codeforcesConnection.getPlayer(handle);
     }
 
     public void add(Player player) {

@@ -1,4 +1,4 @@
-package ru.vsu.rogachev.models;
+package ru.vsu.rogachev.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Submission {
+public class SubmissionDTO {
 
     public enum Verdict {
         FAILED ("FAILED"),
@@ -37,7 +37,7 @@ public class Submission {
     }
 
     private long creationTimeSeconds;
-    private Problem problem;
+    private ProblemDTO problem;
     private String programmingLanguage;
     private Verdict verdict;
 }
