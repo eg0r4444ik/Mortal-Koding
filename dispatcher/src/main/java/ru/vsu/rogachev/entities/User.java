@@ -46,10 +46,6 @@ public class User {
     @Column(name = "rating")
     private Long rating;
 
-    @ManyToOne
-    @JoinColumn(name = "game_id", referencedColumnName = "game_id")
-    private GameSession game;
-
     @Column(name = "codeforces_username", unique = true)
     private String codeforcesUsername;
 

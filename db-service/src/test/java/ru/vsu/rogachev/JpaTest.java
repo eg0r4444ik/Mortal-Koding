@@ -5,14 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import ru.vsu.rogachev.repositories.ConfirmRepository;
 import ru.vsu.rogachev.repositories.GameSessionRepository;
 import ru.vsu.rogachev.repositories.TaskRepository;
-import ru.vsu.rogachev.repositories.UserRepository;
-import ru.vsu.rogachev.services.ConfirmService;
 import ru.vsu.rogachev.services.GameSessionService;
 import ru.vsu.rogachev.services.TaskService;
-import ru.vsu.rogachev.services.UserService;
 
 @SpringBootTest
 public class JpaTest {

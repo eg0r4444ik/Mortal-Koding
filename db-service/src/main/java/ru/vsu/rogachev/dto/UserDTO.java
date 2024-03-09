@@ -1,7 +1,6 @@
 package ru.vsu.rogachev.dto;
 
 import lombok.*;
-import ru.vsu.rogachev.entities.User;
 
 @Getter
 @Setter

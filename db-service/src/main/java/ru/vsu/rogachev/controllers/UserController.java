@@ -6,10 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.rogachev.dto.UserDTO;
-import ru.vsu.rogachev.entities.User;
 import ru.vsu.rogachev.entities.enums.UserState;
 import ru.vsu.rogachev.exceptions.DbDontContainObjectException;
-import ru.vsu.rogachev.services.UserService;
 
 @RestController
 @RequiredArgsConstructor

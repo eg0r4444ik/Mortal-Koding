@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.rogachev.entities.GameSession;
 import ru.vsu.rogachev.repositories.GameSessionRepository;
 import ru.vsu.rogachev.services.GameSessionService;
-import ru.vsu.rogachev.services.UserService;
 
 @Service
 public class GameSessionServiceImpl implements GameSessionService {
