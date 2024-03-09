@@ -4,10 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.vsu.rogachev.converter.ObjectConverter;
-import ru.vsu.rogachev.converter.impl.ObjectConverterImpl;
 import ru.vsu.rogachev.models.Problem;
 import ru.vsu.rogachev.models.Submission;
-import ru.vsu.rogachev.models.User;
+import ru.vsu.rogachev.models.Player;
 
 import java.util.List;
 
@@ -19,12 +18,12 @@ public class ConnectionManager {
     @Autowired
     private ObjectConverter objectConverter;
 
-    public User getUser(String handle){
+    public Player getPlayer(String handle){
         String response = restTemplate.getForObject("https://codeforces.com/api/user.info?handles=" + handle, String.class);
-        return objectConverter.getUser(response);
+        return objectConverter.getPlayer(response);
     }
 
-    public List<Submission> getUserSubmissions(String handle){
+    public List<Submission> getPlayerSubmissions(String handle){
         String response = restTemplate.getForObject("https://codeforces.com/api/user.status?handle=" + handle, String.class);
         return objectConverter.getSubmissions(response);
     }

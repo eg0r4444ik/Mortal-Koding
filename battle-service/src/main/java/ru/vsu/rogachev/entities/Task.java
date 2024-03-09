@@ -2,7 +2,6 @@ package ru.vsu.rogachev.entities;
 
 import com.sun.istack.NotNull;
 import lombok.*;
-import ru.vsu.rogachev.models.User;
 
 import javax.persistence.*;
 

@@ -2,16 +2,16 @@ package ru.vsu.rogachev;
 
 import ru.vsu.rogachev.models.Problem;
 import ru.vsu.rogachev.generator.TaskGenerator;
-import ru.vsu.rogachev.services.ProblemService;
-import ru.vsu.rogachev.services.UserService;
+import ru.vsu.rogachev.services.impl.ProblemServiceImpl;
+import ru.vsu.rogachev.services.impl.PlayerServiceImpl;
 
 import java.util.List;
 
 public class Game {
 
     private TaskGenerator taskGenerator = new TaskGenerator();
-    private UserService userService = new UserService();
-    private ProblemService problemService = new ProblemService();
+    private PlayerServiceImpl userService = new PlayerServiceImpl();
+    private ProblemServiceImpl problemService = new ProblemServiceImpl();
 
     public void start(String player1, String player2, long count) throws InterruptedException {
         List<Problem> problems = taskGenerator.getContestProblems(player1, player2, count);

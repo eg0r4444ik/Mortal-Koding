@@ -10,13 +10,13 @@
         <module name="battle-service" />
         <module name="dispatcher" />
         <module name="mail-service" />
-        <module name="db-service" />
         <module name="codeforces-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="common-rabbitmq" target="17" />
       <module name="common-utils" target="17" />
+      <module name="db-service" target="17" />
       <module name="node" target="17" />
     </bytecodeTargetLevel>
   </component>

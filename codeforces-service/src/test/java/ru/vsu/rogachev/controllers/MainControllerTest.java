@@ -9,7 +9,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.vsu.rogachev.connection.ConnectionManager;
 import ru.vsu.rogachev.models.Problem;
 import ru.vsu.rogachev.models.Submission;
-import ru.vsu.rogachev.models.User;
+import ru.vsu.rogachev.models.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,29 +28,29 @@ public class MainControllerTest {
     ConnectionManager connectionManager;
 
     @Test
-    void getUser() throws Exception {
-        Mockito.when(this.connectionManager.getUser("egor4444ik")).thenReturn(getUserWithEmail());
+    void getPlayer() throws Exception {
+        Mockito.when(this.connectionManager.getPlayer("egor4444ik")).thenReturn(getPlayerWithEmail());
 
-        mvc.perform(get("/getUser/egor4444ik"))
+        mvc.perform(get("/getPlayer/egor4444ik"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.rating").value(1600))
                 .andExpect(jsonPath("$.handle").value("egor4444ik"))
                 .andExpect(jsonPath("$.email").value("egorchik.rog@yandex.ru"));
 
-        Mockito.when(this.connectionManager.getUser("iamdimonis")).thenReturn(getUserWithoutEmail());
+        Mockito.when(this.connectionManager.getPlayer("Just4Fun_")).thenReturn(getPlayerWithoutEmail());
 
-        mvc.perform(get("/getUser/iamdimonis"))
+        mvc.perform(get("/getPlayer/Just4Fun_"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.rating").value(1500))
-                .andExpect(jsonPath("$.handle").value("iamdimonis"))
+                .andExpect(jsonPath("$.handle").value("Just4Fun_"))
                 .andExpect(jsonPath("$.email").isEmpty());
     }
 
     @Test
-    void getUserSubmissions() throws Exception {
-        Mockito.when(this.connectionManager.getUserSubmissions("egor4444ik")).thenReturn(getSubmissions());
+    void getPlayerSubmissions() throws Exception {
+        Mockito.when(this.connectionManager.getPlayerSubmissions("egor4444ik")).thenReturn(getSubmissions());
 
-        mvc.perform(get("/getUserSubmissions/egor4444ik"))
+        mvc.perform(get("/getPlayerSubmissions/egor4444ik"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2));
 //                .andExpect(jsonPath("$.get(0).getCreationTimeSeconds()").value(2000))
@@ -73,12 +73,12 @@ public class MainControllerTest {
                 .andExpect(jsonPath("$.length()").value(2));
     }
 
-    private User getUserWithEmail(){
-        return new User(1600, "egor4444ik", "egorchik.rog@yandex.ru");
+    private Player getPlayerWithEmail(){
+        return new Player(1600, "egor4444ik", "egorchik.rog@yandex.ru");
     }
 
-    private User getUserWithoutEmail(){
-        return new User(1500, "iamdimonis", null);
+    private Player getPlayerWithoutEmail(){
+        return new Player(1500, "Just4Fun_", null);
     }
 
     private List<Submission> getSubmissions(){

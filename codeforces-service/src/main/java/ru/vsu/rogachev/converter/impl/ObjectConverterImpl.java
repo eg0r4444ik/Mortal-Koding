@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import ru.vsu.rogachev.converter.ObjectConverter;
 import ru.vsu.rogachev.models.Problem;
 import ru.vsu.rogachev.models.Submission;
-import ru.vsu.rogachev.models.User;
+import ru.vsu.rogachev.models.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,22 +13,22 @@ import java.util.List;
 public class ObjectConverterImpl implements ObjectConverter {
 
     @Override
-    public User getUser(String response) {
-        String[] userInfo = response.split("\"");
+    public Player getPlayer(String response) {
+        String[] playerInfo = response.split("\"");
         String handle = "", email = null;
         long rating = 0;
 
-        for(int i = 0; i < userInfo.length; i++){
-            String str = userInfo[i];
+        for(int i = 0; i < playerInfo.length; i++){
+            String str = playerInfo[i];
             if(str.equals("handle")){
-                handle = userInfo[i+2];
+                handle = playerInfo[i+2];
             }else if(str.equals("email")){
-                email = userInfo[i+2];
+                email = playerInfo[i+2];
             }else if(str.equals("rating")){
-                rating = Long.parseLong(deleteQuotes(userInfo[i+1]));
+                rating = Long.parseLong(deleteQuotes(playerInfo[i+1]));
             }
         }
-        return new User(rating, handle, email);
+        return new Player(rating, handle, email);
     }
 
     @Override

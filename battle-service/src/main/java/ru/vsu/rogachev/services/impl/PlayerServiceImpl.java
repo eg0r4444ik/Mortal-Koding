@@ -1,8 +1,8 @@
-package ru.vsu.rogachev.services;
+package ru.vsu.rogachev.services.impl;
 
 import ru.vsu.rogachev.models.Problem;
 import ru.vsu.rogachev.models.Submission;
-import ru.vsu.rogachev.models.User;
+import ru.vsu.rogachev.models.Player;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-public class UserService {
+public class PlayerServiceImpl {
 
-    private SubmissionService submissionService = new SubmissionService();
-    private ProblemService problemService = new ProblemService();
+    private SubmissionServiceImpl submissionService = new SubmissionServiceImpl();
+    private ProblemServiceImpl problemService = new ProblemServiceImpl();
 
     public Set<Problem> getUserProblems(String handle) throws InterruptedException {
         Set<Problem> res = new HashSet<>();
@@ -37,7 +37,7 @@ public class UserService {
         return res;
     }
 
-    public User getUser(String handle) throws InterruptedException {
+    public Player getUser(String handle) throws InterruptedException {
         return connectionManager.getUser(handle);
     }
 

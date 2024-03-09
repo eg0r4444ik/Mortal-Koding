@@ -1,12 +1,11 @@
 package ru.vsu.rogachev.connection;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.vsu.rogachev.models.Problem;
 import ru.vsu.rogachev.models.Submission;
-import ru.vsu.rogachev.models.User;
+import ru.vsu.rogachev.models.Player;
 
 import java.util.List;
 
@@ -20,22 +19,22 @@ public class ConnectionManagerTest {
     private ConnectionManager connectionManager;
 
     @Test
-    void getUser() throws Exception {
-        User user1 = connectionManager.getUser("egor4444ik");
-        assertThat(user1).isNotNull();
-        assertThat(user1.getEmail()).isNotNull();
-        assertThat(user1.getEmail()).isEqualTo("egorchik.rog@yandex.ru");
-        assertThat(user1.getHandle()).isEqualTo("egor4444ik");
+    void getPlayer() throws Exception {
+        Player player1 = connectionManager.getPlayer("egor4444ik");
+        assertThat(player1).isNotNull();
+        assertThat(player1.getEmail()).isNotNull();
+        assertThat(player1.getEmail()).isEqualTo("egorchik.rog@yandex.ru");
+        assertThat(player1.getHandle()).isEqualTo("egor4444ik");
 
-        User user2 = connectionManager.getUser("Just4Fun_");
-        assertThat(user2).isNotNull();
-        assertThat(user2.getEmail()).isNull();
-        assertThat(user2.getHandle()).isEqualTo("Just4Fun_");
+        Player player2 = connectionManager.getPlayer("Just4Fun_");
+        assertThat(player2).isNotNull();
+        assertThat(player2.getEmail()).isNull();
+        assertThat(player2.getHandle()).isEqualTo("Just4Fun_");
     }
 
     @Test
-    void getUserSubmissions() throws Exception {
-        List<Submission> submissions = connectionManager.getUserSubmissions("egor4444ik");
+    void getPlayerSubmissions() throws Exception {
+        List<Submission> submissions = connectionManager.getPlayerSubmissions("egor4444ik");
         assertThat(submissions).isNotNull();
         assertThat(submissions).isNotEmpty();
     }

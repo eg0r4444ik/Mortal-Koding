@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.vsu.rogachev.connection.ConnectionManager;
 import ru.vsu.rogachev.models.Problem;
 import ru.vsu.rogachev.models.Submission;
-import ru.vsu.rogachev.models.User;
+import ru.vsu.rogachev.models.Player;
 
 import java.util.List;
 
@@ -21,16 +21,16 @@ public class MainController {
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    @GetMapping("/getUser/{handle}")
-    public String getUser(@PathVariable(value = "handle") String handle) throws JsonProcessingException {
-        User user = connectionManager.getUser(handle);
-        String response = objectMapper.writeValueAsString(user);
+    @GetMapping("/getPlayer/{handle}")
+    public String getPlayer(@PathVariable(value = "handle") String handle) throws JsonProcessingException {
+        Player player = connectionManager.getPlayer(handle);
+        String response = objectMapper.writeValueAsString(player);
         return response;
     }
 
-    @GetMapping("/getUserSubmissions/{handle}")
-    public String getUserSubmissions(@PathVariable(value = "handle") String handle) throws JsonProcessingException {
-        List<Submission> submissions = connectionManager.getUserSubmissions(handle);
+    @GetMapping("/getPlayerSubmissions/{handle}")
+    public String getPlayerSubmissions(@PathVariable(value = "handle") String handle) throws JsonProcessingException {
+        List<Submission> submissions = connectionManager.getPlayerSubmissions(handle);
         String response = objectMapper.writeValueAsString(submissions);
         return response;
     }

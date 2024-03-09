@@ -2,7 +2,6 @@ package ru.vsu.rogachev.entities;
 
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import ru.vsu.rogachev.models.User;
 
 import javax.persistence.*;
 import java.util.Date;

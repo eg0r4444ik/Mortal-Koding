@@ -1,4 +1,4 @@
 package ru.vsu.rogachev.services;
 
-public interface ProblemService {
+public interface PlayerService {
 }
