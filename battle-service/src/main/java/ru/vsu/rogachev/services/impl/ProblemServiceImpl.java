@@ -2,12 +2,13 @@ package ru.vsu.rogachev.services.impl;
 
 import ru.vsu.rogachev.models.Problem;
 import org.springframework.stereotype.Service;
+import ru.vsu.rogachev.services.ProblemService;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ProblemServiceImpl {
+public class ProblemServiceImpl implements ProblemService {
 
     public String getProblemUrl(Problem problem){
         return "https://codeforces.com/problemset/problem/" + problem.getContestId() + "/" + problem.getIndex();

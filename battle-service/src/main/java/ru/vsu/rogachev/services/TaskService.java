@@ -1,6 +1,7 @@
 package ru.vsu.rogachev.services;
 
 import ru.vsu.rogachev.entities.GameSession;
+import ru.vsu.rogachev.entities.Player;
 import ru.vsu.rogachev.entities.Task;
 
 public interface TaskService {
@@ -9,7 +10,7 @@ public interface TaskService {
 
     void add(Long gameId, String solverHandle, String taskUrl, Long time);
 
-    void add(GameSession game, String solverHandle, String taskUrl, Long time);
+    void add(GameSession game, Player solver, String taskUrl, Long time);
 
     Task get(Long id);
 

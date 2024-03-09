@@ -12,7 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "task")
+@Table(name = "tasks")
 public class Task {
 
     @Id
@@ -25,8 +25,10 @@ public class Task {
     @NotNull
     private GameSession game;
 
+    @ManyToOne
+    @JoinColumn(name = "solver_handle", referencedColumnName = "handle")
     @Column(name = "solver_handle")
-    private String solverHandle;
+    private Player solver;
 
     @Column(name = "task_url")
     @NotNull
@@ -35,9 +37,9 @@ public class Task {
     @Column(name = "time")
     private Long time;
 
-    public Task(GameSession game, String solverHandle, String taskUrl, Long time) {
+    public Task(GameSession game, Player solver, String taskUrl, Long time) {
         this.game = game;
-        this.solverHandle = solverHandle;
+        this.solver = solver;
         this.taskUrl = taskUrl;
         this.time = time;
     }

@@ -14,33 +14,19 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "games")
-public class GameSession {
+@Table(name = "waiting_games")
+public class WaitingGame {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "game_id")
+    @Column(name = "waiting_game_id")
     private Long id;
-
-    @CreationTimestamp
-    @Column(name = "start_time")
-    private Date startTime;
-
-    @Column(name = "time")
-    private Long time;
 
     @Column(name = "players_count")
     private Long playersCount;
 
     @OneToMany
-    @JoinColumn(name = "game_id")
+    @JoinColumn(name = "waiting_game_id")
     private List<Player> players;
 
-    @OneToMany
-    @JoinColumn(name = "game_id")
-    private List<Task> tasks;
-
-    public GameSession(Long time) {
-        this.time = time;
-    }
 }

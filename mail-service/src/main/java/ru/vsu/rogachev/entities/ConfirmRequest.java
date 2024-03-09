@@ -14,7 +14,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "confirm")
+@Table(name = "confirms")
 public class ConfirmRequest {
 
     @Id
