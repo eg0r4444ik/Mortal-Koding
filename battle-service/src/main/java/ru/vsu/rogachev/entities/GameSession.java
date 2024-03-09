@@ -1,48 +1,48 @@
 package ru.vsu.rogachev.entities;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import ru.vsu.rogachev.models.User;
 
-import java.util.ArrayList;
+import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
-@Builder
 @Getter
 @Setter
+@EqualsAndHashCode
+@Builder
+@NoArgsConstructor
 @AllArgsConstructor
-public class GameSession extends Thread{
+@Entity
+@Table(name = "game")
+public class GameSession {
 
-    public enum TaskCondition{
-        DRAW,
-        PLAYER1,
-        PLAYER2
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "game_id")
+    private Long id;
+
+    @CreationTimestamp
+    @Column(name = "start_time")
+    private Date startTime;
+
+    @Column(name = "time")
+    private Long time;
+
+    @Column(name = "players_count")
+    private Long playersCount;
+
+    @OneToMany
+    @JoinColumn(name = "game_id")
+    private List<User> players;
+
+    @OneToMany
+    @JoinColumn(name = "game_id")
+    private List<Task> tasks;
+
+    public GameSession(Long time, Long playersCount) {
+        this.time = time;
+        this.playersCount = playersCount;
     }
-
-    private User user1, user2;
-    List<Problem> problems;
-    List<TaskCondition> conditions;
-    long timeStart;
-
-    public GameSession(User user1, User user2, List<Problem> problems) {
-        this.user1 = user1;
-        this.user2 = user2;
-        this.problems = problems;
-
-        conditions = new ArrayList<>();
-        for(Problem problem : problems){
-            conditions.add(TaskCondition.DRAW);
-        }
-
-        this.timeStart = System.currentTimeMillis();
-    }
-
-    @SneakyThrows
-    public void run(){
-        long currTime = System.currentTimeMillis();
-        while(currTime - timeStart < 60000){
-            Thread.sleep(1000);
-            System.out.println(user1.getHandle());
-            currTime = System.currentTimeMillis();
-        }
-    }
-
 }

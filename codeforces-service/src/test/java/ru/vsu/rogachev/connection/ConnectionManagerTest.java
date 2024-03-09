@@ -27,10 +27,10 @@ public class ConnectionManagerTest {
         assertThat(user1.getEmail()).isEqualTo("egorchik.rog@yandex.ru");
         assertThat(user1.getHandle()).isEqualTo("egor4444ik");
 
-        User user2 = connectionManager.getUser("iamdimonis");
+        User user2 = connectionManager.getUser("Just4Fun_");
         assertThat(user2).isNotNull();
         assertThat(user2.getEmail()).isNull();
-        assertThat(user2.getHandle()).isEqualTo("iamdimonis");
+        assertThat(user2.getHandle()).isEqualTo("Just4Fun_");
     }
 
     @Test

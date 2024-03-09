@@ -1,4 +1,4 @@
-package ru.vsu.rogachev.entities;
+package ru.vsu.rogachev.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;

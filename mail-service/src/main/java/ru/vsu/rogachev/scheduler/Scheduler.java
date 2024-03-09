@@ -5,8 +5,8 @@ import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import ru.vsu.rogachev.db.DbService;
-import ru.vsu.rogachev.db.dto.ConfirmDTO;
+import ru.vsu.rogachev.entities.ConfirmRequest;
+import ru.vsu.rogachev.services.ConfirmService;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,16 +17,16 @@ import java.util.List;
 public class Scheduler {
 
     @Autowired
-    private DbService dbService;
+    private ConfirmService confirmService;
 
     private final Long timeForConfirm = 300000L;
 
     @Scheduled(fixedRate = 5000)
     public void removeGarbage() throws JsonProcessingException {
 
-        List<ConfirmDTO> confirms = dbService.getAll();
-        List<ConfirmDTO> toDelete = new ArrayList<>();
-        for(ConfirmDTO confirm : confirms){
+        List<ConfirmRequest> confirms = confirmService.getAll();
+        List<ConfirmRequest> toDelete = new ArrayList<>();
+        for(ConfirmRequest confirm : confirms){
             Date currentDate = new Date();
             Long ms = currentDate.getTime() - confirm.getCreationDate().getTime();
             if(ms >= timeForConfirm){
@@ -34,10 +34,10 @@ public class Scheduler {
             }
         }
 
-        for(ConfirmDTO confirm : toDelete){
-            dbService.deleteConfirmRequest(confirm.getUser());
+        for(ConfirmRequest confirm : toDelete){
+            confirmService.deleteById(confirm.getId());
             log.trace("delete confirm: " + confirm.getId() + " " + confirm.getConfirmationCode() + " " +
-                    confirm.getUser().getEmail());
+                    confirm.getEmail());
         }
 
     }

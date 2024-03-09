@@ -1,7 +1,6 @@
 package ru.vsu.rogachev;
 
-import ru.vsu.rogachev.entities.GameSession;
-import ru.vsu.rogachev.entities.Problem;
+import ru.vsu.rogachev.models.Problem;
 import ru.vsu.rogachev.generator.TaskGenerator;
 import ru.vsu.rogachev.services.ProblemService;
 import ru.vsu.rogachev.services.UserService;

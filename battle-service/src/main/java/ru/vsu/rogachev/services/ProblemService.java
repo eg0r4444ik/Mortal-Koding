@@ -1,7 +1,6 @@
 package ru.vsu.rogachev.services;
 
-import ru.vsu.rogachev.connection.ConnectionManager;
-import ru.vsu.rogachev.entities.Problem;
+import ru.vsu.rogachev.models.Problem;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -9,8 +8,6 @@ import java.util.List;
 
 @Service
 public class ProblemService {
-
-    private ConnectionManager connectionManager = new ConnectionManager();
 
     public String getProblemUrl(Problem problem){
         return "https://codeforces.com/problemset/problem/" + problem.getContestId() + "/" + problem.getIndex();

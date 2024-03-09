@@ -6,9 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import ru.vsu.rogachev.db.DbService;
-import ru.vsu.rogachev.db.dto.UserDTO;
 import ru.vsu.rogachev.generator.CodeGenerator;
+import ru.vsu.rogachev.services.ConfirmService;
 import ru.vsu.rogachev.services.MailSenderService;
 
 @Service
@@ -24,12 +23,12 @@ public class MailServiceSenderImpl implements MailSenderService {
     private CodeGenerator generator;
 
     @Autowired
-    private DbService dbService;
+    private ConfirmService confirmService;
 
     @Override
-    public void send(UserDTO user) {
-        if(dbService.exist(user)){
-            dbService.deleteConfirmRequest(user);
+    public void send(String email) {
+        if(confirmService.existsByEmail(email)){
+            confirmService.deleteByEmail(email);
         }
 
         var subject = "Активация учетной записи";
@@ -38,11 +37,11 @@ public class MailServiceSenderImpl implements MailSenderService {
 
         var mailMessage = new SimpleMailMessage();
         mailMessage.setFrom(emailFrom);
-        mailMessage.setTo(user.getEmail());
+        mailMessage.setTo(email);
         mailMessage.setSubject(subject);
         mailMessage.setText(messageBody);
 
-        dbService.addConfirmRequest(user, activationCode);
+        confirmService.add(email, activationCode);
         javaMailSender.send(mailMessage);
     }
 

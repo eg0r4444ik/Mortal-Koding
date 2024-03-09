@@ -1,7 +1,7 @@
 package ru.vsu.rogachev.generator;
 
-import ru.vsu.rogachev.entities.Problem;
-import ru.vsu.rogachev.entities.User;
+import ru.vsu.rogachev.models.Problem;
+import ru.vsu.rogachev.models.User;
 import ru.vsu.rogachev.services.ProblemService;
 import ru.vsu.rogachev.services.UserService;
 

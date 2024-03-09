@@ -1,9 +1,8 @@
 package ru.vsu.rogachev.services;
 
-import ru.vsu.rogachev.connection.ConnectionManager;
-import ru.vsu.rogachev.entities.Problem;
-import ru.vsu.rogachev.entities.Submission;
-import ru.vsu.rogachev.entities.User;
+import ru.vsu.rogachev.models.Problem;
+import ru.vsu.rogachev.models.Submission;
+import ru.vsu.rogachev.models.User;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -15,7 +14,6 @@ public class UserService {
 
     private SubmissionService submissionService = new SubmissionService();
     private ProblemService problemService = new ProblemService();
-    private ConnectionManager connectionManager = new ConnectionManager();
 
     public Set<Problem> getUserProblems(String handle) throws InterruptedException {
         Set<Problem> res = new HashSet<>();
