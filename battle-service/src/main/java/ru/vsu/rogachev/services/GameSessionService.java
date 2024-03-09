@@ -6,7 +6,7 @@ public interface GameSessionService {
 
     void add(GameSession gameSession);
 
-    void add(Long time, Long playersCount);
+    void add(Long time);
 
     GameSession getById(Long id);
 

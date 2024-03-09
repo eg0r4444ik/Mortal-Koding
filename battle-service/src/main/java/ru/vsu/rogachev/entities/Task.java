@@ -26,9 +26,8 @@ public class Task {
     @NotNull
     private GameSession game;
 
-    @ManyToOne
-    @JoinColumn(name = "solver_id", referencedColumnName = "user_id")
-    private User solver;
+    @Column(name = "solver_handle")
+    private String solverHandle;
 
     @Column(name = "task_url")
     @NotNull
@@ -37,9 +36,9 @@ public class Task {
     @Column(name = "time")
     private Long time;
 
-    public Task(GameSession game, User solver, String taskUrl, Long time) {
+    public Task(GameSession game, String solverHandle, String taskUrl, Long time) {
         this.game = game;
-        this.solver = solver;
+        this.solverHandle = solverHandle;
         this.taskUrl = taskUrl;
         this.time = time;
     }

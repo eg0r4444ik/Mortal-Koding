@@ -30,19 +30,17 @@ public class GameSession {
     @Column(name = "time")
     private Long time;
 
-    @Column(name = "players_count")
-    private Long playersCount;
+    @Column(name = "first_user_handle")
+    private String firstUserHandle;
 
-    @OneToMany
-    @JoinColumn(name = "game_id")
-    private List<User> players;
+    @Column(name = "second_user_handle")
+    private String secondUserHandle;
 
     @OneToMany
     @JoinColumn(name = "game_id")
     private List<Task> tasks;
 
-    public GameSession(Long time, Long playersCount) {
+    public GameSession(Long time) {
         this.time = time;
-        this.playersCount = playersCount;
     }
 }

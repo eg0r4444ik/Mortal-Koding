@@ -12,15 +12,13 @@ public class GameSessionServiceImpl implements GameSessionService {
 
     @Autowired
     private GameSessionRepository gameSessionRepository;
-    @Autowired
-    private UserService userService;
 
     public void add(GameSession gameSession){
         gameSessionRepository.save(gameSession);
     }
 
-    public void add(Long time, Long playersCount) {
-        GameSession gameSession = new GameSession(time, playersCount);
+    public void add(Long time) {
+        GameSession gameSession = new GameSession(time);
         gameSessionRepository.save(gameSession);
     }
 
