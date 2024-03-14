@@ -52,7 +52,8 @@ public class MainControllerTest {
 
         mvc.perform(get("/getPlayerSubmissions/egor4444ik"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(2));
+                .andExpect(jsonPath("$.length()").value(2))
+                .andReturn().getResponse().getContentAsString();
 //                .andExpect(jsonPath("$.get(0).getCreationTimeSeconds()").value(2000))
 //                .andExpect(jsonPath("$.get(0).getProblem().getcontestId()").value(1))
 //                .andExpect(jsonPath("$.get(0).getProblem().getIndex()").value("A"))

@@ -8,7 +8,7 @@ import java.util.Random;
 public class CodeGenerator {
 
     private Random rnd = new Random();
-    private final int CODE_LENGTH = 10;
+    public static final int CODE_LENGTH = 10;
 
     public String generateActivationCode(){
         StringBuilder code = new StringBuilder();

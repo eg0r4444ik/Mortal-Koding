@@ -12,12 +12,9 @@ public class CodeGeneratorTest {
     @Autowired
     private CodeGenerator codeGenerator;
 
-    // Прописано в классе CodeGenerator
-    private final int CODE_LENGTH = 10;
-
     @Test
     void generateActivationCode() throws Exception {
-        assertThat(codeGenerator.generateActivationCode().length()).isEqualTo(CODE_LENGTH);
+        assertThat(CodeGenerator.CODE_LENGTH).isEqualTo(codeGenerator.generateActivationCode().length());
     }
 
 }
