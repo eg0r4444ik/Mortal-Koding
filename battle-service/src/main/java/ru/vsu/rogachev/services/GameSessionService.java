@@ -10,7 +10,7 @@ public interface GameSessionService {
 
     void add(GameSession gameSession);
 
-    void add(Long time);
+    void add(Long time, Long playersCount);
 
     void addPlayer(GameSession game, Player player);
 

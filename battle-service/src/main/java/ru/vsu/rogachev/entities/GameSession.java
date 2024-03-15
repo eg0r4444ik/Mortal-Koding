@@ -2,6 +2,7 @@ package ru.vsu.rogachev.entities;
 
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import ru.vsu.rogachev.entities.enums.PlayerState;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -43,11 +44,13 @@ public class GameSession {
     @JoinColumn(name = "game_id")
     private List<Task> tasks;
 
-    public GameSession(Long time) {
+    public GameSession(Long time, Long playersCount) {
         this.time = time;
+        this.playersCount = playersCount;
     }
 
     public void addPlayer(Player player){
+        player.setState(PlayerState.IN_GAME);
         players.add(player);
     }
 }

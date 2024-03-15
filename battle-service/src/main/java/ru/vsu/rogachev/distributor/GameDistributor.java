@@ -16,16 +16,20 @@ public class GameDistributor {
     @Autowired
     private GameSessionService gameSessionService;
 
-    public void distribute(Player player){
+    public void distribute(Player player, long time, long playersCount){
         List<GameSession> games = gameSessionService.getAll();
 
         for(GameSession game : games){
-            if(!game.isStarted() && game.getPlayersCount() != game.getPlayers().size()
-                    && !haveNotActivePlayers(game)){
+            if(game.getPlayersCount() == playersCount && game.getTime() == time && !game.isStarted() &&
+                    game.getPlayersCount() != game.getPlayers().size() && !haveNotActivePlayers(game)){
                 gameSessionService.addPlayer(game, player);
                 return;
             }
         }
+
+        GameSession game = new GameSession(time, playersCount);
+        game.addPlayer(player);
+        gameSessionService.add(game);
     }
 
     private boolean haveNotActivePlayers(GameSession gameSession){

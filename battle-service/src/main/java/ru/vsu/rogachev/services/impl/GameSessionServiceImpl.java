@@ -22,14 +22,13 @@ public class GameSessionServiceImpl implements GameSessionService {
         gameSessionRepository.save(gameSession);
     }
 
-    public void add(Long time) {
-        GameSession gameSession = new GameSession(time);
+    public void add(Long time, Long playersCount) {
+        GameSession gameSession = new GameSession(time, playersCount);
         gameSessionRepository.save(gameSession);
     }
 
     public void addPlayer(GameSession game, Player player){
         game.addPlayer(player);
-        player.setState(PlayerState.IN_GAME);
         gameSessionRepository.save(game);
     }
 
