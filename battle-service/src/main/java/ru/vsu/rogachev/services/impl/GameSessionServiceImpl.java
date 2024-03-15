@@ -3,9 +3,14 @@ package ru.vsu.rogachev.services.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.vsu.rogachev.Game;
 import ru.vsu.rogachev.entities.GameSession;
+import ru.vsu.rogachev.entities.Player;
+import ru.vsu.rogachev.entities.enums.PlayerState;
 import ru.vsu.rogachev.repositories.GameSessionRepository;
 import ru.vsu.rogachev.services.GameSessionService;
+
+import java.util.List;
 
 @Service
 public class GameSessionServiceImpl implements GameSessionService {
@@ -22,6 +27,15 @@ public class GameSessionServiceImpl implements GameSessionService {
         gameSessionRepository.save(gameSession);
     }
 
+    public void addPlayer(GameSession game, Player player){
+        game.addPlayer(player);
+        player.setState(PlayerState.IN_GAME);
+        gameSessionRepository.save(game);
+    }
+
+    public List<GameSession> getAll() {
+        return gameSessionRepository.findAll();
+    }
     public GameSession getById(Long id){
         return gameSessionRepository.getById(id);
     }

@@ -29,6 +29,9 @@ public class GameSession {
     @Column(name = "time")
     private Long time;
 
+    @Column(name = "started")
+    private boolean isStarted;
+
     @Column(name = "players_count")
     private Long playersCount;
 
@@ -42,5 +45,9 @@ public class GameSession {
 
     public GameSession(Long time) {
         this.time = time;
+    }
+
+    public void addPlayer(Player player){
+        players.add(player);
     }
 }

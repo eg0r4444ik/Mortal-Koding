@@ -8,10 +8,10 @@ import ru.vsu.rogachev.entities.Player;
 import ru.vsu.rogachev.dto.ProblemDTO;
 import ru.vsu.rogachev.dto.SubmissionDTO;
 import org.springframework.stereotype.Service;
+import ru.vsu.rogachev.entities.enums.PlayerState;
 import ru.vsu.rogachev.repositories.PlayerRepository;
 import ru.vsu.rogachev.services.GameSessionService;
 import ru.vsu.rogachev.services.PlayerService;
-import ru.vsu.rogachev.services.WaitingGameService;
 
 import java.util.HashSet;
 import java.util.List;
@@ -25,9 +25,6 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Autowired
     private GameSessionService gameSessionService;
-
-    @Autowired
-    private WaitingGameService waitingGameService;
 
     @Autowired
     private CodeforcesConnection codeforcesConnection;
@@ -65,8 +62,8 @@ public class PlayerServiceImpl implements PlayerService {
         playerRepository.save(player);
     }
 
-    public void add(String handle, String email, long rating) {
-        playerRepository.save(new Player(handle, email, rating));
+    public void add(String handle, String email, long rating, PlayerState state) {
+        playerRepository.save(new Player(handle, email, rating, state));
     }
 
     public void deleteByHandle(String handle) {
@@ -75,11 +72,6 @@ public class PlayerServiceImpl implements PlayerService {
 
     public Player getByHandle(String handle) {
         return getByHandle(handle);
-    }
-
-    public void setWaitingGame(String handle, long id) {
-        Player player = getByHandle(handle);
-        player.setWaitingGame(waitingGameService.getById(id));
     }
 
     public void setGameSession(String handle, long id) {

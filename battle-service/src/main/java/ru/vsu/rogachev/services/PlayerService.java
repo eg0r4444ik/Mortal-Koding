@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import ru.vsu.rogachev.dto.PlayerDTO;
 import ru.vsu.rogachev.entities.Player;
 import ru.vsu.rogachev.dto.ProblemDTO;
+import ru.vsu.rogachev.entities.enums.PlayerState;
 
 import java.util.Set;
 
@@ -17,13 +18,11 @@ public interface PlayerService {
 
     void add(Player player);
 
-    void add(String handle, String email, long rating);
+    void add(String handle, String email, long rating, PlayerState state);
 
     void deleteByHandle(String handle);
 
     Player getByHandle(String handle);
-
-    void setWaitingGame(String handle, long id);
 
     void setGameSession(String handle, long id);
 }

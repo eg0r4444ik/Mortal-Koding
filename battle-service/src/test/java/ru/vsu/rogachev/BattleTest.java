@@ -8,7 +8,6 @@ import ru.vsu.rogachev.generator.TaskGenerator;
 import ru.vsu.rogachev.repositories.GameSessionRepository;
 import ru.vsu.rogachev.repositories.PlayerRepository;
 import ru.vsu.rogachev.repositories.TaskRepository;
-import ru.vsu.rogachev.repositories.WaitingGameRepository;
 import ru.vsu.rogachev.services.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
