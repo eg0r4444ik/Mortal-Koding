@@ -1,6 +1,5 @@
 package ru.vsu.rogachev.services;
 
-import ru.vsu.rogachev.Game;
 import ru.vsu.rogachev.entities.GameSession;
 import ru.vsu.rogachev.entities.Player;
 

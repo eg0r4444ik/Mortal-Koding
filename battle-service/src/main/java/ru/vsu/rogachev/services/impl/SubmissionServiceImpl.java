@@ -15,6 +15,7 @@ public class SubmissionServiceImpl implements SubmissionService {
     @Autowired
     private CodeforcesConnection codeforcesConnection;
 
+    @Override
     public List<SubmissionDTO> getPlayerSubmissions(String handle) throws InterruptedException, JsonProcessingException {
         return codeforcesConnection.getPlayerSubmissions(handle);
     }

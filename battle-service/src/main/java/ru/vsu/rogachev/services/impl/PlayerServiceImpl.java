@@ -12,6 +12,8 @@ import ru.vsu.rogachev.entities.enums.PlayerState;
 import ru.vsu.rogachev.repositories.PlayerRepository;
 import ru.vsu.rogachev.services.GameSessionService;
 import ru.vsu.rogachev.services.PlayerService;
+import ru.vsu.rogachev.services.ProblemService;
+import ru.vsu.rogachev.services.SubmissionService;
 
 import java.util.HashSet;
 import java.util.List;
@@ -29,9 +31,13 @@ public class PlayerServiceImpl implements PlayerService {
     @Autowired
     private CodeforcesConnection codeforcesConnection;
 
-    private SubmissionServiceImpl submissionService = new SubmissionServiceImpl();
-    private ProblemServiceImpl problemService = new ProblemServiceImpl();
+    @Autowired
+    private SubmissionService submissionService;
 
+    @Autowired
+    private ProblemService problemService;
+
+    @Override
     public Set<ProblemDTO> getPlayerProblems(String handle) throws InterruptedException, JsonProcessingException {
         Set<ProblemDTO> res = new HashSet<>();
         List<SubmissionDTO> submissions = submissionService.getPlayerSubmissions(handle);
@@ -44,6 +50,7 @@ public class PlayerServiceImpl implements PlayerService {
         return res;
     }
 
+    @Override
     public Set<String> getPlayerProblemSet(String handle) throws InterruptedException, JsonProcessingException {
         Set<String> res = new HashSet<>();
         Set<ProblemDTO> problems = getPlayerProblems(handle);
@@ -54,28 +61,42 @@ public class PlayerServiceImpl implements PlayerService {
         return res;
     }
 
-    public PlayerDTO getPlayer(String handle) throws InterruptedException, JsonProcessingException {
+    @Override
+    public Player getPlayer(String handle) throws InterruptedException, JsonProcessingException {
         return codeforcesConnection.getPlayer(handle);
     }
 
+    @Override
     public void add(Player player) {
         playerRepository.save(player);
     }
 
+    @Override
     public void add(String handle, String email, long rating, PlayerState state) {
         playerRepository.save(new Player(handle, email, rating, state));
     }
 
+    @Override
     public void deleteByHandle(String handle) {
         playerRepository.deleteByHandle(handle);
     }
 
+    @Override
     public Player getByHandle(String handle) {
-        return getByHandle(handle);
+        return playerRepository.getByHandle(handle);
     }
 
+    @Override
     public void setGameSession(String handle, long id) {
         Player player = getByHandle(handle);
         player.setGame(gameSessionService.getById(id));
+        playerRepository.save(player);
+    }
+
+    @Override
+    public void changePlayerState(String handle, PlayerState state) {
+        Player player = getByHandle(handle);
+        player.setState(PlayerState.IN_GAME);
+        playerRepository.save(player);
     }
 }

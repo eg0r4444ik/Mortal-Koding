@@ -11,6 +11,7 @@ import ru.vsu.rogachev.dto.PlayerDTO;
 import ru.vsu.rogachev.entities.Player;
 import ru.vsu.rogachev.dto.ProblemDTO;
 import ru.vsu.rogachev.dto.SubmissionDTO;
+import ru.vsu.rogachev.entities.enums.PlayerState;
 
 import java.util.List;
 
@@ -29,9 +30,11 @@ public class CodeforcesConnection {
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public PlayerDTO getPlayer(String handle) throws JsonProcessingException {
+    public Player getPlayer(String handle) throws JsonProcessingException {
         String response = restTemplate.getForObject(path + "/getPlayer/" + handle, String.class);
-        return objectMapper.readValue(response, PlayerDTO.class);
+        PlayerDTO playerDTO = objectMapper.readValue(response, PlayerDTO.class);
+        Player player = new Player(playerDTO.getHandle(), playerDTO.getEmail(), playerDTO.getRating(), PlayerState.NOT_CONNECTED);
+        return player;
     }
 
     public List<SubmissionDTO> getPlayerSubmissions(String handle) throws JsonProcessingException {

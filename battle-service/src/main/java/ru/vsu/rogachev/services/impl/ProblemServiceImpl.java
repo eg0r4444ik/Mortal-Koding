@@ -16,14 +16,17 @@ public class ProblemServiceImpl implements ProblemService {
     @Autowired
     private CodeforcesConnection codeforcesConnection;
 
+    @Override
     public String getProblemUrl(ProblemDTO problem){
         return "https://codeforces.com/problemset/problem/" + problem.getContestId() + "/" + problem.getIndex();
     }
 
+    @Override
     public List<ProblemDTO> getProblems() throws InterruptedException, JsonProcessingException {
         return codeforcesConnection.getProblemSet();
     }
 
+    @Override
     public List<String> getProblemSet(List<ProblemDTO> problems){
         List<String> result = new ArrayList<>();
         for(ProblemDTO problem : problems){

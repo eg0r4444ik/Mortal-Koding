@@ -14,7 +14,7 @@ public interface PlayerService {
 
     Set<String> getPlayerProblemSet(String handle) throws InterruptedException, JsonProcessingException;
 
-    PlayerDTO getPlayer(String handle) throws InterruptedException, JsonProcessingException;
+    Player getPlayer(String handle) throws InterruptedException, JsonProcessingException;
 
     void add(Player player);
 
@@ -25,4 +25,6 @@ public interface PlayerService {
     Player getByHandle(String handle);
 
     void setGameSession(String handle, long id);
+
+    void changePlayerState(String handle, PlayerState state);
 }
