@@ -36,6 +36,9 @@ public class GameSession {
     @Column(name = "players_count")
     private Long playersCount;
 
+    @Column(name = "tasks_count")
+    private Long tasksCount;
+
     @OneToMany
     @JoinColumn(name = "game_id")
     private List<Player> players;
@@ -44,13 +47,17 @@ public class GameSession {
     @JoinColumn(name = "game_id")
     private List<Task> tasks;
 
-    public GameSession(Long time, Long playersCount) {
+    public GameSession(Long time, Long playersCount, Long tasksCount) {
         this.time = time;
         this.playersCount = playersCount;
+        this.tasksCount = tasksCount;
     }
 
     public void addPlayer(Player player){
-        player.setState(PlayerState.IN_GAME);
         players.add(player);
+    }
+
+    public void addTasks(List<Task> tasks){
+        this.tasks.addAll(tasks);
     }
 }
