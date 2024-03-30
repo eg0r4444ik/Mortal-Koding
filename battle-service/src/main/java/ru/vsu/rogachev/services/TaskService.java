@@ -8,9 +8,9 @@ public interface TaskService {
 
     void add(Task task);
 
-    void add(Long gameId, String solverHandle, String taskUrl, Long time);
+    void add(Long gameId, String taskUrl);
 
-    void add(GameSession game, Player solver, String taskUrl, Long time);
+    void add(GameSession game, String taskUrl);
 
     Task get(Long id);
 

@@ -27,14 +27,14 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void add(Long gameId, String solverHandle, String taskUrl, Long time){
-        Task task = new Task(gameSessionService.getById(gameId), playerService.getByHandle(solverHandle), taskUrl, time);
+    public void add(Long gameId, String taskUrl){
+        Task task = new Task(gameSessionService.getById(gameId), taskUrl);
         taskRepository.save(task);
     }
 
     @Override
-    public void add(GameSession game, Player solver, String taskUrl, Long time){
-        Task task = new Task(game, solver, taskUrl, time);
+    public void add(GameSession game, String taskUrl){
+        Task task = new Task(game, taskUrl);
         taskRepository.save(task);
     }
 

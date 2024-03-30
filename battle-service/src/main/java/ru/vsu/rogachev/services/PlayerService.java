@@ -2,6 +2,7 @@ package ru.vsu.rogachev.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import ru.vsu.rogachev.dto.PlayerDTO;
+import ru.vsu.rogachev.entities.GameSession;
 import ru.vsu.rogachev.entities.Player;
 import ru.vsu.rogachev.dto.ProblemDTO;
 import ru.vsu.rogachev.entities.enums.PlayerState;
@@ -24,7 +25,12 @@ public interface PlayerService {
 
     Player getByHandle(String handle);
 
-    void setGameSession(String handle, long id);
+    void setGameToActivePlayer(String handle, long id);
 
-    void changePlayerState(String handle, PlayerState state);
+    void setGameToActivePlayer(Player player, GameSession game);
+
+    void setGameToNotActivePlayer(String handle, long id);
+
+    void setGameToNotActivePlayer(Player player, GameSession game);
+
 }

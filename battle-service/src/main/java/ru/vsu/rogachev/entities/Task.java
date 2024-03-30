@@ -36,10 +36,8 @@ public class Task {
     @Column(name = "time")
     private Long time;
 
-    public Task(GameSession game, Player solver, String taskUrl, Long time) {
+    public Task(GameSession game, String taskUrl) {
         this.game = game;
-        this.solver = solver;
         this.taskUrl = taskUrl;
-        this.time = time;
     }
 }

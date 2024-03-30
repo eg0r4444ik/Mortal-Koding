@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.vsu.rogachev.codeforces.CodeforcesConnection;
 import ru.vsu.rogachev.dto.PlayerDTO;
+import ru.vsu.rogachev.entities.GameSession;
 import ru.vsu.rogachev.entities.Player;
 import ru.vsu.rogachev.dto.ProblemDTO;
 import ru.vsu.rogachev.dto.SubmissionDTO;
@@ -87,16 +88,33 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public void setGameSession(String handle, long id) {
+    public void setGameToActivePlayer(String handle, long id) {
         Player player = getByHandle(handle);
         player.setGame(gameSessionService.getById(id));
+        player.setState(PlayerState.IN_GAME);
         playerRepository.save(player);
     }
 
     @Override
-    public void changePlayerState(String handle, PlayerState state) {
-        Player player = getByHandle(handle);
+    public void setGameToActivePlayer(Player player, GameSession game) {
+        player.setGame(game);
         player.setState(PlayerState.IN_GAME);
         playerRepository.save(player);
     }
+
+    @Override
+    public void setGameToNotActivePlayer(String handle, long id) {
+        Player player = getByHandle(handle);
+        player.setGame(gameSessionService.getById(id));
+        player.setState(PlayerState.NOT_CONNECTED);
+        playerRepository.save(player);
+    }
+
+    @Override
+    public void setGameToNotActivePlayer(Player player, GameSession game) {
+        player.setGame(game);
+        player.setState(PlayerState.NOT_CONNECTED);
+        playerRepository.save(player);
+    }
+
 }

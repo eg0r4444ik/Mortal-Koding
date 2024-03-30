@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.rogachev.entities.GameSession;
 import ru.vsu.rogachev.entities.Player;
+import ru.vsu.rogachev.entities.Task;
 import ru.vsu.rogachev.repositories.GameSessionRepository;
 import ru.vsu.rogachev.services.GameSessionService;
 import ru.vsu.rogachev.services.PlayerService;
@@ -26,15 +27,28 @@ public class GameSessionServiceImpl implements GameSessionService {
     }
 
     @Override
-    public void add(Long time, Long playersCount) {
-        GameSession gameSession = new GameSession(time, playersCount);
+    public void add(Long time, Long playersCount, Long tasksCount) {
+        GameSession gameSession = new GameSession(time, playersCount, tasksCount);
         gameSessionRepository.save(gameSession);
     }
 
     @Override
-    public void addPlayer(GameSession game, Player player){
+    public void addActivePlayer(GameSession game, Player player){
         game.addPlayer(player);
-        playerService.setGameSession(player.getHandle(), game.getId());
+        playerService.setGameToActivePlayer(player, game);
+        gameSessionRepository.save(game);
+    }
+
+    @Override
+    public void addNotActivePlayer(GameSession game, Player player) {
+        game.addPlayer(player);
+        playerService.setGameToNotActivePlayer(player, game);
+        gameSessionRepository.save(game);
+    }
+
+    @Override
+    public void addTasks(GameSession game, List<Task> tasks) {
+        game.addTasks(tasks);
         gameSessionRepository.save(game);
     }
 
