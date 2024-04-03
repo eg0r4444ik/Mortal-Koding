@@ -2,6 +2,9 @@ package ru.vsu.rogachev.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
 
 @Builder
 @Getter
@@ -9,9 +12,10 @@ import lombok.*;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PlayerDTO {
+public class GameDTO {
 
-    private long rating;
-    private String handle, email;
+    private String handle;
+    private long playersCount, time, tasksCount;
+    private List<String> handles;
 
 }

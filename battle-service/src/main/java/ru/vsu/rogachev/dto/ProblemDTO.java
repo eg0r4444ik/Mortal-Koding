@@ -1,10 +1,7 @@
 package ru.vsu.rogachev.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -12,6 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
+@RequiredArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProblemDTO implements Comparable<ProblemDTO>{
 

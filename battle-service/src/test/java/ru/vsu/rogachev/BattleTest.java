@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.vsu.rogachev.codeforces.CodeforcesConnection;
+import ru.vsu.rogachev.connectingPlayers.GameDistributor;
 import ru.vsu.rogachev.generator.TaskGenerator;
 import ru.vsu.rogachev.repositories.GameSessionRepository;
 import ru.vsu.rogachev.repositories.PlayerRepository;
@@ -25,9 +26,6 @@ public class BattleTest {
     private TaskRepository taskRepository;
 
     @Autowired
-    private WaitingGameRepository waitingGameRepository;
-
-    @Autowired
     private GameSessionService gameSessionService;
 
     @Autowired
@@ -43,31 +41,29 @@ public class BattleTest {
     private TaskService taskService;
 
     @Autowired
-    private WaitingGameService waitingGameService;
-
-    @Autowired
     private TaskGenerator taskGenerator;
 
     @Autowired
     private CodeforcesConnection codeforcesConnection;
 
+    @Autowired
+    private GameDistributor gameDistributor;
 
     @Test
     void contextLoads() throws Exception {
         assertThat(gameSessionRepository).isNotNull();
         assertThat(playerRepository).isNotNull();
         assertThat(taskRepository).isNotNull();
-        assertThat(waitingGameRepository).isNotNull();
 
         assertThat(gameSessionService).isNotNull();
         assertThat(playerService).isNotNull();
         assertThat(problemService).isNotNull();
         assertThat(submissionService).isNotNull();
         assertThat(taskService).isNotNull();
-        assertThat(waitingGameService).isNotNull();
 
         assertThat(taskGenerator).isNotNull();
         assertThat(codeforcesConnection).isNotNull();
+        assertThat(gameDistributor).isNotNull();
     }
 
 }

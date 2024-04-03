@@ -25,6 +25,11 @@ public class UpdateController {
             return;
         }
 
+        if(update.getCallbackQuery() != null){
+            log.debug(update.getCallbackQuery().getData());
+            return;
+        }
+
         if(update.getMessage() != null){
             distributeMessagesByType(update);
         }else{
@@ -34,23 +39,9 @@ public class UpdateController {
 
     private void distributeMessagesByType(Update update) {
         var message = update.getMessage();
-
-    }
-
-    private void setUnsupportedMessageTypeView(Update update) {
-        var sendMessage = messageUtils.generateSendMessageWithText(update,
-                "Неподдерживаемый тип сообщения!");
-        setView(sendMessage);
-    }
-
-    private void setFileReceivedView(Update update) {
-        var sendMessage = messageUtils.generateSendMessageWithText(update,
-                "Файл получен, обрабатывается...");
-        setView(sendMessage);
-    }
-
-    private void setView(SendMessage sendMessage) {
-        telegramBot.sendAnswerMessage(sendMessage);
+        String s = message.getFrom().getFirstName() + " " + message.getFrom().getLastName()
+                + " " + message.getFrom().getUserName();
+        telegramBot.sendAnswerMessage(messageUtils.generateSendMessageWithText(update, s));
     }
 
 }
