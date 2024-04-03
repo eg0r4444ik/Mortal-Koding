@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.vsu.rogachev.codeforces.CodeforcesConnection;
-import ru.vsu.rogachev.connectingPlayers.GameDistributor;
+import ru.vsu.rogachev.distributor.GameDistributor;
 import ru.vsu.rogachev.generator.TaskGenerator;
 import ru.vsu.rogachev.repositories.GameSessionRepository;
 import ru.vsu.rogachev.repositories.PlayerRepository;

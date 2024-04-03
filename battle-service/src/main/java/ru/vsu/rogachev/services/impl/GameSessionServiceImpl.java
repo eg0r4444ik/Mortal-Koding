@@ -10,6 +10,7 @@ import ru.vsu.rogachev.repositories.GameSessionRepository;
 import ru.vsu.rogachev.services.GameSessionService;
 import ru.vsu.rogachev.services.PlayerService;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -60,6 +61,14 @@ public class GameSessionServiceImpl implements GameSessionService {
     @Override
     public GameSession getById(Long id){
         return gameSessionRepository.getById(id);
+    }
+
+    @Override
+    public void startGame(Long id) {
+        GameSession game = gameSessionRepository.getById(id);
+        game.setStarted(true);
+        game.setStartTime(new Date());
+        gameSessionRepository.save(game);
     }
 
     @Transactional

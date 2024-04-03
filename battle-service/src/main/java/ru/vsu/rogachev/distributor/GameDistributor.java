@@ -1,11 +1,8 @@
-package ru.vsu.rogachev.connectingPlayers;
+package ru.vsu.rogachev.distributor;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.vsu.rogachev.codeforces.CodeforcesConnection;
-import ru.vsu.rogachev.dto.PlayerDTO;
-import ru.vsu.rogachev.dto.ProblemDTO;
 import ru.vsu.rogachev.entities.GameSession;
 import ru.vsu.rogachev.entities.Player;
 import ru.vsu.rogachev.entities.Task;
@@ -34,6 +31,15 @@ public class GameDistributor {
     @Autowired
     private TaskGenerator taskGenerator;
 
+    public void connectPlayerToGame(String handle, Long gameId) throws JsonProcessingException, InterruptedException {
+        Player player = playerService.getPlayer(handle);
+        playerService.add(player);
+
+        GameSession game = gameSessionService.getById(gameId);
+        gameSessionService.addActivePlayer(game, player);
+        startGame(game);
+    }
+
     public void connectPlayerToGame(String handle, long playersCount, long time, long tasksCount) throws JsonProcessingException, InterruptedException {
         Player player = playerService.getPlayer(handle);
         playerService.add(player);
@@ -44,6 +50,7 @@ public class GameDistributor {
             if(game.getPlayersCount() == playersCount && game.getTime() == time && !game.isStarted() &&
                     game.getPlayersCount() != game.getPlayers().size() && !haveNotActivePlayers(game)){
                 gameSessionService.addActivePlayer(game, player);
+                startGame(game);
                 return;
             }
         }
@@ -51,6 +58,7 @@ public class GameDistributor {
         GameSession game = new GameSession(time, playersCount, tasksCount);
         gameSessionService.add(game);
         gameSessionService.addActivePlayer(game, player);
+        startGame(game);
     }
 
     public void createGameWithPlayers(String handle, long playersCount, long time, long tasksCount, List<String> handles) throws InterruptedException, JsonProcessingException {
@@ -73,28 +81,35 @@ public class GameDistributor {
         }
     }
 
-    public void startGame(Long gameId) throws InterruptedException, JsonProcessingException {
-        GameSession game= gameSessionService.getById(gameId);
-        game.setStarted(true);
-        game.setStartTime(new Date());
+    public void startGame(GameSession game) throws InterruptedException, JsonProcessingException {
+        if(readyToStart(game)) {
+            gameSessionService.startGame(game.getId());
 
-        List<String> problems = taskGenerator.getContestProblems(game.getPlayers(), game.getTasksCount());
-        List<Task> tasks = new ArrayList<>();
-        for(String url : problems){
-            Task task = new Task(game, url);
-            taskService.add(task);
+            List<String> problems = taskGenerator.getContestProblems(game.getPlayers(), game.getTasksCount());
+            List<Task> tasks = new ArrayList<>();
+            for (String url : problems) {
+                Task task = new Task(game, url);
+                taskService.add(task);
+            }
+
+            gameSessionService.addTasks(game, tasks);
         }
-
-        gameSessionService.addTasks(game, tasks);
     }
 
-    private boolean haveNotActivePlayers(GameSession gameSession){
-        for(Player player : gameSession.getPlayers()){
+    private boolean haveNotActivePlayers(GameSession game){
+        for(Player player : game.getPlayers()){
             if(player.getState() == PlayerState.NOT_CONNECTED){
                 return true;
             }
         }
 
+        return false;
+    }
+
+    private boolean readyToStart(GameSession game){
+        if(!game.isStarted() && game.getPlayers().size() == game.getPlayersCount() && !haveNotActivePlayers(game)){
+            return true;
+        }
         return false;
     }
 
