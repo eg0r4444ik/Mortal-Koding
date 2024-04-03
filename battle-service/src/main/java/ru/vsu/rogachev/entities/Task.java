@@ -4,6 +4,7 @@ import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -34,7 +35,7 @@ public class Task {
     private String taskUrl;
 
     @Column(name = "time")
-    private Long time;
+    private Date time;
 
     public Task(GameSession game, String taskUrl) {
         this.game = game;

@@ -11,6 +11,8 @@ import ru.vsu.rogachev.services.GameSessionService;
 import ru.vsu.rogachev.services.PlayerService;
 import ru.vsu.rogachev.services.TaskService;
 
+import java.util.Date;
+
 @Service
 public class TaskServiceImpl implements TaskService {
 
@@ -41,6 +43,13 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task get(Long id){
         return taskRepository.getById(id);
+    }
+
+    @Override
+    public void setSolver(Task task, Player player) {
+        task.setSolver(player);
+        task.setTime(new Date());
+        taskRepository.save(task);
     }
 
     @Transactional

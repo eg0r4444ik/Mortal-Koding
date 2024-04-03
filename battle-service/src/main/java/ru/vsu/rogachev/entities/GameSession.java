@@ -5,6 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import ru.vsu.rogachev.entities.enums.PlayerState;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -51,6 +52,8 @@ public class GameSession {
         this.time = time;
         this.playersCount = playersCount;
         this.tasksCount = tasksCount;
+        players = new ArrayList<>();
+        tasks = new ArrayList<>();
     }
 
     public void addPlayer(Player player){

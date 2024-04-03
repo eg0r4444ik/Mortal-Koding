@@ -14,6 +14,8 @@ public interface TaskService {
 
     Task get(Long id);
 
+    void setSolver(Task task, Player player);
+
     void delete(Long id);
 
 }
