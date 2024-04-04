@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.vsu.rogachev.entities.GameSession;
 import ru.vsu.rogachev.entities.Player;
 import ru.vsu.rogachev.entities.Task;
+import ru.vsu.rogachev.entities.enums.GameState;
 import ru.vsu.rogachev.entities.enums.PlayerState;
 import ru.vsu.rogachev.generator.TaskGenerator;
 import ru.vsu.rogachev.services.GameSessionService;
@@ -47,7 +48,7 @@ public class GameDistributor {
         List<GameSession> games = gameSessionService.getAll();
 
         for(GameSession game : games){
-            if(game.getPlayersCount() == playersCount && game.getTime() == time && !game.isStarted() &&
+            if(game.getPlayersCount() == playersCount && game.getTime() == time && game.getState() == GameState.NOT_STARTED &&
                     game.getPlayersCount() != game.getPlayers().size() && !haveNotActivePlayers(game)){
                 gameSessionService.addActivePlayer(game, player);
                 startGame(game);
@@ -107,7 +108,7 @@ public class GameDistributor {
     }
 
     private boolean readyToStart(GameSession game){
-        if(!game.isStarted() && game.getPlayers().size() == game.getPlayersCount() && !haveNotActivePlayers(game)){
+        if(game.getState() == GameState.NOT_STARTED && game.getPlayers().size() == game.getPlayersCount() && !haveNotActivePlayers(game)){
             return true;
         }
         return false;

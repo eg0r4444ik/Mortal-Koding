@@ -2,6 +2,7 @@ package ru.vsu.rogachev.entities;
 
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import ru.vsu.rogachev.entities.enums.GameState;
 import ru.vsu.rogachev.entities.enums.PlayerState;
 
 import javax.persistence.*;
@@ -31,8 +32,8 @@ public class GameSession {
     @Column(name = "time")
     private Long time;
 
-    @Column(name = "started")
-    private boolean isStarted;
+    @Column(name = "state")
+    private GameState state;
 
     @Column(name = "players_count")
     private Long playersCount;
@@ -52,6 +53,7 @@ public class GameSession {
         this.time = time;
         this.playersCount = playersCount;
         this.tasksCount = tasksCount;
+        state = GameState.NOT_STARTED;
         players = new ArrayList<>();
         tasks = new ArrayList<>();
     }

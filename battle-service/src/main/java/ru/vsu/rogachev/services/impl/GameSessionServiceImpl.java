@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.rogachev.entities.GameSession;
 import ru.vsu.rogachev.entities.Player;
 import ru.vsu.rogachev.entities.Task;
+import ru.vsu.rogachev.entities.enums.GameState;
 import ru.vsu.rogachev.repositories.GameSessionRepository;
 import ru.vsu.rogachev.services.GameSessionService;
 import ru.vsu.rogachev.services.PlayerService;
@@ -66,8 +67,15 @@ public class GameSessionServiceImpl implements GameSessionService {
     @Override
     public void startGame(Long id) {
         GameSession game = gameSessionRepository.getById(id);
-        game.setStarted(true);
+        game.setState(GameState.IN_PROGRESS);
         game.setStartTime(new Date());
+        gameSessionRepository.save(game);
+    }
+
+    @Override
+    public void stopGame(Long id) {
+        GameSession game = gameSessionRepository.getById(id);
+        game.setState(GameState.FINISHED);
         gameSessionRepository.save(game);
     }
 

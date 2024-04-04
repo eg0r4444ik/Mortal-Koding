@@ -24,6 +24,8 @@ public interface GameSessionService {
 
     void startGame(Long id);
 
+    void stopGame(Long id);
+
     void deleteById(Long id);
 
 }

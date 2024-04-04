@@ -10,6 +10,7 @@ import ru.vsu.rogachev.dto.SubmissionDTO;
 import ru.vsu.rogachev.entities.GameSession;
 import ru.vsu.rogachev.entities.Player;
 import ru.vsu.rogachev.entities.Task;
+import ru.vsu.rogachev.entities.enums.GameState;
 import ru.vsu.rogachev.services.GameSessionService;
 import ru.vsu.rogachev.services.ProblemService;
 import ru.vsu.rogachev.services.SubmissionService;
@@ -40,9 +41,9 @@ public class Scheduler {
         List<GameSession> games = gameSessionService.getAll();
 
         for(GameSession game : games){
-            if(game.isStarted()){
+            if(game.getState() == GameState.IN_PROGRESS){
                 if(new Date().getTime() - game.getStartTime().getTime() >= game.getTime()){
-                    //todo stop game
+                    gameSessionService.stopGame(game.getId());
                 }else {
                     for (Player player : game.getPlayers()) {
                         updatePlayerSubmissions(player, game);
