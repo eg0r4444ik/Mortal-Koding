@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.vsu.rogachev.connection.ConnectionManager;
 import ru.vsu.rogachev.dto.Problem;
 import ru.vsu.rogachev.dto.Submission;
-import ru.vsu.rogachev.dto.Player;
+import ru.vsu.rogachev.dto.User;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class MainController {
 
     @GetMapping("/getPlayer/{handle}")
     public String getPlayer(@PathVariable(value = "handle") String handle) throws JsonProcessingException {
-        Player player = connectionManager.getPlayer(handle);
+        User player = connectionManager.getPlayer(handle);
         String response = objectMapper.writeValueAsString(player);
         return response;
     }

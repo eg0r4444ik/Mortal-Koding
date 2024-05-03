@@ -5,8 +5,7 @@ import ru.vsu.rogachev.entities.enums.UserState;
 import ru.vsu.rogachev.exceptions.DbDontContainObjectException;
 
 public interface UserService {
-    void addUser(Long telegramUserId, String firstName, String lastName, String username,
-                        String email, Long rating, String codeforcesUsername);
+    void addUser(Long telegramUserId, String firstName, String lastName, String username);
 
     void addUser(User user);
 
@@ -15,6 +14,18 @@ public interface UserService {
     User getUserByTelegramId(Long id) throws DbDontContainObjectException;
 
     User getUserByCodeforcesUsername(String username) throws DbDontContainObjectException;
+
+    void setEmail(User user, String email);
+
+    void setCodeforcesUsername(User user, String codeforcesUsername);
+
+    void setState(User user, UserState state);
+
+    boolean existsById(Long id);
+
+    boolean existsByTelegramId(Long id);
+
+    boolean existsByCodeforcesUsername(String username);
 
     void changeUserState(Long id, UserState state);
 

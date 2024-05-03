@@ -6,7 +6,7 @@ import org.springframework.web.client.RestTemplate;
 import ru.vsu.rogachev.converter.ObjectConverter;
 import ru.vsu.rogachev.dto.Problem;
 import ru.vsu.rogachev.dto.Submission;
-import ru.vsu.rogachev.dto.Player;
+import ru.vsu.rogachev.dto.User;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public class ConnectionManager {
     @Autowired
     private ObjectConverter objectConverter;
 
-    public Player getPlayer(String handle){
+    public User getPlayer(String handle){
         String response = restTemplate.getForObject("https://codeforces.com/api/user.info?handles=" + handle, String.class);
         return objectConverter.getPlayer(response);
     }

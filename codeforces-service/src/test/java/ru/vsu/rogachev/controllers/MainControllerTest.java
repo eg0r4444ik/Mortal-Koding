@@ -9,7 +9,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.vsu.rogachev.connection.ConnectionManager;
 import ru.vsu.rogachev.dto.Problem;
 import ru.vsu.rogachev.dto.Submission;
-import ru.vsu.rogachev.dto.Player;
+import ru.vsu.rogachev.dto.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,12 +74,12 @@ public class MainControllerTest {
                 .andExpect(jsonPath("$.length()").value(2));
     }
 
-    private Player getPlayerWithEmail(){
-        return new Player(1600, "egor4444ik", "egorchik.rog@yandex.ru");
+    private User getPlayerWithEmail(){
+        return new User(1600, "egor4444ik", "egorchik.rog@yandex.ru");
     }
 
-    private Player getPlayerWithoutEmail(){
-        return new Player(1500, "Just4Fun_", null);
+    private User getPlayerWithoutEmail(){
+        return new User(1500, "Just4Fun_", null);
     }
 
     private List<Submission> getSubmissions(){

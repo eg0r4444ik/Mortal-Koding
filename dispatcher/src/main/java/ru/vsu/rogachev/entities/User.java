@@ -23,9 +23,9 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
-    @Column(name = "telegram_user_id", unique = true)
+    @Column(name = "telegram_id", unique = true)
     @NotNull
-    private Long telegramUserId;
+    private Long telegramId;
 
     @CreationTimestamp
     @Column(name = "first_login_date")
@@ -58,7 +58,7 @@ public class User {
 
     public User(Long telegramUserId, String firstName, String lastName, String username,
                 String email, Long rating, String codeforcesUsername, boolean isActive, UserState userState) {
-        this.telegramUserId = telegramUserId;
+        this.telegramId = telegramUserId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;

@@ -12,21 +12,30 @@ import java.util.List;
 @Component
 public class MessageUtils {
 
-    public SendMessage generateSendMessageWithText(Update update, String text){
-        var message = update.getMessage();
+    public SendMessage generateSendMessage(Long chatId, String text){
         var sendMessage = new SendMessage();
-        sendMessage.setChatId(message.getChatId().toString());
+        sendMessage.setChatId(chatId.toString());
+        sendMessage.setText(text);
+
+        return sendMessage;
+    }
+
+    public SendMessage generateSendMessageWithButtons(Long chatId, String text,
+                                                      List<String> buttonTexts, List<String> buttonsCallbackData){
+        var sendMessage = new SendMessage();
+        sendMessage.setChatId(chatId.toString());
         sendMessage.setText(text);
 
         InlineKeyboardMarkup inlineKeyboardMarkup =new InlineKeyboardMarkup();
-
-        InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton();
-        inlineKeyboardButton.setText("Тык");
-        inlineKeyboardButton.setCallbackData("Привет");
-
         List<InlineKeyboardButton> keyboardButtons = new ArrayList<>();
-        keyboardButtons.add(inlineKeyboardButton);
-        keyboardButtons.add(inlineKeyboardButton);
+
+        for(int i = 0; i < buttonTexts.size(); i++) {
+            InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton();
+            inlineKeyboardButton.setText(buttonTexts.get(i));
+            inlineKeyboardButton.setCallbackData(buttonsCallbackData.get(i));
+            keyboardButtons.add(inlineKeyboardButton);
+        }
+
         List<List<InlineKeyboardButton>> rowList= new ArrayList<>();
         rowList.add(keyboardButtons);
         inlineKeyboardMarkup.setKeyboard(rowList);

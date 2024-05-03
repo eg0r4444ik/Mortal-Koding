@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.vsu.rogachev.dto.Problem;
 import ru.vsu.rogachev.dto.Submission;
-import ru.vsu.rogachev.dto.Player;
+import ru.vsu.rogachev.dto.User;
 
 import java.util.List;
 
@@ -20,13 +20,13 @@ public class ConnectionManagerTest {
 
     @Test
     void getPlayer() throws Exception {
-        Player player1 = connectionManager.getPlayer("egor4444ik");
+        User player1 = connectionManager.getPlayer("egor4444ik");
         assertThat(player1).isNotNull();
         assertThat(player1.getEmail()).isNotNull();
         assertThat(player1.getEmail()).isEqualTo("egorchik.rog@yandex.ru");
         assertThat(player1.getHandle()).isEqualTo("egor4444ik");
 
-        Player player2 = connectionManager.getPlayer("Just4Fun_");
+        User player2 = connectionManager.getPlayer("Just4Fun_");
         assertThat(player2).isNotNull();
         assertThat(player2.getEmail()).isNull();
         assertThat(player2.getHandle()).isEqualTo("Just4Fun_");
