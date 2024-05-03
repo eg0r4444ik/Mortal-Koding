@@ -45,6 +45,16 @@ public class MailServiceSenderImpl implements MailSenderService {
         javaMailSender.send(mailMessage);
     }
 
+    @Override
+    public boolean checkCode(String email, String code) {
+        if(confirmService.existsByEmail(email) &&
+                confirmService.getByEmail(email).getConfirmationCode().equals(code)){
+            return true;
+        }
+
+        return false;
+    }
+
     private String getActivationMailBody(String code) {
         var msg = String.format("Для завершения регистрации введите полученный код в чат:\n%s",
                 code);

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.vsu.rogachev.generator.CodeGenerator;
+import ru.vsu.rogachev.kafka.KafkaConsumer;
 import ru.vsu.rogachev.repositories.ConfirmRepository;
 import ru.vsu.rogachev.services.ConfirmService;
 import ru.vsu.rogachev.services.MailSenderService;
@@ -25,12 +26,16 @@ public class MailTest {
     @Autowired
     private ConfirmService confirmService;
 
+    @Autowired
+    private KafkaConsumer kafkaConsumer;
+
     @Test
     void contextLoads() throws Exception {
         assertThat(generator).isNotNull();
         assertThat(mailSenderService).isNotNull();
         assertThat(confirmRepository).isNotNull();
         assertThat(confirmService).isNotNull();
+        assertThat(kafkaConsumer).isNotNull();
     }
 
 }
