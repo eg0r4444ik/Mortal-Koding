@@ -43,4 +43,89 @@ public class MessageUtils {
         return sendMessage;
     }
 
+    public SendMessage generateSendMessageWithTable(Long chatId, List<Long> player1Points, List<Long> player2Points){
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(chatId.toString());
+
+        StringBuilder player1 = new StringBuilder();
+        long player1Sum = 0;
+        for(int i = 0; i < player1Points.size(); i++){
+            long curr = player1Points.get(i);
+            player1Sum += curr;
+            player1.append("| ");
+            if(curr == 0){
+                player1.append(" ");
+            }
+            player1.append(curr);
+            player1.append(" баллов ");
+            if(curr == 0){
+                player1.append(" ");
+            }
+            if(i == player1Points.size()-1){
+                player1.append("|");
+            }
+        }
+        player1.append("  ");
+        player1.append(player1Sum);
+        player1.append(" \n");
+
+        StringBuilder player2 = new StringBuilder();
+        long player2Sum = 0;
+        for(int i = 0; i < player2Points.size(); i++){
+            long curr = player2Points.get(i);
+            player2Sum += curr;
+            player2.append("| ");
+            if(curr == 0){
+                player2.append(" ");
+            }
+            player2.append(curr);
+            player2.append(" баллов ");
+            if(curr == 0){
+                player2.append(" ");
+            }
+            if(i == player2Points.size()-1){
+                player2.append("|");
+            }
+        }
+        player2.append("  ");
+        player2.append(player2Sum);
+        player2.append(" \n");
+
+        String separator = getSeparator(Math.max(player1.length(), player2.length()));
+
+        StringBuilder text = new StringBuilder();
+        text.append("<b>Состояние соревнования:</b>\n");
+        text.append("<pre>\n");
+
+        for(int i = 1; i <= player1Points.size(); i++){
+            text.append("|  Задача ");
+            text.append(i);
+            text.append("  ");
+            if(i == player1Points.size()){
+                text.append("|");
+            }
+        }
+        text.append(" Сумма \n");
+
+        text.append(separator);
+        text.append(player1);
+        text.append(separator);
+        text.append(player2);
+        text.append(separator);
+        text.append("</pre>");
+
+        sendMessage.setText(text.toString());
+        sendMessage.setParseMode("HTML");
+        return sendMessage;
+    }
+
+    private String getSeparator(int len){
+        StringBuilder separator = new StringBuilder();
+        for(int i = 0; i < len; i++){
+            separator.append("-");
+        }
+        separator.append("\n");
+        return separator.toString();
+    }
+
 }

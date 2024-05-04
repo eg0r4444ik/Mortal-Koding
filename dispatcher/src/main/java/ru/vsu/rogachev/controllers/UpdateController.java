@@ -4,8 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.vsu.rogachev.connections.CodeforcesConnection;
 import ru.vsu.rogachev.connections.MailConnection;
 import ru.vsu.rogachev.dto.UserDTO;
@@ -16,8 +19,12 @@ import ru.vsu.rogachev.kafka.KafkaProducer;
 import ru.vsu.rogachev.services.UserService;
 import ru.vsu.rogachev.utils.MessageUtils;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Component
 @Log4j
@@ -79,12 +86,17 @@ public class UpdateController {
 
     private void processWaitingHandleState(User user, long chatId, String handle){
         try {
-            UserDTO userDTO = codeforcesConnection.getUser(handle);
-            userService.setEmail(user, userDTO.getEmail());
-            userService.setCodeforcesUsername(user, userDTO.getHandle());
-            userService.setState(user, UserState.WAIT_CONFIRMATION_CODE_STATE);
-            producer.sendEmail(user.getEmail());
-            telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(chatId, "На почту был отправлен код подтверждения"));
+            if(userService.existsByCodeforcesUsername(handle)){
+                telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(chatId, "С этим хэндлом уже" +
+                        " зарегистрировался другой пользователь. Введите другой хэндл."));
+            }else {
+                UserDTO userDTO = codeforcesConnection.getUser(handle);
+                userService.setEmail(user, userDTO.getEmail());
+                userService.setCodeforcesUsername(user, userDTO.getHandle());
+                userService.setState(user, UserState.WAIT_CONFIRMATION_CODE_STATE);
+                producer.sendEmail(user.getEmail());
+                telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(chatId, "На почту был отправлен код подтверждения"));
+            }
         }catch (Exception e){
             userService.setEmail(user, null);
             userService.setCodeforcesUsername(user, null);
@@ -96,24 +108,26 @@ public class UpdateController {
 
     private void processWaitingCodeState(User user, long chatId, String code){
         try {
-            if (code.equals("Отправить заново")) {
+            if (code.equals("send_again")) {
                 producer.sendEmail(user.getEmail());
                 telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(chatId, "На почту был отправлен код подтверждения"));
-            } else if (code.equals("Изменить handle")) {
+            } else if (code.equals("change_handle")) {
                 userService.setState(user, UserState.WAIT_FOR_HANDLE_STATE);
-                telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(chatId, "Введите свой handle с сайта Codeforces"));
+                telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(chatId, "Введите свой хэндл с сайта Codeforces"));
             } else {
                 boolean result = mailConnection.checkCode(user.getEmail(), code);
                 if(result){
                     userService.setState(user, UserState.BASIC_STATE);
                     userService.setActive(user, true);
-                    telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(chatId, "Вы успешно привязали аккаунт Codeforces с хендлом '"
-                            + user.getCodeforcesUsername() + "' к чату! Теперь вы можете соревноваться с другими участниками!"));
+                    telegramBot.sendAnswerMessage(messageUtils.generateSendMessageWithButtons(chatId, "Вы успешно привязали аккаунт Codeforces с хэндлом '"
+                            + user.getCodeforcesUsername() + "' к чату! Теперь вы можете соревноваться с другими участниками, друзьями и " +
+                            "отслеживать свой рейтинг!", List.of("Найти дуэль", "Играть с другом", "Посмотреть рейтинг"),
+                            List.of("find_game", "play_with_friend", "look_rating")));
                 }else{
                     telegramBot.sendAnswerMessage(messageUtils.generateSendMessageWithButtons(chatId,
                             "Вы ввели неверный код, попробуйте снова или " +
-                            "запросите повторную отправку кода нажав на кнопку", List.of("Отправить код заново", "Ввести другой handle"),
-                            List.of("Отправить заново", "Изменить handle")));
+                            "запросите повторную отправку кода нажав на кнопку", List.of("Отправить код заново", "Ввести другой хэндл"),
+                            List.of("send_again", "change_handle")));
                 }
             }
         }catch (Exception e){
@@ -122,8 +136,22 @@ public class UpdateController {
     }
 
     private void processBasicState(User user, long chatId, String text){
+        if(text.equals("/start")){
+            telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(chatId,
+                    "Привет! Это бот для дуэлей по спортивному программированию. Привяжите свой аккаунт на codeforces к этому боту, " +
+                            "соревнуйтесь с друзьями и другими пользователями и повышайте свой рейтинг!"));
+            return;
+        }
         if(user.getIsActive()){
-
+            if(text.equals("find_game")){
+                sendBasicStateMessage(chatId, "Опция еще находится в разработке и пока недоступна, выберите другую.");
+            }else if(text.equals("play_with_friend")){
+                sendBasicStateMessage(chatId, "Опция еще находится в разработке и пока недоступна, выберите другую.");
+            }else if(text.equals("look_rating")){
+                sendBasicStateMessage(chatId, "Ваш рейтинг: " + user.getRating());
+            }else{
+                sendBasicStateMessage(chatId, "Такой команды не существует, выберите одну из предложенных.");
+            }
         }else{
             telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(chatId,
                     "Похоже вы еще не привязали свой аккаунт на сайте Codeforces с этим чатом. Введите свой handle " +
@@ -135,7 +163,21 @@ public class UpdateController {
     }
 
     private void processDuringTheGameState(User user, long chatId, String text){
+        if(text.equals("show_timer")) {
+            //todo запрашивать из battle-service оставшееся время
+            telegramBot.sendAnswerMessage(messageUtils.generateSendMessageWithButtons(chatId, text,
+                    List.of("Показать оставшееся время"),
+                    List.of("show_timer")));
+        }else{
+            telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(chatId,
+                    "Такой команды не существует, выберите одну из предложенных."));
+        }
+    }
 
+    private void sendBasicStateMessage(long chatId, String text){
+        telegramBot.sendAnswerMessage(messageUtils.generateSendMessageWithButtons(chatId, text,
+                List.of("Найти дуэль", "Играть с другом", "Посмотреть рейтинг"),
+                List.of("find_game", "play_with_friend", "look_rating")));
     }
 
     private User getUser(Message message) throws DbDontContainObjectException {
@@ -143,7 +185,7 @@ public class UpdateController {
         String firstName = message.getFrom().getFirstName();
         String lastName = message.getFrom().getLastName();
         String username = message.getFrom().getUserName();
-        if(!userService.existsByTelegramId(telegramId)){
+        if (!userService.existsByTelegramId(telegramId)) {
             userService.addUser(telegramId, firstName, lastName, username);
         }
         return userService.getUserByTelegramId(telegramId);

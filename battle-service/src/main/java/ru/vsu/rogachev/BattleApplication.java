@@ -8,10 +8,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableJpaRepositories
 @EnableScheduling
-public class BattleApp {
+public class BattleApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(BattleApp.class);
+        SpringApplication.run(BattleApplication.class);
     }
 
 }

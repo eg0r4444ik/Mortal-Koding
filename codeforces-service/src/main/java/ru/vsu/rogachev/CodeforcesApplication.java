@@ -6,10 +6,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-public class CodeforcesApp {
+public class CodeforcesApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(CodeforcesApp.class);
+        SpringApplication.run(CodeforcesApplication.class);
     }
 
 }
