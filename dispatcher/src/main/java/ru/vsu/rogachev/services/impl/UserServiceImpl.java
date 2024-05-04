@@ -51,6 +51,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void setActive(User user, boolean active) {
+        user.setIsActive(active);
+        userRepository.save(user);
+    }
+
+    @Override
     public void setEmail(User user, String email) {
         user.setEmail(email);
         userRepository.save(user);

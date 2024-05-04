@@ -15,6 +15,8 @@ public interface UserService {
 
     User getUserByCodeforcesUsername(String username) throws DbDontContainObjectException;
 
+    void setActive(User user, boolean active);
+
     void setEmail(User user, String email);
 
     void setCodeforcesUsername(User user, String codeforcesUsername);
