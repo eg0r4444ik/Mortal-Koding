@@ -12,18 +12,16 @@ import ru.vsu.rogachev.services.MailSenderService;
 
 @Service
 @RequiredArgsConstructor
-public class MailServiceSenderImpl implements MailSenderService {
+public class MailSenderServiceImpl implements MailSenderService {
 
     private final JavaMailSender javaMailSender;
 
     @Value("${spring.mail.username}")
     private String emailFrom;
 
-    @Autowired
-    private CodeGenerator generator;
+    private final CodeGenerator generator;
 
-    @Autowired
-    private ConfirmService confirmService;
+    private final ConfirmService confirmService;
 
     @Override
     public void send(String email) {
