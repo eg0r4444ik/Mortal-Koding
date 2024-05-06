@@ -11,6 +11,24 @@ import java.util.Map;
 public class KafkaConfiguration {
 
     @Bean
+    public NewTopic changeGameState(){
+        return TopicBuilder.name("change-game-state-event-topic")
+                .partitions(3)
+                .replicas(3)
+                .configs(Map.of("min.insync.replicas", "1"))
+                .build();
+    }
+
+    @Bean
+    public NewTopic sendGameInfo(){
+        return TopicBuilder.name("send-game-info-event-topic")
+                .partitions(3)
+                .replicas(3)
+                .configs(Map.of("min.insync.replicas", "1"))
+                .build();
+    }
+
+    @Bean
     public NewTopic sendMessageTopic(){
         return TopicBuilder.name("send-message-event-topic")
                 .partitions(3)
@@ -19,4 +37,12 @@ public class KafkaConfiguration {
                 .build();
     }
 
+    @Bean
+    public NewTopic startGame(){
+        return TopicBuilder.name("start-game-event-topic")
+                .partitions(3)
+                .replicas(3)
+                .configs(Map.of("min.insync.replicas", "1"))
+                .build();
+    }
 }
