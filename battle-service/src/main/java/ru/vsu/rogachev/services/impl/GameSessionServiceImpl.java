@@ -3,6 +3,8 @@ package ru.vsu.rogachev.services.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.vsu.rogachev.dto.GameInfoDTO;
+import ru.vsu.rogachev.dto.GameStateDTO;
 import ru.vsu.rogachev.entities.GameSession;
 import ru.vsu.rogachev.entities.Player;
 import ru.vsu.rogachev.entities.Task;
@@ -11,6 +13,7 @@ import ru.vsu.rogachev.repositories.GameSessionRepository;
 import ru.vsu.rogachev.services.GameSessionService;
 import ru.vsu.rogachev.services.PlayerService;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -83,5 +86,41 @@ public class GameSessionServiceImpl implements GameSessionService {
     @Override
     public void deleteById(Long id){
         gameSessionRepository.deleteById(id);
+    }
+
+    @Override
+    public GameStateDTO convertToState(GameSession game) {
+        List<List<Long>> points = new ArrayList<>();
+
+        for(Player player : game.getPlayers()){
+            List<Long> playerPoints = new ArrayList<>();
+            long point = 100;
+            for(Task task : game.getTasks()){
+                if(task.getSolver() != null && task.getSolver().getHandle().equals(player.getHandle())){
+                    playerPoints.add(point);
+                }else{
+                    playerPoints.add(0L);
+                }
+                point += 100;
+            }
+
+            points.add(playerPoints);
+        }
+
+        GameStateDTO gameStateDTO = new GameStateDTO(points, getHandles(game.getPlayers()));
+        return gameStateDTO;
+    }
+
+    @Override
+    public GameInfoDTO convertToInfo(GameSession game, String message) {
+        return new GameInfoDTO(message, getHandles(game.getPlayers()));
+    }
+
+    private List<String> getHandles(List<Player> players){
+        List<String> handles = new ArrayList<>();
+        for(Player player : players){
+            handles.add(player.getHandle());
+        }
+        return handles;
     }
 }

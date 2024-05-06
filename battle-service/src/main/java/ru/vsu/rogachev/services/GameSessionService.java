@@ -1,5 +1,7 @@
 package ru.vsu.rogachev.services;
 
+import ru.vsu.rogachev.dto.GameInfoDTO;
+import ru.vsu.rogachev.dto.GameStateDTO;
 import ru.vsu.rogachev.entities.GameSession;
 import ru.vsu.rogachev.entities.Player;
 import ru.vsu.rogachev.entities.Task;
@@ -28,4 +30,7 @@ public interface GameSessionService {
 
     void deleteById(Long id);
 
+    GameStateDTO convertToState(GameSession game);
+
+    GameInfoDTO convertToInfo(GameSession game, String message);
 }

@@ -9,6 +9,7 @@ import ru.vsu.rogachev.entities.Task;
 import ru.vsu.rogachev.entities.enums.GameState;
 import ru.vsu.rogachev.entities.enums.PlayerState;
 import ru.vsu.rogachev.generator.TaskGenerator;
+import ru.vsu.rogachev.kafka.KafkaProducer;
 import ru.vsu.rogachev.services.GameSessionService;
 import ru.vsu.rogachev.services.PlayerService;
 import ru.vsu.rogachev.services.TaskService;
@@ -31,6 +32,9 @@ public class GameDistributor {
 
     @Autowired
     private TaskGenerator taskGenerator;
+
+    @Autowired
+    private KafkaProducer kafkaProducer;
 
     public void connectPlayerToGame(String handle, Long gameId) throws JsonProcessingException, InterruptedException {
         Player player = playerService.getPlayer(handle);
@@ -82,18 +86,42 @@ public class GameDistributor {
         }
     }
 
+    public void createGameWithPlayers(String handle1, String handle2, long time, long tasksCount) throws InterruptedException, JsonProcessingException {
+        Player player1 = playerService.getPlayer(handle1);
+        Player player2 = playerService.getPlayer(handle2);
+        playerService.add(player1);
+        playerService.add(player2);
+
+        GameSession game = new GameSession(time, 2L, tasksCount);
+        gameSessionService.add(game);
+        gameSessionService.addActivePlayer(game, player1);
+        gameSessionService.addActivePlayer(game, player2);
+        startGame(game);
+        kafkaProducer.sendMessage(game, "Соревнование началось!");
+    }
+
     public void startGame(GameSession game) throws InterruptedException, JsonProcessingException {
         if(readyToStart(game)) {
             gameSessionService.startGame(game.getId());
 
             List<String> problems = taskGenerator.getContestProblems(game.getPlayers(), game.getTasksCount());
             List<Task> tasks = new ArrayList<>();
+
+            //todo вынести в отдельный класс
+            StringBuilder messageToUser = new StringBuilder();
+            messageToUser.append("Задачи соревнования: \n");
+            int curr = 1;
+
             for (String url : problems) {
                 Task task = new Task(game, url);
+                tasks.add(task);
                 taskService.add(task);
+                messageToUser.append("Задача " + curr + ": " + url);
+                curr++;
             }
 
             gameSessionService.addTasks(game, tasks);
+            kafkaProducer.sendMessage(game, messageToUser.toString());
         }
     }
 

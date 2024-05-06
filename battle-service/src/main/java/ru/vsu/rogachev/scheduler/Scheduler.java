@@ -11,6 +11,7 @@ import ru.vsu.rogachev.entities.GameSession;
 import ru.vsu.rogachev.entities.Player;
 import ru.vsu.rogachev.entities.Task;
 import ru.vsu.rogachev.entities.enums.GameState;
+import ru.vsu.rogachev.kafka.KafkaProducer;
 import ru.vsu.rogachev.services.GameSessionService;
 import ru.vsu.rogachev.services.ProblemService;
 import ru.vsu.rogachev.services.SubmissionService;
@@ -34,6 +35,9 @@ public class Scheduler {
     @Autowired
     private TaskService taskService;
 
+    @Autowired
+    private KafkaProducer kafkaProducer;
+
     private final int MILLISECONDS_COEFF = 1000;
 
     @Scheduled(fixedRate = 5000)
@@ -44,22 +48,28 @@ public class Scheduler {
             if(game.getState() == GameState.IN_PROGRESS){
                 if(new Date().getTime() - game.getStartTime().getTime() >= game.getTime()){
                     gameSessionService.stopGame(game.getId());
+                    kafkaProducer.sendMessage(game, "Игра окончена! Результаты представлены в таблице");
+                    kafkaProducer.sendGameState(game);
                 }else {
                     for (Player player : game.getPlayers()) {
-                        updatePlayerSubmissions(player, game);
+                        boolean changeState = updatePlayerSubmissions(player, game);
+                        if(changeState){
+                            kafkaProducer.sendGameState(game);
+                        }
                     }
                 }
             }
         }
     }
 
-    private void updatePlayerSubmissions(Player player, GameSession game) throws InterruptedException, JsonProcessingException {
+    private boolean updatePlayerSubmissions(Player player, GameSession game) throws InterruptedException, JsonProcessingException {
         List<SubmissionDTO> submissions = submissionService.getPlayerSubmissions(player.getHandle());
         Map<String, Task> urls = new HashMap<>();
         for(Task task : game.getTasks()){
             urls.put(task.getTaskUrl(), task);
         }
 
+        boolean changeState = false;
         for(SubmissionDTO submission : submissions){
             Date date = new Date(submission.getCreationTimeSeconds()*MILLISECONDS_COEFF);
             String url = problemService.getProblemUrl(submission.getProblem());
@@ -67,8 +77,11 @@ public class Scheduler {
                     && urls.containsKey(url) && (urls.get(url).getSolver() == null || date.before(urls.get(url).getTime()))){
                 Task task = urls.get(url);
                 taskService.setSolver(task, player);
+                changeState = true;
             }
         }
+
+        return changeState;
     }
 
 }
