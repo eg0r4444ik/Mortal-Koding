@@ -1,54 +1,73 @@
 package ru.vsu.rogachev.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.vsu.rogachev.connections.CodeforcesConnection;
 import ru.vsu.rogachev.connections.MailConnection;
+import ru.vsu.rogachev.dto.GameDTO;
+import ru.vsu.rogachev.dto.GameInfoDTO;
+import ru.vsu.rogachev.dto.GameStateDTO;
 import ru.vsu.rogachev.dto.UserDTO;
+import ru.vsu.rogachev.entities.Invite;
 import ru.vsu.rogachev.entities.User;
 import ru.vsu.rogachev.entities.enums.UserState;
 import ru.vsu.rogachev.exceptions.DbDontContainObjectException;
 import ru.vsu.rogachev.kafka.KafkaProducer;
+import ru.vsu.rogachev.services.InviteService;
 import ru.vsu.rogachev.services.UserService;
 import ru.vsu.rogachev.utils.MessageUtils;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
+@RequiredArgsConstructor
 @Component
 @Log4j
 public class UpdateController {
 
     private TelegramBot telegramBot;
 
-    @Autowired
-    private MessageUtils messageUtils;
+    private final MessageUtils messageUtils;
 
-    @Autowired
-    private KafkaProducer producer;
+    private final KafkaProducer producer;
+    
+    private final UserService userService;
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private CodeforcesConnection codeforcesConnection;
-
-    @Autowired
-    private MailConnection mailConnection;
+    private final CodeforcesConnection codeforcesConnection;
+    
+    private final MailConnection mailConnection;
+    
+    private final InviteService inviteService;
     
     public void registerBot(TelegramBot telegramBot){
         this.telegramBot = telegramBot;
+    }
+
+    public void printGameState(GameStateDTO gameState){
+        try {
+            for (String handle : gameState.getHandles()) {
+                User user = userService.getUserByCodeforcesUsername(handle);
+                telegramBot.sendAnswerMessage(messageUtils.generateSendMessageWithTable(user.getTelegramId(),
+                        gameState.getPoints().get(0), gameState.getPoints().get(1)));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void printGameMessage(GameInfoDTO gameInfo){
+        try{
+            for(String handle : gameInfo.getHandles()){
+                User user = userService.getUserByCodeforcesUsername(handle);
+                telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(user.getTelegramId(), gameInfo.getInfo()));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public void processUpdate(Update update){
@@ -78,6 +97,10 @@ public class UpdateController {
                 processDuringTheGameState(user, chatId, text);
             }else if(user.getState() == UserState.BASIC_STATE){
                 processBasicState(user, chatId, text);
+            }else if(user.getState() == UserState.WAIT_OPPONENT_HANDLE_STATE){
+                processOpponentHandleState(user, chatId, text);
+            }else if(user.getState() == UserState.WAIT_OPPONENT_CONNECTION_STATE){
+                processOpponentConnectionState(user, chatId, text);
             }
         }catch (DbDontContainObjectException e){
             telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(message.getChatId(), "Что-то пошло не так"));
@@ -91,11 +114,15 @@ public class UpdateController {
                         " зарегистрировался другой пользователь. Введите другой хэндл."));
             }else {
                 UserDTO userDTO = codeforcesConnection.getUser(handle);
-                userService.setEmail(user, userDTO.getEmail());
-                userService.setCodeforcesUsername(user, userDTO.getHandle());
-                userService.setState(user, UserState.WAIT_CONFIRMATION_CODE_STATE);
-                producer.sendEmail(user.getEmail());
-                telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(chatId, "На почту был отправлен код подтверждения"));
+                if(userDTO.getEmail() == null){
+                    telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(chatId, "Сделайте почту публичной!"));
+                }else {
+                    userService.setEmail(user, userDTO.getEmail());
+                    userService.setCodeforcesUsername(user, userDTO.getHandle());
+                    userService.setState(user, UserState.WAIT_CONFIRMATION_CODE_STATE);
+                    producer.sendEmail(user.getEmail());
+                    telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(chatId, "На почту был отправлен код подтверждения"));
+                }
             }
         }catch (Exception e){
             userService.setEmail(user, null);
@@ -146,9 +173,31 @@ public class UpdateController {
             if(text.equals("find_game")){
                 sendBasicStateMessage(chatId, "Опция еще находится в разработке и пока недоступна, выберите другую.");
             }else if(text.equals("play_with_friend")){
-                sendBasicStateMessage(chatId, "Опция еще находится в разработке и пока недоступна, выберите другую.");
+                telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(chatId, "Введите хэндл оппонента с сайта codeforces"));
+                userService.setState(user, UserState.WAIT_OPPONENT_HANDLE_STATE);
             }else if(text.equals("look_rating")){
                 sendBasicStateMessage(chatId, "Ваш рейтинг: " + user.getRating());
+            }else if(text.equals("agree_game")){
+                try {
+                    Invite invite = inviteService.getByRecipientId(user.getTelegramId());
+                    User opponent = userService.getUserByTelegramId(invite.getSenderTelegramId());
+                    userService.setState(user, UserState.DURING_THE_GAME);
+                    userService.setState(opponent, UserState.DURING_THE_GAME);
+                    sendBasicStateMessage(opponent.getTelegramId(), "Ваш соперник согласился");
+                    producer.startGame(new GameDTO(user.getCodeforcesUsername(), 2, 1200000,5,
+                            List.of(opponent.getCodeforcesUsername())));
+                } catch (DbDontContainObjectException e) {
+                    e.printStackTrace();
+                }
+            }else if(text.equals("refuse_game")){
+                try {
+                    Invite invite = inviteService.getByRecipientId(user.getTelegramId());
+                    User opponent = userService.getUserByTelegramId(invite.getSenderTelegramId());
+                    userService.setState(opponent, UserState.BASIC_STATE);
+                    sendBasicStateMessage(opponent.getTelegramId(), "Ваш соперник отказался от игры");
+                } catch (DbDontContainObjectException e) {
+                    e.printStackTrace();
+                }
             }else{
                 sendBasicStateMessage(chatId, "Такой команды не существует, выберите одну из предложенных.");
             }
@@ -171,6 +220,35 @@ public class UpdateController {
         }else{
             telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(chatId,
                     "Такой команды не существует, выберите одну из предложенных."));
+        }
+    }
+
+    private void processOpponentHandleState(User user, long chatId, String text){
+        try {
+            if(!userService.existsByCodeforcesUsername(text)){
+                userService.setState(user, UserState.BASIC_STATE);
+                sendBasicStateMessage(chatId, "Указанный пользователь не зарегистрировался" +
+                        "в этом боте или не привязал свой аккаунт Codeforces к боту.");
+            }else {
+                User opponent = userService.getUserByCodeforcesUsername(text);
+                userService.setState(user, UserState.WAIT_OPPONENT_CONNECTION_STATE);
+                telegramBot.sendAnswerMessage(messageUtils.generateSendMessageWithButtons(opponent.getTelegramId(),
+                        "Пользователь " + user.getUsername() + " с ником на Codeforces " + user.getCodeforcesUsername() +
+                        "вызвал вас на дуэль!", List.of("Согласиться", "Отказаться"), List.of("agree_game", "refuse_game")));
+                inviteService.add(user.getTelegramId(), opponent.getTelegramId());
+                telegramBot.sendAnswerMessage(messageUtils.generateSendMessageWithButtons(chatId,
+                        "Ждем ответа пользователя...", List.of("Отменить"), List.of("exit")));
+            }
+        }catch (Exception e){
+            telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(chatId, "Похоже такого пользователя не существует" +
+                    "на Codeforces или его электронная почта скрыта. Попробуйте еще раз!"));
+        }
+    }
+
+    private void processOpponentConnectionState(User user, long chatId, String text){
+        if(text.equals("exit")){
+            userService.setState(user, UserState.BASIC_STATE);
+            sendBasicStateMessage(chatId, "Ожидание подключения игрока завершено!");
         }
     }
 
