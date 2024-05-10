@@ -54,11 +54,13 @@ public class UpdateController {
                 userService.setState(userService.getUserByCodeforcesUsername(gameInfo.getHandles().get(0)), UserState.DURING_THE_GAME);
                 userService.setState(userService.getUserByCodeforcesUsername(gameInfo.getHandles().get(1)), UserState.DURING_THE_GAME);
 
-                telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(player1.getTelegramId(), "Соревнование началось"));
+                telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(player1.getTelegramId(),
+                        messageUtils.startGameMessage()));
                 telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(player1.getTelegramId(),
                         messageUtils.getGameTasks(gameInfo.getTasksUrls())));
 
-                telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(player2.getTelegramId(), "Соревнование началось"));
+                telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(player2.getTelegramId(),
+                        messageUtils.startGameMessage()));
                 telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(player2.getTelegramId(),
                         messageUtils.getGameTasks(gameInfo.getTasksUrls())));
             }else if(gameInfo.getType() == InfoType.FINISHED){
@@ -66,13 +68,13 @@ public class UpdateController {
                 userService.setState(userService.getUserByCodeforcesUsername(gameInfo.getHandles().get(1)), UserState.BASIC_STATE);
 
                 telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(player1.getTelegramId(),
-                        "Игра окончена! Результаты представлены в таблице"));
+                        messageUtils.endGameMessage()));
                 telegramBot.sendAnswerMessage(messageUtils.generateSendMessageWithTable(player1.getTelegramId(),
                         gameInfo.getPoints().get(0), gameInfo.getPoints().get(1), player1.getCodeforcesUsername(),
                         player2.getCodeforcesUsername()));
 
                 telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(player2.getTelegramId(),
-                        "Игра окончена! Результаты представлены в таблице"));
+                        messageUtils.endGameMessage()));
                 telegramBot.sendAnswerMessage(messageUtils.generateSendMessageWithTable(player2.getTelegramId(),
                         gameInfo.getPoints().get(0), gameInfo.getPoints().get(1), player1.getCodeforcesUsername(),
                         player2.getCodeforcesUsername()));

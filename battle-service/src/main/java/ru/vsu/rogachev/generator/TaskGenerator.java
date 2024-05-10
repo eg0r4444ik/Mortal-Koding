@@ -29,7 +29,7 @@ public class TaskGenerator {
     public List<String> getContestProblems(List<Player> players, long tasksCount) throws InterruptedException, JsonProcessingException {
         List<String> result = new ArrayList<>();
         List<ProblemDTO> problems = problemService.getProblems();
-        problems.sort(Comparator.naturalOrder());
+        Collections.shuffle(problems);
 
         List<Long> ratings = new ArrayList<>();
         for(Player player : players){
@@ -45,15 +45,17 @@ public class TaskGenerator {
         }
 
         long currRating = startTaskRating;
-        for(ProblemDTO problem : problems){
-            if(result.size() == tasksCount){
-                break;
-            }
+        while(result.size() < tasksCount) {
+            for (ProblemDTO problem : problems) {
+                if (result.size() == tasksCount) {
+                    break;
+                }
 
-            String problemUrl = problemService.getProblemUrl(problem);
-            if(problem.getRating() >= currRating && !used.contains(problemUrl)){
-                result.add(problemUrl);
-                currRating = problem.getRating() + 100;
+                String problemUrl = problemService.getProblemUrl(problem);
+                if (problem.getRating() >= currRating && !used.contains(problemUrl)) {
+                    result.add(problemUrl);
+                    currRating = problem.getRating() + 100;
+                }
             }
         }
 
