@@ -2,6 +2,8 @@ package ru.vsu.rogachev.entities;
 
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import ru.vsu.rogachev.entities.enums.GameState;
 import ru.vsu.rogachev.entities.enums.PlayerState;
 
@@ -42,18 +44,20 @@ public class GameSession {
     private Long tasksCount;
 
     @OneToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinColumn(name = "game_id")
     private List<Player> players;
 
     @OneToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinColumn(name = "game_id")
     private List<Task> tasks;
 
-    public GameSession(Long time, Long playersCount, Long tasksCount) {
+    public GameSession(Long time, Long playersCount, Long tasksCount, GameState state) {
         this.time = time;
         this.playersCount = playersCount;
         this.tasksCount = tasksCount;
-        state = GameState.NOT_STARTED;
+        this.state = state;
         players = new ArrayList<>();
         tasks = new ArrayList<>();
     }
@@ -63,6 +67,8 @@ public class GameSession {
     }
 
     public void addTasks(List<Task> tasks){
-        this.tasks.addAll(tasks);
+        for(Task task : tasks) {
+            this.tasks.add(task);
+        }
     }
 }

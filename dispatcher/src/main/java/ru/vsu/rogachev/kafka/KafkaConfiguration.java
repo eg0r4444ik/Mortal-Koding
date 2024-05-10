@@ -20,15 +20,6 @@ public class KafkaConfiguration {
     }
 
     @Bean
-    public NewTopic sendGameInfo(){
-        return TopicBuilder.name("send-game-info-event-topic")
-                .partitions(3)
-                .replicas(3)
-                .configs(Map.of("min.insync.replicas", "1"))
-                .build();
-    }
-
-    @Bean
     public NewTopic sendMessageTopic(){
         return TopicBuilder.name("send-message-event-topic")
                 .partitions(3)

@@ -29,14 +29,14 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void add(Long gameId, String taskUrl){
-        Task task = new Task(gameSessionService.getById(gameId), taskUrl);
+    public void add(Long gameId, String taskUrl, int numberInGame){
+        Task task = new Task(gameSessionService.getById(gameId), taskUrl, numberInGame);
         taskRepository.save(task);
     }
 
     @Override
-    public void add(GameSession game, String taskUrl){
-        Task task = new Task(game, taskUrl);
+    public void add(GameSession game, String taskUrl, int numberInGame){
+        Task task = new Task(game, taskUrl, numberInGame);
         taskRepository.save(task);
     }
 
@@ -46,9 +46,9 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void setSolver(Task task, Player player) {
+    public void setSolver(Task task, Player player, Date date) {
         task.setSolver(player);
-        task.setTime(new Date());
+        task.setTime(date);
         taskRepository.save(task);
     }
 

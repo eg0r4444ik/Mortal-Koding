@@ -128,4 +128,25 @@ public class MessageUtils {
         return separator.toString();
     }
 
+    public String startGameMessage(){
+        return "Соревнование началось";
+    }
+
+    public String getGameTasks(List<String> problems){
+        StringBuilder messageToUser = new StringBuilder();
+        messageToUser.append("Задачи соревнования: \n");
+        int curr = 1;
+
+        for (String url : problems) {
+            messageToUser.append("Задача ").append(curr).append(": ").append(url).append("\n");
+            curr++;
+        }
+
+        return messageToUser.toString();
+    }
+
+    public String endGameMessage(){
+        return "Игра окончена! Результаты представлены в таблице";
+    }
+
 }

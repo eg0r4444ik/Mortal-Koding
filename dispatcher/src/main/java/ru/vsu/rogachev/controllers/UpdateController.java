@@ -1,9 +1,7 @@
 package ru.vsu.rogachev.controllers;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -11,8 +9,8 @@ import ru.vsu.rogachev.connections.CodeforcesConnection;
 import ru.vsu.rogachev.connections.MailConnection;
 import ru.vsu.rogachev.dto.GameDTO;
 import ru.vsu.rogachev.dto.GameInfoDTO;
-import ru.vsu.rogachev.dto.GameStateDTO;
 import ru.vsu.rogachev.dto.UserDTO;
+import ru.vsu.rogachev.dto.enums.InfoType;
 import ru.vsu.rogachev.entities.Invite;
 import ru.vsu.rogachev.entities.User;
 import ru.vsu.rogachev.entities.enums.UserState;
@@ -47,23 +45,33 @@ public class UpdateController {
         this.telegramBot = telegramBot;
     }
 
-    public void printGameState(GameStateDTO gameState){
+    public void printGameInfo(GameInfoDTO gameInfo){
         try {
-            for (String handle : gameState.getHandles()) {
-                User user = userService.getUserByCodeforcesUsername(handle);
-                telegramBot.sendAnswerMessage(messageUtils.generateSendMessageWithTable(user.getTelegramId(),
-                        gameState.getPoints().get(0), gameState.getPoints().get(1)));
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    public void printGameMessage(GameInfoDTO gameInfo){
-        try{
-            for(String handle : gameInfo.getHandles()){
-                User user = userService.getUserByCodeforcesUsername(handle);
-                telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(user.getTelegramId(), gameInfo.getInfo()));
+            if(gameInfo.getType() == InfoType.STARTED){
+                userService.setState(userService.getUserByCodeforcesUsername(gameInfo.getHandles().get(0)), UserState.DURING_THE_GAME);
+                userService.setState(userService.getUserByCodeforcesUsername(gameInfo.getHandles().get(1)), UserState.DURING_THE_GAME);
+                for(String handle : gameInfo.getHandles()){
+                    User user = userService.getUserByCodeforcesUsername(handle);
+                    telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(user.getTelegramId(), "Соревнование началось"));
+                    telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(user.getTelegramId(),
+                            messageUtils.getGameTasks(gameInfo.getTasksUrls())));
+                }
+            }else if(gameInfo.getType() == InfoType.FINISHED){
+                userService.setState(userService.getUserByCodeforcesUsername(gameInfo.getHandles().get(0)), UserState.BASIC_STATE);
+                userService.setState(userService.getUserByCodeforcesUsername(gameInfo.getHandles().get(1)), UserState.BASIC_STATE);
+                for(String handle : gameInfo.getHandles()){
+                    User user = userService.getUserByCodeforcesUsername(handle);
+                    telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(user.getTelegramId(),
+                            "Игра окончена! Результаты представлены в таблице"));
+                    telegramBot.sendAnswerMessage(messageUtils.generateSendMessageWithTable(user.getTelegramId(),
+                            gameInfo.getPoints().get(0), gameInfo.getPoints().get(1)));
+                }
+            }else if(gameInfo.getType() == InfoType.IN_PROGRESS){
+                for (String handle : gameInfo.getHandles()) {
+                    User user = userService.getUserByCodeforcesUsername(handle);
+                    telegramBot.sendAnswerMessage(messageUtils.generateSendMessageWithTable(user.getTelegramId(),
+                            gameInfo.getPoints().get(0), gameInfo.getPoints().get(1)));
+                }
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -181,11 +189,10 @@ public class UpdateController {
                 try {
                     Invite invite = inviteService.getByRecipientId(user.getTelegramId());
                     User opponent = userService.getUserByTelegramId(invite.getSenderTelegramId());
-                    userService.setState(user, UserState.DURING_THE_GAME);
-                    userService.setState(opponent, UserState.DURING_THE_GAME);
                     sendBasicStateMessage(opponent.getTelegramId(), "Ваш соперник согласился");
                     producer.startGame(new GameDTO(user.getCodeforcesUsername(), 2, 1200000,5,
                             List.of(opponent.getCodeforcesUsername())));
+                    inviteService.delete(invite.getId());
                 } catch (DbDontContainObjectException e) {
                     e.printStackTrace();
                 }
@@ -195,6 +202,7 @@ public class UpdateController {
                     User opponent = userService.getUserByTelegramId(invite.getSenderTelegramId());
                     userService.setState(opponent, UserState.BASIC_STATE);
                     sendBasicStateMessage(opponent.getTelegramId(), "Ваш соперник отказался от игры");
+                    inviteService.delete(invite.getId());
                 } catch (DbDontContainObjectException e) {
                     e.printStackTrace();
                 }
@@ -225,12 +233,12 @@ public class UpdateController {
 
     private void processOpponentHandleState(User user, long chatId, String text){
         try {
-            if(!userService.existsByCodeforcesUsername(text)){
+            User opponent = userService.getUserByCodeforcesUsername(text);
+            if(!userService.existsByCodeforcesUsername(text) || !opponent.getIsActive()){
                 userService.setState(user, UserState.BASIC_STATE);
                 sendBasicStateMessage(chatId, "Указанный пользователь не зарегистрировался" +
                         "в этом боте или не привязал свой аккаунт Codeforces к боту.");
             }else {
-                User opponent = userService.getUserByCodeforcesUsername(text);
                 userService.setState(user, UserState.WAIT_OPPONENT_CONNECTION_STATE);
                 telegramBot.sendAnswerMessage(messageUtils.generateSendMessageWithButtons(opponent.getTelegramId(),
                         "Пользователь " + user.getUsername() + " с ником на Codeforces " + user.getCodeforcesUsername() +
@@ -240,7 +248,7 @@ public class UpdateController {
                         "Ждем ответа пользователя...", List.of("Отменить"), List.of("exit")));
             }
         }catch (Exception e){
-            telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(chatId, "Похоже такого пользователя не существует" +
+            telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(chatId, "Похоже такого пользователя не существует " +
                     "на Codeforces или его электронная почта скрыта. Попробуйте еще раз!"));
         }
     }

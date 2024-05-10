@@ -5,8 +5,8 @@ import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import ru.vsu.rogachev.codeforces.CodeforcesConnection;
 import ru.vsu.rogachev.dto.SubmissionDTO;
+import ru.vsu.rogachev.dto.enums.InfoType;
 import ru.vsu.rogachev.entities.GameSession;
 import ru.vsu.rogachev.entities.Player;
 import ru.vsu.rogachev.entities.Task;
@@ -40,7 +40,7 @@ public class Scheduler {
 
     private final int MILLISECONDS_COEFF = 1000;
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 10000)
     public void checkForUpdate() throws JsonProcessingException, InterruptedException {
         List<GameSession> games = gameSessionService.getAll();
 
@@ -48,13 +48,12 @@ public class Scheduler {
             if(game.getState() == GameState.IN_PROGRESS){
                 if(new Date().getTime() - game.getStartTime().getTime() >= game.getTime()){
                     gameSessionService.stopGame(game.getId());
-                    kafkaProducer.sendMessage(game, "Игра окончена! Результаты представлены в таблице");
-                    kafkaProducer.sendGameState(game);
+                    kafkaProducer.sendGameInfo(game, InfoType.FINISHED);
                 }else {
                     for (Player player : game.getPlayers()) {
                         boolean changeState = updatePlayerSubmissions(player, game);
                         if(changeState){
-                            kafkaProducer.sendGameState(game);
+                            kafkaProducer.sendGameInfo(game, InfoType.IN_PROGRESS);
                         }
                     }
                 }
@@ -75,9 +74,11 @@ public class Scheduler {
             String url = problemService.getProblemUrl(submission.getProblem());
             if(date.after(game.getStartTime()) && submission.getVerdict() == SubmissionDTO.Verdict.OK
                     && urls.containsKey(url) && (urls.get(url).getSolver() == null || date.before(urls.get(url).getTime()))){
-                Task task = urls.get(url);
-                taskService.setSolver(task, player);
-                changeState = true;
+                if(urls.get(url).getSolver() == null || !urls.get(url).getSolver().getHandle().equals(player.getHandle())) {
+                    changeState = true;
+                    Task task = urls.get(url);
+                    taskService.setSolver(task, player, date);
+                }
             }
         }
 

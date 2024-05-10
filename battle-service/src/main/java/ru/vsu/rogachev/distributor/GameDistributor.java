@@ -1,8 +1,9 @@
 package ru.vsu.rogachev.distributor;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.vsu.rogachev.dto.enums.InfoType;
 import ru.vsu.rogachev.entities.GameSession;
 import ru.vsu.rogachev.entities.Player;
 import ru.vsu.rogachev.entities.Task;
@@ -18,23 +19,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class GameDistributor {
 
-    @Autowired
-    private PlayerService playerService;
+    private final PlayerService playerService;
 
-    @Autowired
-    private GameSessionService gameSessionService;
+    private final GameSessionService gameSessionService;
 
-    @Autowired
-    private TaskService taskService;
+    private final TaskService taskService;
 
-    @Autowired
-    private TaskGenerator taskGenerator;
+    private final TaskGenerator taskGenerator;
 
-    @Autowired
-    private KafkaProducer kafkaProducer;
+    private final KafkaProducer kafkaProducer;
 
     public void connectPlayerToGame(String handle, Long gameId) throws JsonProcessingException, InterruptedException {
         Player player = playerService.getPlayer(handle);
@@ -60,7 +57,7 @@ public class GameDistributor {
             }
         }
 
-        GameSession game = new GameSession(time, playersCount, tasksCount);
+        GameSession game = new GameSession(time, playersCount, tasksCount, GameState.NOT_STARTED);
         gameSessionService.add(game);
         gameSessionService.addActivePlayer(game, player);
         startGame(game);
@@ -77,7 +74,7 @@ public class GameDistributor {
             playerService.add(p);
         }
 
-        GameSession game = new GameSession(time, playersCount, tasksCount);
+        GameSession game = new GameSession(time, playersCount, tasksCount, GameState.NOT_STARTED);
         gameSessionService.add(game);
         gameSessionService.addActivePlayer(game, player);
 
@@ -92,12 +89,25 @@ public class GameDistributor {
         playerService.add(player1);
         playerService.add(player2);
 
-        GameSession game = new GameSession(time, 2L, tasksCount);
+        GameSession game = new GameSession(time, 2L, tasksCount, GameState.IN_PROGRESS);
+        game.setStartTime(new Date());
         gameSessionService.add(game);
         gameSessionService.addActivePlayer(game, player1);
         gameSessionService.addActivePlayer(game, player2);
-        startGame(game);
-        kafkaProducer.sendMessage(game, "Соревнование началось!");
+
+        List<String> problems = taskGenerator.getContestProblems(game.getPlayers(), game.getTasksCount());
+        List<Task> tasks = new ArrayList<>();
+
+        int num = 1;
+        for (String url : problems) {
+            Task task = new Task(game, url, num);
+            tasks.add(task);
+            taskService.add(task);
+            num++;
+        }
+
+        gameSessionService.addTasks(game, tasks);
+        kafkaProducer.sendGameInfo(game, InfoType.STARTED);
     }
 
     public void startGame(GameSession game) throws InterruptedException, JsonProcessingException {
@@ -107,21 +117,16 @@ public class GameDistributor {
             List<String> problems = taskGenerator.getContestProblems(game.getPlayers(), game.getTasksCount());
             List<Task> tasks = new ArrayList<>();
 
-            //todo вынести в отдельный класс
-            StringBuilder messageToUser = new StringBuilder();
-            messageToUser.append("Задачи соревнования: \n");
-            int curr = 1;
-
+            int num = 1;
             for (String url : problems) {
-                Task task = new Task(game, url);
+                Task task = new Task(game, url, num);
                 tasks.add(task);
                 taskService.add(task);
-                messageToUser.append("Задача " + curr + ": " + url);
-                curr++;
+                num++;
             }
 
             gameSessionService.addTasks(game, tasks);
-            kafkaProducer.sendMessage(game, messageToUser.toString());
+            kafkaProducer.sendGameInfo(game, InfoType.STARTED);
         }
     }
 

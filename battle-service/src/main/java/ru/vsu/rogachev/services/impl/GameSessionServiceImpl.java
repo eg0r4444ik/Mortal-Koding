@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.rogachev.dto.GameInfoDTO;
-import ru.vsu.rogachev.dto.GameStateDTO;
+import ru.vsu.rogachev.dto.enums.InfoType;
 import ru.vsu.rogachev.entities.GameSession;
 import ru.vsu.rogachev.entities.Player;
 import ru.vsu.rogachev.entities.Task;
@@ -32,8 +32,8 @@ public class GameSessionServiceImpl implements GameSessionService {
     }
 
     @Override
-    public void add(Long time, Long playersCount, Long tasksCount) {
-        GameSession gameSession = new GameSession(time, playersCount, tasksCount);
+    public void add(Long time, Long playersCount, Long tasksCount, GameState state) {
+        GameSession gameSession = new GameSession(time, playersCount, tasksCount, state);
         gameSessionRepository.save(gameSession);
     }
 
@@ -64,12 +64,12 @@ public class GameSessionServiceImpl implements GameSessionService {
 
     @Override
     public GameSession getById(Long id){
-        return gameSessionRepository.getById(id);
+        return gameSessionRepository.findById(id).get();
     }
 
     @Override
     public void startGame(Long id) {
-        GameSession game = gameSessionRepository.getById(id);
+        GameSession game = gameSessionRepository.findById(id).get();
         game.setState(GameState.IN_PROGRESS);
         game.setStartTime(new Date());
         gameSessionRepository.save(game);
@@ -77,7 +77,7 @@ public class GameSessionServiceImpl implements GameSessionService {
 
     @Override
     public void stopGame(Long id) {
-        GameSession game = gameSessionRepository.getById(id);
+        GameSession game = gameSessionRepository.findById(id).get();
         game.setState(GameState.FINISHED);
         gameSessionRepository.save(game);
     }
@@ -89,31 +89,33 @@ public class GameSessionServiceImpl implements GameSessionService {
     }
 
     @Override
-    public GameStateDTO convertToState(GameSession game) {
+    public GameInfoDTO convertToInfo(GameSession game, InfoType type) {
         List<List<Long>> points = new ArrayList<>();
 
-        for(Player player : game.getPlayers()){
-            List<Long> playerPoints = new ArrayList<>();
-            long point = 100;
-            for(Task task : game.getTasks()){
-                if(task.getSolver() != null && task.getSolver().getHandle().equals(player.getHandle())){
-                    playerPoints.add(point);
-                }else{
-                    playerPoints.add(0L);
-                }
-                point += 100;
-            }
-
-            points.add(playerPoints);
+        List<String> urls = new ArrayList<>();
+        for(Task task : game.getTasks()){
+            urls.add(task.getTaskUrl());
         }
 
-        GameStateDTO gameStateDTO = new GameStateDTO(points, getHandles(game.getPlayers()));
-        return gameStateDTO;
-    }
+        for(Player player : game.getPlayers()){
+            long[] playerPoints = new long[game.getTasks().size()];
+            for(Task task : game.getTasks()){
+                if(task.getSolver() != null && task.getSolver().getHandle().equals(player.getHandle())){
+                    playerPoints[task.getNumberInGame()-1] = (long)100*task.getNumberInGame();
+                }else{
+                    playerPoints[task.getNumberInGame()-1] = 0;
+                }
+            }
 
-    @Override
-    public GameInfoDTO convertToInfo(GameSession game, String message) {
-        return new GameInfoDTO(message, getHandles(game.getPlayers()));
+            List<Long> playerPointsList = new ArrayList<>();
+            for(long point : playerPoints){
+                playerPointsList.add(point);
+            }
+            points.add(playerPointsList);
+        }
+
+        GameInfoDTO gameStateDTO = new GameInfoDTO(points, urls, type, getHandles(game.getPlayers()));
+        return gameStateDTO;
     }
 
     private List<String> getHandles(List<Player> players){

@@ -21,6 +21,9 @@ public class Task {
     @Column(name = "task_id")
     private Long id;
 
+    @Column(name = "task_number")
+    private Integer numberInGame;
+
     @ManyToOne
     @JoinColumn(name = "game_id", referencedColumnName = "game_id")
     @NotNull
@@ -37,8 +40,9 @@ public class Task {
     @Column(name = "time")
     private Date time;
 
-    public Task(GameSession game, String taskUrl) {
+    public Task(GameSession game, String taskUrl, Integer numberInGame) {
         this.game = game;
         this.taskUrl = taskUrl;
+        this.numberInGame = numberInGame;
     }
 }
