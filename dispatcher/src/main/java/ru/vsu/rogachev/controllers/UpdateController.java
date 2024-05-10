@@ -183,11 +183,9 @@ public class UpdateController {
 
     private void processBasicState(User user, long chatId, String text){
         if(text.equals("/start")){
-//            telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(chatId,
-//                    "Привет! Это бот для дуэлей по спортивному программированию. Привяжите свой аккаунт на codeforces к этому боту, " +
-//                            "соревнуйтесь с друзьями и другими пользователями и повышайте свой рейтинг!"));
-            telegramBot.sendAnswerMessage(messageUtils.generateSendMessageWithTable(chatId, List.of(100L, 0L, 300L),
-                    List.of(0L, 200L, 0L), "egor4444ik", "iamdimonis"));
+            telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(chatId,
+                    "Привет! Это бот для дуэлей по спортивному программированию. Привяжите свой аккаунт на codeforces к этому боту, " +
+                            "соревнуйтесь с друзьями и другими пользователями и повышайте свой рейтинг!"));
             return;
         }
         if(user.getIsActive()){
