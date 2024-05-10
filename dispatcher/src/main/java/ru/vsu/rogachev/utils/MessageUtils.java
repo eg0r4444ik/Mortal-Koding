@@ -43,75 +43,71 @@ public class MessageUtils {
         return sendMessage;
     }
 
-    public SendMessage generateSendMessageWithTable(Long chatId, List<Long> player1Points, List<Long> player2Points){
+    public SendMessage generateSendMessageWithTable(Long chatId, List<Long> player1Points, List<Long> player2Points,
+                                                    String player1Handle, String player2Handle){
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId.toString());
-
-        StringBuilder player1 = new StringBuilder();
-        long player1Sum = 0;
-        for(int i = 0; i < player1Points.size(); i++){
-            long curr = player1Points.get(i);
-            player1Sum += curr;
-            player1.append("| ");
-            if(curr == 0){
-                player1.append(" ");
-            }
-            player1.append(curr);
-            player1.append(" баллов ");
-            if(curr == 0){
-                player1.append(" ");
-            }
-            if(i == player1Points.size()-1){
-                player1.append("|");
-            }
-        }
-        player1.append("  ");
-        player1.append(player1Sum);
-        player1.append(" \n");
-
-        StringBuilder player2 = new StringBuilder();
-        long player2Sum = 0;
-        for(int i = 0; i < player2Points.size(); i++){
-            long curr = player2Points.get(i);
-            player2Sum += curr;
-            player2.append("| ");
-            if(curr == 0){
-                player2.append(" ");
-            }
-            player2.append(curr);
-            player2.append(" баллов ");
-            if(curr == 0){
-                player2.append(" ");
-            }
-            if(i == player2Points.size()-1){
-                player2.append("|");
-            }
-        }
-        player2.append("  ");
-        player2.append(player2Sum);
-        player2.append(" \n");
-
-        String separator = getSeparator(Math.max(player1.length(), player2.length()));
 
         StringBuilder text = new StringBuilder();
         text.append("<b>Состояние соревнования:</b>\n");
         text.append("<pre>\n");
 
-        for(int i = 1; i <= player1Points.size(); i++){
-            text.append("|  Задача ");
-            text.append(i);
-            text.append("  ");
-            if(i == player1Points.size()){
-                text.append("|");
-            }
-        }
-        text.append(" Сумма \n");
+        player1Handle = " " + player1Handle + " ";
+        player2Handle = " " + player2Handle + " ";
+        int len1 = player1Handle.length();
+        int len2 = player2Handle.length();
 
-        text.append(separator);
-        text.append(player1);
-        text.append(separator);
-        text.append(player2);
-        text.append(separator);
+        text.append("          |").append(player1Handle).append("|").append(player2Handle).append("\n");
+
+        Long player1Sum = 0L;
+        Long player2Sum = 0L;
+        for(int i = 0; i < player1Points.size(); i++){
+            Long pts1 = player1Points.get(i);
+            Long pts2 = player2Points.get(i);
+            player1Sum += pts1;
+            player2Sum += pts2;
+            int pts1Len = pts1.toString().length();
+            int pts2Len = pts2.toString().length();
+            text.append("Задача ").append(i+1).append(": ").append("|");
+            for(int j = 0; j < (len1-pts1Len)/2; j++){
+                text.append(" ");
+            }
+            text.append(pts1);
+            for(int j = (len1-pts1Len)/2 + pts1Len; j < len1; j++){
+                text.append(" ");
+            }
+            text.append("|");
+
+            for(int j = 0; j < (len2-pts2Len)/2; j++){
+                text.append(" ");
+            }
+            text.append(pts2);
+            for(int j = (len2-pts2Len)/2 + pts2Len; j < len2; j++){
+                text.append(" ");
+            }
+            text.append("\n");
+        }
+
+        text.append("Сумма:    |");
+        int pts1Len = player1Sum.toString().length();
+        int pts2Len = player2Sum.toString().length();
+        for(int j = 0; j < (len1-pts1Len)/2; j++){
+            text.append(" ");
+        }
+        text.append(player1Sum);
+        for(int j = (len1-pts1Len)/2 + pts1Len; j < len1; j++){
+            text.append(" ");
+        }
+        text.append("|");
+
+        for(int j = 0; j < (len2-pts2Len)/2; j++){
+            text.append(" ");
+        }
+        text.append(player2Sum);
+        for(int j = (len2-pts2Len)/2 + pts2Len; j < len2; j++){
+            text.append(" ");
+        }
+
         text.append("</pre>");
 
         sendMessage.setText(text.toString());

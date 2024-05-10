@@ -47,31 +47,42 @@ public class UpdateController {
 
     public void printGameInfo(GameInfoDTO gameInfo){
         try {
+            User player1 = userService.getUserByCodeforcesUsername(gameInfo.getHandles().get(0));
+            User player2 = userService.getUserByCodeforcesUsername(gameInfo.getHandles().get(1));
+
             if(gameInfo.getType() == InfoType.STARTED){
                 userService.setState(userService.getUserByCodeforcesUsername(gameInfo.getHandles().get(0)), UserState.DURING_THE_GAME);
                 userService.setState(userService.getUserByCodeforcesUsername(gameInfo.getHandles().get(1)), UserState.DURING_THE_GAME);
-                for(String handle : gameInfo.getHandles()){
-                    User user = userService.getUserByCodeforcesUsername(handle);
-                    telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(user.getTelegramId(), "Соревнование началось"));
-                    telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(user.getTelegramId(),
-                            messageUtils.getGameTasks(gameInfo.getTasksUrls())));
-                }
+
+                telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(player1.getTelegramId(), "Соревнование началось"));
+                telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(player1.getTelegramId(),
+                        messageUtils.getGameTasks(gameInfo.getTasksUrls())));
+
+                telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(player2.getTelegramId(), "Соревнование началось"));
+                telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(player2.getTelegramId(),
+                        messageUtils.getGameTasks(gameInfo.getTasksUrls())));
             }else if(gameInfo.getType() == InfoType.FINISHED){
                 userService.setState(userService.getUserByCodeforcesUsername(gameInfo.getHandles().get(0)), UserState.BASIC_STATE);
                 userService.setState(userService.getUserByCodeforcesUsername(gameInfo.getHandles().get(1)), UserState.BASIC_STATE);
-                for(String handle : gameInfo.getHandles()){
-                    User user = userService.getUserByCodeforcesUsername(handle);
-                    telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(user.getTelegramId(),
-                            "Игра окончена! Результаты представлены в таблице"));
-                    telegramBot.sendAnswerMessage(messageUtils.generateSendMessageWithTable(user.getTelegramId(),
-                            gameInfo.getPoints().get(0), gameInfo.getPoints().get(1)));
-                }
+
+                telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(player1.getTelegramId(),
+                        "Игра окончена! Результаты представлены в таблице"));
+                telegramBot.sendAnswerMessage(messageUtils.generateSendMessageWithTable(player1.getTelegramId(),
+                        gameInfo.getPoints().get(0), gameInfo.getPoints().get(1), player1.getCodeforcesUsername(),
+                        player2.getCodeforcesUsername()));
+
+                telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(player2.getTelegramId(),
+                        "Игра окончена! Результаты представлены в таблице"));
+                telegramBot.sendAnswerMessage(messageUtils.generateSendMessageWithTable(player2.getTelegramId(),
+                        gameInfo.getPoints().get(0), gameInfo.getPoints().get(1), player1.getCodeforcesUsername(),
+                        player2.getCodeforcesUsername()));
             }else if(gameInfo.getType() == InfoType.IN_PROGRESS){
-                for (String handle : gameInfo.getHandles()) {
-                    User user = userService.getUserByCodeforcesUsername(handle);
-                    telegramBot.sendAnswerMessage(messageUtils.generateSendMessageWithTable(user.getTelegramId(),
-                            gameInfo.getPoints().get(0), gameInfo.getPoints().get(1)));
-                }
+                    telegramBot.sendAnswerMessage(messageUtils.generateSendMessageWithTable(player1.getTelegramId(),
+                            gameInfo.getPoints().get(0), gameInfo.getPoints().get(1), player1.getCodeforcesUsername(),
+                            player2.getCodeforcesUsername()));
+                telegramBot.sendAnswerMessage(messageUtils.generateSendMessageWithTable(player2.getTelegramId(),
+                        gameInfo.getPoints().get(0), gameInfo.getPoints().get(1), player1.getCodeforcesUsername(),
+                        player2.getCodeforcesUsername()));
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -172,9 +183,11 @@ public class UpdateController {
 
     private void processBasicState(User user, long chatId, String text){
         if(text.equals("/start")){
-            telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(chatId,
-                    "Привет! Это бот для дуэлей по спортивному программированию. Привяжите свой аккаунт на codeforces к этому боту, " +
-                            "соревнуйтесь с друзьями и другими пользователями и повышайте свой рейтинг!"));
+//            telegramBot.sendAnswerMessage(messageUtils.generateSendMessage(chatId,
+//                    "Привет! Это бот для дуэлей по спортивному программированию. Привяжите свой аккаунт на codeforces к этому боту, " +
+//                            "соревнуйтесь с друзьями и другими пользователями и повышайте свой рейтинг!"));
+            telegramBot.sendAnswerMessage(messageUtils.generateSendMessageWithTable(chatId, List.of(100L, 0L, 300L),
+                    List.of(0L, 200L, 0L), "egor4444ik", "iamdimonis"));
             return;
         }
         if(user.getIsActive()){
