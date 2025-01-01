@@ -13,6 +13,10 @@
         <module>battle-service</module>
         <module>mail-service</module>
         <module>codeforces-service</module>
+        <module>mk-info</module>
+        <module>mk-mi</module>
+        <module>mk-jobs</module>
+        <module>mk-core</module>
     </modules>
 
     <properties>

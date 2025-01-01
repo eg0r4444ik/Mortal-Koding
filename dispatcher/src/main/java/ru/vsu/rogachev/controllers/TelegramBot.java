@@ -1,5 +1,6 @@
 package ru.vsu.rogachev.controllers;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,8 +13,9 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import javax.annotation.PostConstruct;
 
-@Component
 @Log4j
+@Component
+@RequiredArgsConstructor
 public class TelegramBot extends TelegramLongPollingBot {
 
     @Value("${bot.name}")
@@ -21,8 +23,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     @Value("${bot.token}")
     private String botToken;
 
-    @Autowired
-    private UpdateController updateController;
+    private final UpdateController updateController;
 
     @PostConstruct
     public void init(){

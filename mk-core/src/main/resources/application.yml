@@ -1,0 +1,8 @@
+client:
+  codeforces:
+    url: https://codeforces.ru/api
+    connections: 30
+    max-retry-attempts: 2
+    connections-timeout-in-seconds: 25
+    read-timeout-in-seconds: 25
+    pending-acquire-timeout-in-seconds: 10

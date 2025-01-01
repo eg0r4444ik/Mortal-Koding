@@ -8,10 +8,10 @@ import java.util.List;
 
 public interface ObjectConverter {
 
-    public User getPlayer(String response);
-    public Problem getProblem(String response);
-    public Submission getSubmission(String response);
-    public List<Problem> getProblems(String response);
-    public List<Submission> getSubmissions(String response);
+    User getPlayer(String response);
+    Problem getProblem(String response);
+    Submission getSubmission(String response);
+    List<Problem> getProblems(String response);
+    List<Submission> getSubmissions(String response);
 
 }
