@@ -1,0 +1,53 @@
+version: '3.7'
+services:
+  # Postgres
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: MK_ADMIN
+      POSTGRES_PASSWORD: QGW5lG5Tl8Hw7oY
+      POSTGRES_DB: mk_db
+    ports:
+      - "5432:5432"
+    networks:
+      - mk_network
+
+  # Vault
+  vault:
+    image: hashicorp/vault:latest
+    container_name: vault
+    ports:
+      - "8200:8200"
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: 95536c523d539f151f5f9a4e1662944d70b7f2eeb4480e20b43205b987205cfa
+      VAULT_DEV_LISTEN_ADDRESS: "0.0.0.0:8200"
+    volumes:
+      - ./vault/data:/vault/data
+      - ./vault/config:/vault/config
+    command: "server -dev -dev-listen-address=0.0.0.0:8200"
+
+networks:
+  mk_network:
+    driver: bridge
+
+
+#  # Dispatcher Microservice
+#  dispatcher:
+#    build:
+#      context: ./dispatcher
+#      dockerfile: Dockerfile
+#    container_name: dispatcher
+#    ports:
+#      - "8088:8088"
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/mk_db
+#      SPRING_DATASOURCE_USERNAME: postgres
+#      SPRING_DATASOURCE_PASSWORD: 111111
+#      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+#    depends_on:
+#      - postgres
+#      - kafka
+
+#volumes:
+#  postgres_data:

@@ -10,7 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import ru.vsu.rogachev.client.codeforces.CodeforcesClient;
 import ru.vsu.rogachev.client.codeforces.entity.Problems;
 import ru.vsu.rogachev.client.codeforces.entity.Submission;
-import ru.vsu.rogachev.client.codeforces.entity.User;
+import ru.vsu.rogachev.client.codeforces.entity.CodeforcesUser;
 
 import java.util.List;
 import java.util.Optional;
@@ -207,7 +207,7 @@ public class CodeforcesClientTest {
                         .addHeader("Content-Type", "application/json")
         );
 
-        Optional<User> user = codeforcesClient.getUserInfo(userHandle);
+        Optional<CodeforcesUser> user = codeforcesClient.getUserInfo(userHandle);
 
         assertTrue(user.isPresent());
         assertEquals(userHandle, user.get().getHandle());

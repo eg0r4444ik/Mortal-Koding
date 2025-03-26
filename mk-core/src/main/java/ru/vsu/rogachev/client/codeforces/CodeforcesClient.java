@@ -9,7 +9,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import ru.vsu.rogachev.client.codeforces.entity.Problems;
 import ru.vsu.rogachev.client.codeforces.entity.CodeforcesResponseContainer;
 import ru.vsu.rogachev.client.codeforces.entity.Submission;
-import ru.vsu.rogachev.client.codeforces.entity.User;
+import ru.vsu.rogachev.client.codeforces.entity.CodeforcesUser;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,11 +31,11 @@ public class CodeforcesClient {
         this.webClient = webClient;
     }
 
-    public @NotNull Optional<User> getUserInfo(@NotNull String handle){
+    public @NotNull Optional<CodeforcesUser> getUserInfo(@NotNull String handle){
         return webClient.get()
                 .uri(GET_USER_INFO, handle)
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<CodeforcesResponseContainer<List<User>>>() {
+                .bodyToMono(new ParameterizedTypeReference<CodeforcesResponseContainer<List<CodeforcesUser>>>() {
                 })
                 .blockOptional()
                 .map(CodeforcesResponseContainer::getResult)

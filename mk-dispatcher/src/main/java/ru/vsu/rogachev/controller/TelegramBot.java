@@ -1,0 +1,46 @@
+package ru.vsu.rogachev.controller;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j;
+import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import ru.vsu.rogachev.config.TelegramBotProperties;
+
+@Log4j
+@Component
+@RequiredArgsConstructor
+public class TelegramBot extends TelegramLongPollingBot {
+
+    private final TelegramBotProperties properties;
+
+    private final UpdateController updateController;
+
+    @Override
+    public String getBotUsername() {
+        return properties.getName();
+    }
+
+    @Override
+    public String getBotToken() {
+        return properties.getToken();
+    }
+
+    @Override
+    public void onUpdateReceived(Update update) {
+        updateController.processUpdate(update);
+    }
+
+    public void sendAnswerMessage(SendMessage message){
+        if(message != null){
+            try{
+                execute(message);
+            }catch (TelegramApiException e){
+                log.error(e);
+            }
+        }
+    }
+
+}

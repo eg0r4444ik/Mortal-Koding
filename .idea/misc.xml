@@ -9,14 +9,19 @@
     </option>
     <option name="ignoredFiles">
       <set>
+        <option value="$PROJECT_DIR$/battle-service/pom.xml" />
+        <option value="$PROJECT_DIR$/codeforces-service/pom.xml" />
         <option value="$PROJECT_DIR$/common-rabbitmq/pom.xml" />
         <option value="$PROJECT_DIR$/common-utils/pom.xml" />
         <option value="$PROJECT_DIR$/db-service/pom.xml" />
+        <option value="$PROJECT_DIR$/mail-service/pom.xml" />
+        <option value="$PROJECT_DIR$/mk-info/pom.xml" />
+        <option value="$PROJECT_DIR$/mk-mi/pom.xml" />
         <option value="$PROJECT_DIR$/node/pom.xml" />
       </set>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="17" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" project-jdk-name="17" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>
