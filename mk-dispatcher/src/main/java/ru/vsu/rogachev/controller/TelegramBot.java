@@ -1,7 +1,7 @@
 package ru.vsu.rogachev.controller;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -11,12 +11,16 @@ import ru.vsu.rogachev.config.TelegramBotProperties;
 
 @Log4j
 @Component
-@RequiredArgsConstructor
 public class TelegramBot extends TelegramLongPollingBot {
 
     private final TelegramBotProperties properties;
 
     private final UpdateController updateController;
+
+    public TelegramBot(TelegramBotProperties properties, @Lazy UpdateController updateController) {
+        this.properties = properties;
+        this.updateController = updateController;
+    }
 
     @Override
     public String getBotUsername() {

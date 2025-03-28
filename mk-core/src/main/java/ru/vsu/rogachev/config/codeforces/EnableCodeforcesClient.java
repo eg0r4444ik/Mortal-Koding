@@ -1,4 +1,4 @@
-package ru.vsu.rogachev.config;
+package ru.vsu.rogachev.config.codeforces;
 
 import org.springframework.context.annotation.Import;
 import ru.vsu.rogachev.client.codeforces.CodeforcesClient;

@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static ru.vsu.rogachev.config.CodeforcesClientConfig.CODEFORCES_CLIENT;
+import static ru.vsu.rogachev.config.codeforces.CodeforcesClientConfig.CODEFORCES_CLIENT;
 
 @RequiredArgsConstructor
 @Service
@@ -25,11 +25,7 @@ public class CodeforcesClient {
     public static final String GET_USER_SUBMISSIONS = "/user.status?handle={handle}";
     public static final String GET_PROBLEM_SET = "/problemset.problems";
 
-    private WebClient webClient;
-
-    public CodeforcesClient(@Qualifier(CODEFORCES_CLIENT) WebClient webClient) {
-        this.webClient = webClient;
-    }
+    private final WebClient webClient;
 
     public @NotNull Optional<CodeforcesUser> getUserInfo(@NotNull String handle){
         return webClient.get()

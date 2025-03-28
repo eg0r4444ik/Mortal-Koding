@@ -5,9 +5,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
-import ru.vsu.rogachev.entity.ConfirmRequest;
 import ru.vsu.rogachev.entity.User;
-import ru.vsu.rogachev.services.ConfirmService;
+import ru.vsu.rogachev.mail.MailSenderService;
 import ru.vsu.rogachev.services.UserService;
 import ru.vsu.rogachev.utils.MessageUtils;
 
@@ -18,6 +17,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static ru.vsu.rogachev.config.Constants.SEND_CONFIRMATION_CODE_TEXT;
 import static ru.vsu.rogachev.config.Constants.WAIT_CONFIRMATION_CODE_STATE_BUTTON_CALLBACK_DATA;
 import static ru.vsu.rogachev.config.Constants.WAIT_CONFIRMATION_CODE_STATE_BUTTON_TEXTS;
 import static ru.vsu.rogachev.entity.enums.UserState.BASIC_STATE;
@@ -27,7 +27,6 @@ import static ru.vsu.rogachev.entity.enums.UserState.WAIT_FOR_HANDLE_STATE;
 @RequiredArgsConstructor
 public class WaitConfirmationCodeStateCommandHandler implements CommandHandler {
 
-    private static final String SEND_AGAIN_RESULT_TEXT = "На почту был отправлен код подтверждения";
     private static final String CHANGE_HANDLE_RESULT_TEXT = "Введите свой хэндл с сайта Codeforces";
     private static final String SUCCESS_CHECK_CODE_RESULT_TEXT =
             "Вы успешно привязали аккаунт Codeforces с хэндлом '%s' к чату! " +
@@ -39,11 +38,11 @@ public class WaitConfirmationCodeStateCommandHandler implements CommandHandler {
 
     private final UserService userService;
 
-    private final ConfirmService confirmService;
+    private final MailSenderService mailSenderService;
 
     @Getter
     @AllArgsConstructor
-    enum ProcessedCommand {
+    public enum ProcessedCommand {
         SEND_AGAIN_COMMAND("send_again", "Повторить отправку кода подтверждения"),
         CHANGE_HANDLE_COMMAND("change_handle", "Поменять хэндл сайта codeforces"),
         CHECK_CODE_COMMAND("code", "Проверить код подтверждения");
@@ -67,18 +66,17 @@ public class WaitConfirmationCodeStateCommandHandler implements CommandHandler {
 
         switch (command) {
             case SEND_AGAIN_COMMAND -> {
-                confirmService.add(new ConfirmRequest(Objects.requireNonNull(user.getEmail())));
-                messageUtils.sendMessage(chatId, SEND_AGAIN_RESULT_TEXT);
+                mailSenderService.send(Objects.requireNonNull(user.getEmail()));
+                messageUtils.sendMessage(chatId, SEND_CONFIRMATION_CODE_TEXT);
             }
             case CHANGE_HANDLE_COMMAND -> {
                 userService.setUserState(user, WAIT_FOR_HANDLE_STATE);
                 messageUtils.sendMessage(chatId, CHANGE_HANDLE_RESULT_TEXT);
             }
             case CHECK_CODE_COMMAND -> {
-                ConfirmRequest confirmRequest = confirmService.getByEmail(Objects.requireNonNull(user.getEmail()))
-                        .orElseThrow(() -> new IllegalArgumentException("No confirmation request found"));
+                boolean isCodeCorrect = mailSenderService.checkCode(Objects.requireNonNull(user.getEmail()), message);
 
-                if (Objects.equals(message, confirmRequest.getConfirmationCode())) {
+                if (isCodeCorrect) {
                     userService.activateUser(user);
                     userService.setUserState(user, BASIC_STATE);
                     messageUtils.sendBasicStateMessage(

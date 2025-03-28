@@ -16,17 +16,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @Entity
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Table(name = "users")
 public class User {
 
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
@@ -38,18 +36,18 @@ public class User {
     @Nullable
     @CreationTimestamp
     @Column(name = "first_login_date")
-    private Date firstLoginDate;
+    private LocalDate firstLoginDate;
 
     @NotNull
     @Column(name = "firstname", nullable = false)
     private String firstName;
 
-    @NotNull
-    @Column(name = "lastname", nullable = false)
+    @Nullable
+    @Column(name = "lastname")
     private String lastName;
 
-    @NotNull
-    @Column(name = "username", nullable = false)
+    @Nullable
+    @Column(name = "username")
     private String username;
 
     @Nullable
@@ -57,7 +55,7 @@ public class User {
     private String email;
 
     @Nullable
-    @Column(name = "rating", nullable = false)
+    @Column(name = "rating")
     private Long rating;
 
     @Nullable
@@ -66,7 +64,7 @@ public class User {
 
     @NotNull
     @Column(name = "active", nullable = false)
-    private Boolean isActive;
+    private Boolean isActive = false;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -76,8 +74,8 @@ public class User {
     public User(
             @NotNull Long telegramId,
             @NotNull String firstName,
-            @NotNull String lastName,
-            @NotNull String username
+            @Nullable String lastName,
+            @Nullable String username
     ) {
         this.telegramId = telegramId;
         this.firstName = firstName;

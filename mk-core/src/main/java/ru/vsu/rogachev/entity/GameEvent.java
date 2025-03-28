@@ -16,7 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -25,15 +25,14 @@ import java.util.Date;
 public class GameEvent {
 
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "game_event_id", nullable = false)
+    @Column(name = "game_event_id")
     private Long id;
 
     @NotNull
     @CreationTimestamp
     @Column(name = "creation_time")
-    private Date creationTime;
+    private LocalDate creationTime;
 
     @NotNull
     @Column(name = "event_type", nullable = false)

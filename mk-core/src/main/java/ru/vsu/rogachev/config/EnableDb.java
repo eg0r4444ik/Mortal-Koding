@@ -1,5 +1,6 @@
 package ru.vsu.rogachev.config;
 
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import ru.vsu.rogachev.repositories.ConfirmRepository;
@@ -20,7 +21,8 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@EnableJpaRepositories
+@EnableJpaRepositories(basePackages = "ru.vsu.rogachev.repositories")
+@EntityScan(basePackages = "ru.vsu.rogachev.entity")
 @Import({
         ConfirmRepository.class,
         GameRepository.class,
@@ -29,8 +31,6 @@ import java.lang.annotation.Target;
         TaskRepository.class,
         UserRepository.class,
         ConfirmService.class,
-        GameService.class,
-        InviteService.class,
         PlayerService.class,
         TaskService.class,
         UserService.class

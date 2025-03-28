@@ -20,9 +20,8 @@ import java.time.Duration;
 public class GameParameters {
 
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "game_parameters_id", nullable = false)
+    @Column(name = "game_parameters_id")
     private Long id;
 
     @NotNull

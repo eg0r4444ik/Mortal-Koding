@@ -1,8 +1,9 @@
-package ru.vsu.rogachev.config;
+package ru.vsu.rogachev.config.codeforces;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Primary;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotBlank;

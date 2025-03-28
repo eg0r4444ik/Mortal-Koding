@@ -22,9 +22,8 @@ import javax.persistence.Table;
 public class Invite {
 
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "invite_id", nullable = false)
+    @Column(name = "invite_id")
     private Long id;
 
     @NotNull

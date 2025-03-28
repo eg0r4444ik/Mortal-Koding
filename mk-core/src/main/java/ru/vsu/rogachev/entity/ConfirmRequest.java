@@ -1,7 +1,9 @@
 package ru.vsu.rogachev.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,24 +13,24 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @Entity
 @NoArgsConstructor
+@RequiredArgsConstructor
 @Table(name = "confirm_requests")
 public class ConfirmRequest {
 
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "confirm_id", nullable = false)
+    @Column(name = "confirm_id")
     private Long id;
 
     @NotNull
     @CreationTimestamp
     @Column(name = "creation_date", nullable = false)
-    private Date creationDate;
+    private LocalDate creationDate;
 
     @NotNull
     @Column(name = "email", nullable = false)
@@ -37,9 +39,5 @@ public class ConfirmRequest {
     @NotNull
     @Column(name = "confirmation_code", nullable = false)
     private String confirmationCode;
-
-    public ConfirmRequest(@NotNull String email) {
-        this.email = email;
-    }
 
 }

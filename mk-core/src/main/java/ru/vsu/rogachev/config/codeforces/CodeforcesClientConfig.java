@@ -1,6 +1,7 @@
-package ru.vsu.rogachev.config;
+package ru.vsu.rogachev.config.codeforces;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +18,6 @@ import java.util.concurrent.TimeUnit;
 
 @Configuration
 @RequiredArgsConstructor
-@EnableConfigurationProperties(CodeforcesClientProperties.class)
 public class CodeforcesClientConfig {
 
     public static final String CODEFORCES_CLIENT = "codeforces-client";

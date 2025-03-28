@@ -2,6 +2,9 @@ package ru.vsu.rogachev.config;
 
 import java.util.List;
 
+import static ru.vsu.rogachev.handler.WaitConfirmationCodeStateCommandHandler.ProcessedCommand.CHANGE_HANDLE_COMMAND;
+import static ru.vsu.rogachev.handler.WaitConfirmationCodeStateCommandHandler.ProcessedCommand.SEND_AGAIN_COMMAND;
+
 public class Constants {
 
     public static final String UNKNOWN_COMMAND_TEXT = "Такой комады не существет, выберите одну из предложенных";
@@ -11,6 +14,14 @@ public class Constants {
                     "Введите свой handle с сайта https://codeforces.com/ и введите код подтверждения, " +
                     "который придет вам на почту, привязанную к вашему аккаунту codeforces. " +
                     "!! Если вы скрыли свою почту на codeforces, сделайте ее публичной !!";
+
+    public static final String SEND_CONFIRMATION_CODE_TEXT = "На почту был отправлен код подтверждения";
+
+    public static final String CODEFORCES_ACCOUNT_NOT_FOUNT =
+            "Аккаунт на Codeforces с таким хэндлом не найден, попробуйте ввести хэндл ханово";
+
+    public static final String CODEFORCES_ACCOUNT_EMAIL_IS_BLOCKED =
+            "На данном акаунте Codeforces скрыт адрес электронной почты. Пожалуйста, сделайте его публичным!";
 
     public static final String OPERATION_NOT_SUPPORTED_YET_MESSAGE =
             "Опция еще находится в разработке и пока недоступна, выберите другую";
@@ -27,7 +38,7 @@ public class Constants {
             List.of("Отправить код заново", "Ввести другой хэндл");
 
     public static final List<String> WAIT_CONFIRMATION_CODE_STATE_BUTTON_CALLBACK_DATA =
-            List.of("send_again", "change_handle");
+            List.of(SEND_AGAIN_COMMAND.getMessage(), CHANGE_HANDLE_COMMAND.getMessage());
 
     public static final List<String> DURING_THE_GAME_STATE_BUTTON_TEXTS = List.of("Показать оставшееся время");
 

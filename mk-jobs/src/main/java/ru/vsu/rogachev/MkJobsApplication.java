@@ -6,10 +6,10 @@ import ru.vsu.rogachev.config.EnableDb;
 
 @EnableDb
 @SpringBootApplication
-public class DispatcherApplication {
+public class MkJobsApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(DispatcherApplication.class);
+        SpringApplication.run(MkJobsApplication.class);
     }
 
 }

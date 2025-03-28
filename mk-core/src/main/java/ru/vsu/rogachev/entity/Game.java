@@ -19,8 +19,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -30,15 +30,14 @@ import java.util.List;
 public class Game {
 
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "game_id", nullable = false)
+    @Column(name = "game_id")
     private Long id;
 
     @Nullable
     @CreationTimestamp
     @Column(name = "start_time")
-    private Date startTime;
+    private LocalDate startTime;
 
     @NotNull
     @Column(name = "state")

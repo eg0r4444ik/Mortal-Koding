@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.rogachev.entity.ConfirmRequest;
 import ru.vsu.rogachev.repositories.ConfirmRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,23 +21,19 @@ public class ConfirmService {
         confirmRepository.save(confirmRequest);
     }
 
+    public void add(@NotNull String email, @NotNull String activationCode){
+        confirmRepository.save(new ConfirmRequest(LocalDate.now(), email, activationCode));
+    }
+
     @NotNull
     public List<ConfirmRequest> getAll(){
         return confirmRepository.findAll();
     }
 
-    @NotNull
-    public Optional<ConfirmRequest> getById(@NotNull Long id){
-        return confirmRepository.findById(id);
-    }
 
     @NotNull
     public Optional<ConfirmRequest> getByEmail(@NotNull String email) {
         return confirmRepository.findByEmail(email);
-    }
-
-    public boolean existsById(@NotNull Long id) {
-        return confirmRepository.existsById(id);
     }
 
     public boolean existsByEmail(@NotNull String email) {

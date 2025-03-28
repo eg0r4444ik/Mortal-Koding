@@ -67,11 +67,12 @@ public class BasicStateCommandHandler implements CommandHandler {
         if (!user.getIsActive() && command != ProcessedCommand.START_COMMAND) {
             userService.setUserState(user, WAIT_FOR_HANDLE_STATE);
             messageUtils.sendMessage(chatId, NON_ACTIVE_ACCOUNT_MESSAGE);
-            return;
         }
 
         switch (command) {
             case START_COMMAND -> {
+                // todo добавить проверку что пользователь уже активирал учетную запись
+                userService.setUserState(user, WAIT_FOR_HANDLE_STATE);
                 messageUtils.sendMessage(chatId, GREETING_MESSAGE);
             }
             case FIND_GAME_COMMAND -> {
