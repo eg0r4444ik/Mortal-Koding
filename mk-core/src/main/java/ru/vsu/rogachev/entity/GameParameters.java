@@ -40,4 +40,26 @@ public class GameParameters {
     @Column(name = "tasks_count", nullable = false)
     private Long tasksCount;
 
+    public GameParameters(
+            @NotNull Duration duration,
+            @NotNull GameType type,
+            @NotNull Long playersCount,
+            @NotNull Long tasksCount
+    ) {
+        this.duration = duration;
+        this.type = type;
+        this.playersCount = playersCount;
+        this.tasksCount = tasksCount;
+    }
+
+    public GameParameters(
+            @NotNull GameType type,
+            @NotNull Long playersCount,
+            @NotNull Long tasksCount
+    ) {
+        this.type = type;
+        this.playersCount = playersCount;
+        this.tasksCount = tasksCount;
+    }
+
 }

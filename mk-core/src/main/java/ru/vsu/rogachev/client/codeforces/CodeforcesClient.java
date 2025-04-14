@@ -2,7 +2,6 @@ package ru.vsu.rogachev.client.codeforces;
 
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -14,8 +13,6 @@ import ru.vsu.rogachev.client.codeforces.entity.CodeforcesUser;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
-import static ru.vsu.rogachev.config.codeforces.CodeforcesClientConfig.CODEFORCES_CLIENT;
 
 @RequiredArgsConstructor
 @Service

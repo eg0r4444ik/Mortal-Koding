@@ -19,9 +19,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -37,7 +39,7 @@ public class Game {
     @Nullable
     @CreationTimestamp
     @Column(name = "start_time")
-    private LocalDate startTime;
+    private LocalDateTime startTime;
 
     @NotNull
     @Column(name = "state")
@@ -50,7 +52,7 @@ public class Game {
     @OneToMany
     @LazyCollection(LazyCollectionOption.FALSE)
     @JoinColumn(name = "game_id")
-    private List<Player> players = new ArrayList<>();
+    private Set<Player> players = new HashSet<>();
 
     @OneToMany
     @LazyCollection(LazyCollectionOption.FALSE)

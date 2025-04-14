@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import ru.vsu.rogachev.entity.User;
+import ru.vsu.rogachev.exception.BusinessLogicException;
+import ru.vsu.rogachev.services.GameEventService;
 import ru.vsu.rogachev.services.UserService;
 import ru.vsu.rogachev.utils.MessageUtils;
 
@@ -15,9 +17,11 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static ru.vsu.rogachev.config.Constants.NON_ACTIVE_ACCOUNT_MESSAGE;
+import static ru.vsu.rogachev.exception.BusinessLogicExceptionType.NON_ACTIVE_ACCOUNT;
 import static ru.vsu.rogachev.entity.enums.UserState.WAIT_FOR_HANDLE_STATE;
 import static ru.vsu.rogachev.entity.enums.UserState.WAIT_OPPONENT_HANDLE_STATE;
+import static ru.vsu.rogachev.exception.BusinessLogicExceptionType.OPERATION_NOT_SUPPORTED_YET;
+import static ru.vsu.rogachev.exception.BusinessLogicExceptionType.UNKNOWN_COMMAND;
 
 @Service
 @RequiredArgsConstructor
@@ -35,9 +39,11 @@ public class BasicStateCommandHandler implements CommandHandler {
 
     private final UserService userService;
 
+    private final GameEventService gameEventService;
+
     @Getter
     @AllArgsConstructor
-    enum ProcessedCommand {
+    public enum ProcessedCommand {
         START_COMMAND("/start", "Начало взаимодействия с ботом"),
         FIND_GAME_COMMAND("find_game", "Поиск игры"),
         PLAY_WITH_FRIEND_COMMAND("play_with_friend", "Создание игры с другом"),
@@ -66,7 +72,7 @@ public class BasicStateCommandHandler implements CommandHandler {
 
         if (!user.getIsActive() && command != ProcessedCommand.START_COMMAND) {
             userService.setUserState(user, WAIT_FOR_HANDLE_STATE);
-            messageUtils.sendMessage(chatId, NON_ACTIVE_ACCOUNT_MESSAGE);
+            throw BusinessLogicException.of(chatId, NON_ACTIVE_ACCOUNT);
         }
 
         switch (command) {
@@ -76,7 +82,7 @@ public class BasicStateCommandHandler implements CommandHandler {
                 messageUtils.sendMessage(chatId, GREETING_MESSAGE);
             }
             case FIND_GAME_COMMAND -> {
-                messageUtils.sendNotSupportedYetCommandMessage(chatId);
+                throw BusinessLogicException.of(chatId, OPERATION_NOT_SUPPORTED_YET);
             }
             case PLAY_WITH_FRIEND_COMMAND -> {
                 userService.setUserState(user, WAIT_OPPONENT_HANDLE_STATE);
@@ -86,15 +92,15 @@ public class BasicStateCommandHandler implements CommandHandler {
                 messageUtils.sendBasicStateMessage(chatId, String.format(GET_RATING_MESSAGE, user.getRating()));
             }
             case LOOK_GAMES_HISTORY_COMMAND -> {
-
+                throw BusinessLogicException.of(chatId, OPERATION_NOT_SUPPORTED_YET);
             }
             case AGREE_GAME_COMMAND -> {
-
+                gameEventService.connectToGame(user);
             }
             case REFUSE_GAME_COMMAND -> {
-
+                gameEventService.refuseGame(user);
             }
-            case UNKNOWN -> messageUtils.sendUnknownCommandMessage(chatId);
+            case UNKNOWN -> throw BusinessLogicException.of(chatId, UNKNOWN_COMMAND);
         }
     }
 

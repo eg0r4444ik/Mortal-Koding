@@ -11,14 +11,19 @@ import ru.vsu.rogachev.controller.TelegramBot;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.vsu.rogachev.config.Constants.BASIC_STATE_BUTTON_CALLBACK_DATA;
-import static ru.vsu.rogachev.config.Constants.BASIC_STATE_BUTTON_TEXTS;
-import static ru.vsu.rogachev.config.Constants.OPERATION_NOT_SUPPORTED_YET_MESSAGE;
-import static ru.vsu.rogachev.config.Constants.UNKNOWN_COMMAND_TEXT;
+import static ru.vsu.rogachev.handler.BasicStateCommandHandler.ProcessedCommand.FIND_GAME_COMMAND;
+import static ru.vsu.rogachev.handler.BasicStateCommandHandler.ProcessedCommand.LOOK_RATING_COMMAND;
+import static ru.vsu.rogachev.handler.BasicStateCommandHandler.ProcessedCommand.PLAY_WITH_FRIEND_COMMAND;
 
 @Component
 @RequiredArgsConstructor
 public class MessageUtils {
+
+    public static final List<String> BASIC_STATE_BUTTON_TEXTS =
+            List.of("Найти дуэль", "Играть с другом", "Посмотреть рейтинг");
+
+    public static final List<String> BASIC_STATE_BUTTON_CALLBACK_DATA =
+            List.of(FIND_GAME_COMMAND.getMessage(), PLAY_WITH_FRIEND_COMMAND.getMessage(), LOOK_RATING_COMMAND.getMessage());
 
     private final TelegramBot telegramBot;
 
@@ -32,14 +37,6 @@ public class MessageUtils {
 
     public void sendBasicStateMessage(@NotNull Long chatId, @NotNull String text){
         sendMessageWithButtons(chatId, text, BASIC_STATE_BUTTON_TEXTS, BASIC_STATE_BUTTON_CALLBACK_DATA);
-    }
-
-    public void sendUnknownCommandMessage(@NotNull Long chatId){
-        sendMessage(chatId, UNKNOWN_COMMAND_TEXT);
-    }
-
-    public void sendNotSupportedYetCommandMessage(@NotNull Long chatId){
-        sendBasicStateMessage(chatId, OPERATION_NOT_SUPPORTED_YET_MESSAGE);
     }
 
     public void sendMessageWithButtons(

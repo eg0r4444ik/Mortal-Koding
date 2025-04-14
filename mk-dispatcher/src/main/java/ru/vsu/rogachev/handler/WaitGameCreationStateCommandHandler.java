@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import ru.vsu.rogachev.entity.User;
+import ru.vsu.rogachev.exception.BusinessLogicException;
+import ru.vsu.rogachev.exception.BusinessLogicExceptionType;
 import ru.vsu.rogachev.services.UserService;
 import ru.vsu.rogachev.utils.MessageUtils;
 
@@ -16,6 +18,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static ru.vsu.rogachev.entity.enums.UserState.BASIC_STATE;
+import static ru.vsu.rogachev.exception.BusinessLogicExceptionType.UNKNOWN_COMMAND;
 
 @Service
 @RequiredArgsConstructor
@@ -52,10 +55,11 @@ public class WaitGameCreationStateCommandHandler implements CommandHandler {
 
         switch (command) {
             case EXIT_COMMAND -> {
+                // todo добавить исчезновение сообщения у второго пользователя
                 userService.setUserState(user, BASIC_STATE);
                 messageUtils.sendBasicStateMessage(chatId, CANCEL_GAME_RESULT_TEXT);
             }
-            case UNKNOWN -> messageUtils.sendUnknownCommandMessage(chatId);
+            case UNKNOWN -> throw BusinessLogicException.of(chatId, UNKNOWN_COMMAND);
         }
     }
 

@@ -32,6 +32,6 @@ public class Invite {
 
     @NotNull
     @OneToOne(fetch = FetchType.EAGER)
-    private Game game;
+    private User inviter;
 
 }

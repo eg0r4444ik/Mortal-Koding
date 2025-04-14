@@ -2,6 +2,7 @@ package ru.vsu.rogachev.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 
 @Data
 @Entity
+@Setter
 @NoArgsConstructor
 @Table(name = "game_events")
 public class GameEvent {
@@ -34,6 +36,9 @@ public class GameEvent {
     @Column(name = "creation_time")
     private LocalDate creationTime;
 
+    @Column(name = "processed")
+    private boolean processed;
+
     @NotNull
     @Column(name = "event_type", nullable = false)
     private GameEventType eventType;
@@ -42,12 +47,17 @@ public class GameEvent {
     @OneToOne(fetch = FetchType.EAGER)
     private User originator;
 
-    @NotNull
+    @Nullable
     @OneToOne(cascade = CascadeType.ALL)
     private GameParameters gameParameters;
 
     @Nullable
     @OneToOne(fetch = FetchType.EAGER)
-    private User opponent;
+    private User participant;
+
+    public GameEvent(@NotNull GameEventType eventType, @NotNull User originator) {
+        this.eventType = eventType;
+        this.originator = originator;
+    }
 
 }

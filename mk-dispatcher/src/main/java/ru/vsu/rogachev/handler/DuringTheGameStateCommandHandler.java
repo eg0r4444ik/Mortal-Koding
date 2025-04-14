@@ -6,19 +6,30 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import ru.vsu.rogachev.entity.User;
+import ru.vsu.rogachev.exception.BusinessLogicException;
+import ru.vsu.rogachev.services.GameService;
 import ru.vsu.rogachev.utils.MessageUtils;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static ru.vsu.rogachev.exception.BusinessLogicExceptionType.UNKNOWN_COMMAND;
 
 @Service
 @RequiredArgsConstructor
 public class DuringTheGameStateCommandHandler implements CommandHandler {
 
+    private static final String TIMER_RESULT_MESSAGE = "С начала соревнования прошло: %s минут, %s секунд";
+
     private final MessageUtils messageUtils;
+
+    private final GameService gameService;
 
     @Getter
     @AllArgsConstructor
@@ -45,9 +56,16 @@ public class DuringTheGameStateCommandHandler implements CommandHandler {
 
         switch (command) {
             case SHOW_TIMER_COMMAND -> {
-
+                gameService.getByPlayerHandle(Objects.requireNonNull(user.getCodeforcesUsername()))
+                        .ifPresent(game -> {
+                            Duration time = Duration.between(LocalDateTime.now(), game.getStartTime());
+                            messageUtils.sendMessage(
+                                    chatId,
+                                    String.format(TIMER_RESULT_MESSAGE, time.toMinutes(), time.getSeconds() % 60)
+                            );
+                        });
             }
-            case UNKNOWN -> messageUtils.sendUnknownCommandMessage(chatId);
+            case UNKNOWN -> throw BusinessLogicException.of(chatId, UNKNOWN_COMMAND);
         }
     }
 

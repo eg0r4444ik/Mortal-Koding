@@ -46,6 +46,6 @@ public class Task {
 
     @Nullable
     @Column(name = "solve_time")
-    private LocalDate solve_time;
+    private LocalDate solveTime;
 
 }

@@ -11,6 +11,7 @@ import ru.vsu.rogachev.services.UserService;
 import ru.vsu.rogachev.utils.MessageUtils;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -18,10 +19,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static ru.vsu.rogachev.config.Constants.SEND_CONFIRMATION_CODE_TEXT;
-import static ru.vsu.rogachev.config.Constants.WAIT_CONFIRMATION_CODE_STATE_BUTTON_CALLBACK_DATA;
-import static ru.vsu.rogachev.config.Constants.WAIT_CONFIRMATION_CODE_STATE_BUTTON_TEXTS;
 import static ru.vsu.rogachev.entity.enums.UserState.BASIC_STATE;
 import static ru.vsu.rogachev.entity.enums.UserState.WAIT_FOR_HANDLE_STATE;
+import static ru.vsu.rogachev.handler.WaitConfirmationCodeStateCommandHandler.ProcessedCommand.CHANGE_HANDLE_COMMAND;
+import static ru.vsu.rogachev.handler.WaitConfirmationCodeStateCommandHandler.ProcessedCommand.SEND_AGAIN_COMMAND;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +34,12 @@ public class WaitConfirmationCodeStateCommandHandler implements CommandHandler {
                     "Теперь вы можете соревноваться с другими участниками, друзьями и отслеживать свой рейтинг!";
     private static final String FAILED_CHECK_CODE_RESULT_TEXT =
             "Вы ввели неверный код, попробуйте снова или запросите повторную отправку кода нажав на кнопку";
+
+    public static final List<String> WAIT_CONFIRMATION_CODE_STATE_BUTTON_TEXTS =
+            List.of("Отправить код заново", "Ввести другой хэндл");
+
+    public static final List<String> WAIT_CONFIRMATION_CODE_STATE_BUTTON_CALLBACK_DATA =
+            List.of(SEND_AGAIN_COMMAND.getMessage(), CHANGE_HANDLE_COMMAND.getMessage());
 
     private final MessageUtils messageUtils;
 

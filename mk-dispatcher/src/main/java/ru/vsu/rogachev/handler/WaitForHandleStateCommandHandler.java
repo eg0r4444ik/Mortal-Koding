@@ -6,7 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import ru.vsu.rogachev.client.codeforces.CodeforcesClient;
+import ru.vsu.rogachev.client.codeforces.entity.CodeforcesUser;
 import ru.vsu.rogachev.entity.User;
+import ru.vsu.rogachev.exception.BusinessLogicException;
 import ru.vsu.rogachev.mail.MailSenderService;
 import ru.vsu.rogachev.services.UserService;
 import ru.vsu.rogachev.utils.MessageUtils;
@@ -14,14 +16,13 @@ import ru.vsu.rogachev.utils.MessageUtils;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static ru.vsu.rogachev.config.Constants.CODEFORCES_ACCOUNT_EMAIL_IS_BLOCKED;
-import static ru.vsu.rogachev.config.Constants.CODEFORCES_ACCOUNT_NOT_FOUNT;
 import static ru.vsu.rogachev.entity.enums.UserState.WAIT_CONFIRMATION_CODE_STATE;
 import static ru.vsu.rogachev.config.Constants.SEND_CONFIRMATION_CODE_TEXT;
+import static ru.vsu.rogachev.exception.BusinessLogicExceptionType.CODEFORCES_ACCOUNT_EMAIL_IS_BLOCKED;
+import static ru.vsu.rogachev.exception.BusinessLogicExceptionType.CODEFORCES_ACCOUNT_NOT_FOUNT;
 
 @Service
 @RequiredArgsConstructor
@@ -59,24 +60,21 @@ public class WaitForHandleStateCommandHandler implements CommandHandler {
 
         switch (command) {
             case SELECT_HANDLE_COMMAND -> {
-                AtomicReference<String> resultMessage = new AtomicReference<>(CODEFORCES_ACCOUNT_NOT_FOUNT);
-
                 try {
-                    codeforcesClient.getUserInfo(message).ifPresent(cfUser -> {
-                        String email = cfUser.getEmail();
-                        if (email != null) {
-                            userService.setCodeforcesInfo(user, cfUser);
-                            mailSenderService.send(email);
-                            userService.setUserState(user, WAIT_CONFIRMATION_CODE_STATE);
-                            resultMessage.set(SEND_CONFIRMATION_CODE_TEXT);
-                        } else {
-                            resultMessage.set(CODEFORCES_ACCOUNT_EMAIL_IS_BLOCKED);
-                        }
-                    });
+                    CodeforcesUser cfUser = codeforcesClient.getUserInfo(message)
+                            .orElseThrow(() -> BusinessLogicException.of(chatId, CODEFORCES_ACCOUNT_NOT_FOUNT, message));
+                    String email = cfUser.getEmail();
 
-                    messageUtils.sendMessage(chatId, resultMessage.get());
+                    if (email == null) {
+                        throw BusinessLogicException.of(chatId, CODEFORCES_ACCOUNT_EMAIL_IS_BLOCKED, message);
+                    }
+
+                    userService.setCodeforcesInfo(user, cfUser);
+                    mailSenderService.send(email);
+                    userService.setUserState(user, WAIT_CONFIRMATION_CODE_STATE);
+                    messageUtils.sendMessage(chatId, SEND_CONFIRMATION_CODE_TEXT);
                 } catch (Exception e) {
-                    messageUtils.sendMessage(chatId, resultMessage.get());
+                    throw BusinessLogicException.of(chatId, CODEFORCES_ACCOUNT_NOT_FOUNT, message);
                 }
             }
         }
