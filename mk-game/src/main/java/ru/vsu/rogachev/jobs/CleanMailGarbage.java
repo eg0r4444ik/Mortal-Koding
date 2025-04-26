@@ -1,4 +1,4 @@
-//package ru.vsu.rogachev.jobs;
+package ru.vsu.rogachev.jobs;//package ru.vsu.rogachev.jobs;
 //
 //import com.fasterxml.jackson.core.JsonProcessingException;
 //import lombok.extern.log4j.Log4j;

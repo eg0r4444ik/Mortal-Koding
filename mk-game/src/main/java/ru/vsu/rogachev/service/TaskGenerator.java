@@ -1,4 +1,4 @@
-//package ru.vsu.rogachev.service;
+package ru.vsu.rogachev.service;//package ru.vsu.rogachev.service;
 //
 //import com.fasterxml.jackson.core.JsonProcessingException;
 //import org.springframework.beans.factory.annotation.Autowired;

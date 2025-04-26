@@ -1,4 +1,4 @@
-package ru.vsu.rogachev.mail.generator;
+package ru.vsu.rogachev.auth.generator;
 
 import org.springframework.stereotype.Service;
 

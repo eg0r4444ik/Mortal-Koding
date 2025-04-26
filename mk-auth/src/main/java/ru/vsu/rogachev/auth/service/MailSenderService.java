@@ -1,4 +1,4 @@
-package ru.vsu.rogachev.mail;
+package ru.vsu.rogachev.auth.service;
 
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import ru.vsu.rogachev.mail.generator.CodeGenerator;
+import ru.vsu.rogachev.auth.generator.CodeGenerator;
 import ru.vsu.rogachev.services.ConfirmService;
 
 @Service

@@ -1,4 +1,4 @@
-package ru.vsu.rogachev.exceptions;
+package ru.vsu.rogachev.exception;
 
 public class DbDontContainObjectException extends Exception{
 

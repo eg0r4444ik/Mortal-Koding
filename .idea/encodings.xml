@@ -4,11 +4,14 @@
     <file url="file://$PROJECT_DIR$/battle-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/codeforces-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/mail-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mk-auth/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/mk-core/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/mk-dispatcher/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mk-game/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/mk-info/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/mk-jobs/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/mk-mi/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mk-stats/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
   </component>

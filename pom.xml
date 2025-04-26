@@ -10,8 +10,10 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>mk-dispatcher</module>
-        <module>mk-jobs</module>
         <module>mk-core</module>
+        <module>mk-auth</module>
+        <module>mk-stats</module>
+        <module>mk-game</module>
     </modules>
 
     <properties>

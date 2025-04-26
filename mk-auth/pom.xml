@@ -9,7 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>mk-jobs</artifactId>
+    <artifactId>mk-auth</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -22,6 +22,14 @@
             <groupId>ru.vsu.rogachev</groupId>
             <artifactId>mk-core</artifactId>
             <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
     </dependencies>
 

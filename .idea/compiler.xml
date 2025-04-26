@@ -17,8 +17,10 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
         </processorPath>
         <module name="mk-core" />
-        <module name="mk-jobs" />
         <module name="mk-dispatcher" />
+        <module name="mk-game" />
+        <module name="mk-auth" />
+        <module name="mk-stats" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -29,6 +31,7 @@
       <module name="db-service" target="17" />
       <module name="mail-service" target="17" />
       <module name="mk-info" target="17" />
+      <module name="mk-jobs" target="17" />
       <module name="mk-mi" target="17" />
       <module name="node" target="17" />
     </bytecodeTargetLevel>
@@ -43,11 +46,14 @@
       <module name="common-utils" options="-parameters" />
       <module name="db-service" options="-parameters" />
       <module name="mail-service" options="-parameters" />
+      <module name="mk-auth" options="-parameters" />
       <module name="mk-core" options="-parameters" />
       <module name="mk-dispatcher" options="-parameters" />
+      <module name="mk-game" options="-parameters" />
       <module name="mk-info" options="-parameters" />
       <module name="mk-jobs" options="-parameters" />
       <module name="mk-mi" options="-parameters" />
+      <module name="mk-stats" options="-parameters" />
       <module name="node" options="-parameters" />
     </option>
   </component>
