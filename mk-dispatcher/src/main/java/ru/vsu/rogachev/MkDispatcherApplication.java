@@ -3,7 +3,7 @@ package ru.vsu.rogachev;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import ru.vsu.rogachev.config.codeforces.EnableCodeforcesClient;
+import ru.vsu.rogachev.config.client.codeforces.EnableCodeforcesClient;
 
 @EnableScheduling
 @SpringBootApplication

@@ -1,20 +1,21 @@
 package ru.vsu.rogachev.client.codeforces;
 
-import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import ru.vsu.rogachev.client.codeforces.entity.Problems;
-import ru.vsu.rogachev.client.codeforces.entity.CodeforcesResponseContainer;
-import ru.vsu.rogachev.client.codeforces.entity.Submission;
-import ru.vsu.rogachev.client.codeforces.entity.CodeforcesUser;
+import ru.vsu.rogachev.client.codeforces.dto.Problems;
+import ru.vsu.rogachev.client.codeforces.dto.CodeforcesResponseContainer;
+import ru.vsu.rogachev.client.codeforces.dto.Submission;
+import ru.vsu.rogachev.client.codeforces.dto.CodeforcesUser;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-@RequiredArgsConstructor
+import static ru.vsu.rogachev.config.client.codeforces.CodeforcesClientConfig.CODEFORCES_CLIENT_NAME;
+
 @Service
 public class CodeforcesClient {
 
@@ -23,6 +24,10 @@ public class CodeforcesClient {
     public static final String GET_PROBLEM_SET = "/problemset.problems";
 
     private final WebClient webClient;
+
+    public CodeforcesClient(@Qualifier(CODEFORCES_CLIENT_NAME) WebClient webClient) {
+        this.webClient = webClient;
+    }
 
     public @NotNull Optional<CodeforcesUser> getUserInfo(@NotNull String handle){
         return webClient.get()

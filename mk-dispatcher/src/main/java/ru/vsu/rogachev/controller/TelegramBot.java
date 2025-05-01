@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.vsu.rogachev.config.TelegramBotProperties;
+import ru.vsu.rogachev.exception.BusinessLogicException;
 
 @Log4j
 @Component
@@ -34,7 +35,19 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        updateController.processUpdate(update);
+        try {
+            updateController.processUpdate(update);
+        } catch (BusinessLogicException ex) {
+            if (ex.getChatId() == null) {
+                log.error(ex.getMessage(), ex);
+                return;
+            }
+            var sendMessage = new SendMessage();
+            sendMessage.setChatId(ex.getChatId().toString());
+            sendMessage.setText(ex.getText());
+
+            sendAnswerMessage(sendMessage);
+        }
     }
 
     public void sendAnswerMessage(SendMessage message){

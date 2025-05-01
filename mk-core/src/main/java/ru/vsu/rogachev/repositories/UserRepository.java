@@ -10,15 +10,15 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    @NotNull Optional<User> findByTelegramId(@NotNull Long id);
+    @NotNull Optional<User> findByChatId(@NotNull Long id);
 
     @NotNull Optional<User> findByCodeforcesUsername(@NotNull String username);
 
-    boolean existsByTelegramId(@NotNull Long id);
+    boolean existsByChatId(@NotNull Long id);
 
     boolean existsByCodeforcesUsername(@NotNull String username);
 
-    void deleteByTelegramId(@NotNull Long id);
+    void deleteByChatId(@NotNull Long id);
 
     void deleteByCodeforcesUsername(@NotNull String username);
 

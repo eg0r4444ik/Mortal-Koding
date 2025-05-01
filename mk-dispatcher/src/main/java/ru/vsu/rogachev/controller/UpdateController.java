@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.vsu.rogachev.distributor.MessageDistributor;
+import ru.vsu.rogachev.service.distributor.MessageDistributor;
 
 @Log4j
 @Component

@@ -2,7 +2,6 @@ package ru.vsu.rogachev.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -30,8 +29,8 @@ public class User {
     private Long id;
 
     @NotNull
-    @Column(name = "telegram_id", unique = true, nullable = false)
-    private Long telegramId;
+    @Column(name = "chat_id", unique = true, nullable = false)
+    private Long chatId;
 
     @Nullable
     @CreationTimestamp
@@ -72,12 +71,12 @@ public class User {
     private UserState state = UserState.BASIC_STATE;
 
     public User(
-            @NotNull Long telegramId,
+            @NotNull Long chatId,
             @NotNull String firstName,
             @Nullable String lastName,
             @Nullable String username
     ) {
-        this.telegramId = telegramId;
+        this.chatId = chatId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;

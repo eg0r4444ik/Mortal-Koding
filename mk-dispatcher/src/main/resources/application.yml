@@ -13,6 +13,28 @@ client:
     connections-timeout-in-seconds: 25
     read-timeout-in-seconds: 25
     pending-acquire-timeout-in-seconds: 10
+  mk:
+    auth:
+      url: http://localhost:8089
+      connections: 30
+      max-retry-attempts: 2
+      connections-timeout-in-seconds: 25
+      read-timeout-in-seconds: 25
+      pending-acquire-timeout-in-seconds: 10
+    game:
+      url: http://localhost:8090
+      connections: 30
+      max-retry-attempts: 2
+      connections-timeout-in-seconds: 25
+      read-timeout-in-seconds: 25
+      pending-acquire-timeout-in-seconds: 10
+    stats:
+      url: http://localhost:8091
+      connections: 30
+      max-retry-attempts: 2
+      connections-timeout-in-seconds: 25
+      read-timeout-in-seconds: 25
+      pending-acquire-timeout-in-seconds: 10
 
 spring:
   mail:

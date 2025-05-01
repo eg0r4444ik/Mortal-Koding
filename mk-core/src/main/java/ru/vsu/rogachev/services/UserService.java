@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.vsu.rogachev.client.codeforces.entity.CodeforcesUser;
+import ru.vsu.rogachev.client.codeforces.dto.CodeforcesUser;
 import ru.vsu.rogachev.entity.User;
 import ru.vsu.rogachev.entity.enums.UserState;
 import ru.vsu.rogachev.repositories.UserRepository;
@@ -21,8 +21,8 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public @NotNull Optional<User> getUserByTelegramId(@NotNull Long id) {
-        return userRepository.findByTelegramId(id);
+    public @NotNull Optional<User> getUserByChatId(@NotNull Long id) {
+        return userRepository.findByChatId(id);
     }
 
     public void setCodeforcesInfo(@NotNull User user, @NotNull CodeforcesUser codeforcesUser) {
@@ -53,8 +53,8 @@ public class UserService {
         return userRepository.existsById(id);
     }
 
-    public boolean existsByTelegramId(@NotNull Long id) {
-        return userRepository.existsByTelegramId(id);
+    public boolean existsByChatId(@NotNull Long id) {
+        return userRepository.existsByChatId(id);
     }
 
     public boolean existsByCodeforcesUsername(@NotNull String username) {
@@ -67,8 +67,8 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUserByTelegramId(@NotNull Long id){
-        userRepository.deleteByTelegramId(id);
+    public void deleteUserByChatId(@NotNull Long id){
+        userRepository.deleteByChatId(id);
     }
 
     @Transactional

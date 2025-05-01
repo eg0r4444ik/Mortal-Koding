@@ -2,7 +2,7 @@ package ru.vsu.rogachev;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import ru.vsu.rogachev.config.EnableDb;
+import ru.vsu.rogachev.config.db.EnableDb;
 
 @EnableDb
 @SpringBootApplication

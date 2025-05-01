@@ -8,9 +8,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.function.client.WebClient;
 import ru.vsu.rogachev.client.codeforces.CodeforcesClient;
-import ru.vsu.rogachev.client.codeforces.entity.Problems;
-import ru.vsu.rogachev.client.codeforces.entity.Submission;
-import ru.vsu.rogachev.client.codeforces.entity.CodeforcesUser;
+import ru.vsu.rogachev.client.codeforces.dto.Problems;
+import ru.vsu.rogachev.client.codeforces.dto.Submission;
+import ru.vsu.rogachev.client.codeforces.dto.CodeforcesUser;
 
 import java.util.List;
 import java.util.Optional;

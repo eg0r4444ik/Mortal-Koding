@@ -6,32 +6,30 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import ru.vsu.rogachev.auth.generator.CodeGenerator;
-import ru.vsu.rogachev.services.ConfirmService;
+import ru.vsu.rogachev.auth.utils.CodeGenerator;
+import ru.vsu.rogachev.client.mk.auth.dto.ApiCheckCodeRequest;
+import ru.vsu.rogachev.client.mk.dto.ResponseContainer;
 
 @Service
 @RequiredArgsConstructor
 public class MailSenderService {
 
-    private static final String ACTIVATION_EMAIL_MESSAGE =
-            "Для завершения регистрации введите полученный код в чат:\n%s";
     private static final String ACTIVATION_EMAIL_HEADER = "Активация учетной записи";
+    private static final String ACTIVATION_EMAIL_MESSAGE = "Для завершения регистрации введите полученный код в чат:\n%s";
 
     private final JavaMailSender javaMailSender;
 
     @Value("${spring.mail.username}")
     private String emailFrom;
 
-    private final CodeGenerator generator;
-
     private final ConfirmService confirmService;
 
-    public void send(@NotNull String email) {
+    public ResponseContainer<Void> sendCode(@NotNull String email) {
         if(confirmService.existsByEmail(email)){
             confirmService.deleteByEmail(email);
         }
 
-        String activationCode = generator.generateActivationCode();
+        String activationCode = CodeGenerator.generateActivationCode();
         var messageBody = String.format(ACTIVATION_EMAIL_MESSAGE, activationCode);
 
         var mailMessage = new SimpleMailMessage();
@@ -42,12 +40,16 @@ public class MailSenderService {
 
         confirmService.add(email, activationCode);
         javaMailSender.send(mailMessage);
+
+        return ResponseContainer.success(null);
     }
 
-    public boolean checkCode(@NotNull String email, @NotNull String code) {
-        return confirmService.getByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Confirmation code not found"))
-                .getConfirmationCode().equals(code);
+    public ResponseContainer<Boolean> checkCode(@NotNull ApiCheckCodeRequest request) {
+        return ResponseContainer.success(
+                confirmService.getByEmail(request.getEmail())
+                        .orElseThrow(() -> new RuntimeException("Confirmation code not found"))
+                        .getConfirmationCode().equals(request.getCode())
+        );
     }
 
 }
