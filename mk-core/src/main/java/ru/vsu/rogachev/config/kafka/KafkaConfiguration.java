@@ -11,8 +11,17 @@ import java.util.Map;
 public class KafkaConfiguration {
 
     @Bean
-    public NewTopic sendMessageTopic(){
-        return TopicBuilder.name("send-message-event-topic")
+    public NewTopic gameStateUpdateEventTopic(){
+        return TopicBuilder.name("game-state-update-event-topic")
+                .partitions(3)
+                .replicas(2)
+                .configs(Map.of("min.insync.replicas", "1"))
+                .build();
+    }
+
+    @Bean
+    public NewTopic gameEventTopic(){
+        return TopicBuilder.name("game-event-topic")
                 .partitions(3)
                 .replicas(2)
                 .configs(Map.of("min.insync.replicas", "1"))

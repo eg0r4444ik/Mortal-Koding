@@ -16,7 +16,9 @@ public enum BusinessLogicExceptions {
     USER_CREATING_THE_GAME(-8, "Пользователь с хэндлом %s в процессе создания игры"),
     USER_WAITING_CONNECTION_TO_ANOTHER_GAME(-9, "Пользователь с хэндлом %s ожидает подключения к другой игре"),
     USER_ALREADY_IN_GAME(-10, "Пользователь с хэндлом %s уже играет"),
-    COMMON_LOGIC_EXCEPTION(-11, "Что-то пошло не так, попробуйте еще раз")
+    COMMON_LOGIC_EXCEPTION(-11, "Что-то пошло не так, попробуйте еще раз"),
+    CODEFORCES_NOT_AVAILABLE(-12, "Codeforces временно недоступен"),
+    USER_NOT_IN_GAME(-13, "Пользователь не играет в данный момент")
     ;
 
     private final Integer code;

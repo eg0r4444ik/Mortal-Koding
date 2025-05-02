@@ -1,17 +1,24 @@
 package ru.vsu.rogachev.exception;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Getter
+@NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class BusinessLogicException extends RuntimeException {
 
     @Nullable
-    private final Long chatId;
+    @JsonProperty("chat_id")
+    private Long chatId;
 
     @NotNull
-    private final String text;
+    @JsonProperty("text")
+    private String text;
 
     public BusinessLogicException(@NotNull Long chatId, @NotNull String text) {
         super(text);

@@ -2,9 +2,11 @@ package ru.vsu.rogachev;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import ru.vsu.rogachev.config.db.EnableDb;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import ru.vsu.rogachev.config.kafka.EnableKafka;
 
-@EnableDb
+@EnableKafka
+@EnableJpaRepositories
 @SpringBootApplication
 public class MkGameApplication {
 

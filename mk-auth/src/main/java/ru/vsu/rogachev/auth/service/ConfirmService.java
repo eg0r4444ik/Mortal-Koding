@@ -8,6 +8,7 @@ import ru.vsu.rogachev.auth.entity.ConfirmRequest;
 import ru.vsu.rogachev.auth.repository.ConfirmRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +23,7 @@ public class ConfirmService {
     }
 
     public void add(@NotNull String email, @NotNull String activationCode){
-        confirmRepository.save(new ConfirmRequest(LocalDate.now(), email, activationCode));
+        confirmRepository.save(new ConfirmRequest(LocalDateTime.now(), email, activationCode));
     }
 
     @NotNull
@@ -48,6 +49,11 @@ public class ConfirmService {
     @Transactional
     public void deleteByEmail(@NotNull String email){
         confirmRepository.deleteByEmail(email);
+    }
+
+    @Transactional
+    public void deleteAllExpiredSince(@NotNull LocalDateTime expirationTime){
+        confirmRepository.deleteAllExpiredSince(expirationTime);
     }
 
 }

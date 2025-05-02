@@ -7,8 +7,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import ru.vsu.rogachev.auth.utils.CodeGenerator;
-import ru.vsu.rogachev.client.mk.auth.dto.ApiCheckCodeRequest;
-import ru.vsu.rogachev.client.mk.dto.ResponseContainer;
+import ru.vsu.rogachev.client.mk.auth.dto.CheckCodeRequest;
+import ru.vsu.rogachev.client.mk.container.ResponseContainer;
 
 @Service
 @RequiredArgsConstructor
@@ -44,7 +44,7 @@ public class MailSenderService {
         return ResponseContainer.success(null);
     }
 
-    public ResponseContainer<Boolean> checkCode(@NotNull ApiCheckCodeRequest request) {
+    public ResponseContainer<Boolean> checkCode(@NotNull CheckCodeRequest request) {
         return ResponseContainer.success(
                 confirmService.getByEmail(request.getEmail())
                         .orElseThrow(() -> new RuntimeException("Confirmation code not found"))

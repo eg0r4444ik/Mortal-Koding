@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -29,7 +30,7 @@ public class ConfirmRequest {
     @NotNull
     @CreationTimestamp
     @Column(name = "creation_date", nullable = false)
-    private LocalDate creationDate;
+    private LocalDateTime creationDate;
 
     @NotNull
     @Column(name = "email", nullable = false)

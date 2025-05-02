@@ -220,7 +220,7 @@ public class CodeforcesClientTest {
     }
 
     @Test
-    void positive_getUserSubmissions() throws InterruptedException {
+    void positive_getPlayersSubmissions() throws InterruptedException {
         mockWebServer.enqueue(
                 new MockResponse()
                         .setResponseCode(200)
@@ -228,7 +228,7 @@ public class CodeforcesClientTest {
                         .addHeader("Content-Type", "application/json")
         );
 
-        List<Submission> submissions = codeforcesClient.getUserSubmissions(userHandle);
+        List<Submission> submissions = codeforcesClient.getPlayersSubmissions(userHandle);
 
         assertThat(submissions).isNotEmpty();
 

@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.vsu.rogachev.auth.service.MailSenderService;
-import ru.vsu.rogachev.client.mk.auth.dto.ApiCheckCodeRequest;
-import ru.vsu.rogachev.client.mk.dto.ResponseContainer;
+import ru.vsu.rogachev.client.mk.auth.dto.CheckCodeRequest;
+import ru.vsu.rogachev.client.mk.container.ResponseContainer;
 
 import static ru.vsu.rogachev.client.mk.auth.AuthEndpoints.CHECK_CODE_ENDPOINT;
 import static ru.vsu.rogachev.client.mk.auth.AuthEndpoints.SEND_CODE_ENDPOINT;
@@ -25,7 +25,7 @@ public class AuthController {
     }
 
     @PostMapping(CHECK_CODE_ENDPOINT)
-    public ResponseContainer<Boolean> checkCode(@RequestBody ApiCheckCodeRequest request){
+    public ResponseContainer<Boolean> checkCode(@RequestBody CheckCodeRequest request){
         return mailSenderService.checkCode(request);
     }
 

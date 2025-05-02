@@ -5,14 +5,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import ru.vsu.rogachev.client.mk.auth.dto.ApiCheckCodeRequest;
-import ru.vsu.rogachev.client.mk.dto.ResponseContainer;
+import ru.vsu.rogachev.client.mk.auth.dto.CheckCodeRequest;
+import ru.vsu.rogachev.client.mk.container.ResponseContainer;
 
 import java.util.Objects;
 
 import static ru.vsu.rogachev.client.mk.auth.AuthEndpoints.CHECK_CODE_ENDPOINT;
 import static ru.vsu.rogachev.client.mk.auth.AuthEndpoints.SEND_CODE_ENDPOINT;
-import static ru.vsu.rogachev.client.mk.dto.ResponseContainer.ResponseStatus.ERROR;
+import static ru.vsu.rogachev.client.mk.container.ResponseContainer.ResponseStatus.ERROR;
 import static ru.vsu.rogachev.config.client.MkAuthClientConfig.MK_AUTH_CLIENT_NAME;
 import static ru.vsu.rogachev.exception.BusinessLogicExceptions.COMMON_LOGIC_EXCEPTION;
 
@@ -40,7 +40,7 @@ public class MkAuthClient {
     }
 
     public boolean checkCode(@NotNull String email, @NotNull String code){
-        ApiCheckCodeRequest request = new ApiCheckCodeRequest(email, code);
+        CheckCodeRequest request = new CheckCodeRequest(email, code);
         ResponseContainer<Boolean> response = webClient.post()
                 .uri(CHECK_CODE_ENDPOINT)
                 .bodyValue(request)

@@ -46,9 +46,9 @@ public class Problems {
         private ProblemType type;
 
         // Рейтинг задачи (сложность)
-        @Nullable
+        @NotNull
         @JsonProperty("rating")
-        private Long rating;
+        private Long rating = 0L;
 
         // Теги задачи
         @NotNull

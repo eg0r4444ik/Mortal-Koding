@@ -7,11 +7,9 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import ru.vsu.rogachev.client.codeforces.CodeforcesClient;
 import ru.vsu.rogachev.client.codeforces.dto.CodeforcesUser;
-import ru.vsu.rogachev.entity.GameParameters;
 import ru.vsu.rogachev.entity.User;
 import ru.vsu.rogachev.entity.enums.UserState;
 import ru.vsu.rogachev.exception.BusinessLogicException;
-import ru.vsu.rogachev.services.GameEventService;
 import ru.vsu.rogachev.services.InviteService;
 import ru.vsu.rogachev.services.UserService;
 import ru.vsu.rogachev.service.MessageSender;
@@ -23,7 +21,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static ru.vsu.rogachev.entity.enums.GameType.DEFAULT;
 import static ru.vsu.rogachev.entity.enums.UserState.BASIC_STATE;
 import static ru.vsu.rogachev.entity.enums.UserState.WAIT_GAME_CREATION_STATE;
 import static ru.vsu.rogachev.entity.enums.UserState.WAIT_OPPONENT_HANDLE_STATE;
@@ -56,8 +53,6 @@ public class WaitOpponentHandleStateCommandHandler implements CommandHandler {
     private final CodeforcesClient codeforcesClient;
     
     private final UserService userService;
-
-    private final GameEventService gameEventService;
 
     private final InviteService inviteService;
 
@@ -103,7 +98,7 @@ public class WaitOpponentHandleStateCommandHandler implements CommandHandler {
                     User opponent = opponentOptional.get();
                     validateOpponent(opponent, chatId);
 
-                    gameEventService.createGame(user, new GameParameters(DEFAULT, 2L ,5L));
+//                    gameEventService.createGame(user, new GameParameters(DEFAULT, 2L ,5L));
 
                     messageSender.sendMessageWithButtons(
                             opponent.getChatId(),

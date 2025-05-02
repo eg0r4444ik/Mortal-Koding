@@ -20,7 +20,7 @@ import static ru.vsu.rogachev.config.client.codeforces.CodeforcesClientConfig.CO
 public class CodeforcesClient {
 
     public static final String GET_USER_INFO = "/user.info?handles={handle}";
-    public static final String GET_USER_SUBMISSIONS = "/user.status?handle={handle}";
+    public static final String GET_PLAYERS_SUBMISSIONS = "/user.status?handle={handle}";
     public static final String GET_PROBLEM_SET = "/problemset.problems";
 
     private final WebClient webClient;
@@ -40,9 +40,9 @@ public class CodeforcesClient {
                 .flatMap(users -> users.stream().findFirst());
     }
 
-    public @NotNull List<Submission> getUserSubmissions(@NotNull String handle){
+    public @NotNull List<Submission> getPlayersSubmissions(@NotNull String handle){
         return webClient.get()
-                .uri(GET_USER_SUBMISSIONS, handle)
+                .uri(GET_PLAYERS_SUBMISSIONS, handle)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<CodeforcesResponseContainer<List<Submission>>>() {})
                 .blockOptional()

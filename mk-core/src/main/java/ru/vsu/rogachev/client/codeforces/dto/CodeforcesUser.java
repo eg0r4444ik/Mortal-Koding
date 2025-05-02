@@ -28,6 +28,6 @@ public class CodeforcesUser {
     // Рейтинг пользователя
     @NotNull
     @JsonProperty("rating")
-    private Integer rating;
+    private Long rating;
 
 }

@@ -4,15 +4,22 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import ru.vsu.rogachev.client.MkGameClient;
+import ru.vsu.rogachev.client.mk.game.dto.async.GameEvent;
+import ru.vsu.rogachev.client.mk.game.dto.async.enums.GameEventType;
+import ru.vsu.rogachev.client.mk.game.dto.async.enums.GameType;
 import ru.vsu.rogachev.entity.User;
 import ru.vsu.rogachev.entity.enums.UserState;
 import ru.vsu.rogachev.exception.BusinessLogicException;
-import ru.vsu.rogachev.services.GameEventService;
 import ru.vsu.rogachev.services.UserService;
 import ru.vsu.rogachev.service.MessageSender;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -41,7 +48,9 @@ public class BasicStateCommandHandler implements CommandHandler {
 
     private final UserService userService;
 
-    private final GameEventService gameEventService;
+    private final MkGameClient gameClient;
+
+//    private final KafkaTemplate<String, GameEvent> gameEventKafkaTemplate;
 
     @Getter
     @AllArgsConstructor
@@ -79,6 +88,12 @@ public class BasicStateCommandHandler implements CommandHandler {
 
         switch (command) {
             case START_COMMAND -> {
+
+//                GameEvent gameEvent = new GameEvent(LocalDate.now(), GameEventType.CREATE_GAME, "egor444ik",
+//                        new GameEvent.GameParameters(Duration.ofMinutes(15), GameType.DEFAULT, 2L, 5L),
+//                        List.of("iamdimonis", "destroyer"));
+//                gameEventKafkaTemplate.send("game-event-topic", gameEvent);
+
                 if (!user.getIsActive()) {
                     userService.setUserState(user, WAIT_FOR_HANDLE_STATE);
                 }
@@ -98,10 +113,10 @@ public class BasicStateCommandHandler implements CommandHandler {
                 throw BusinessLogicException.of(chatId, OPERATION_NOT_SUPPORTED_YET);
             }
             case AGREE_GAME_COMMAND -> {
-                gameEventService.connectToGame(user);
+//                gameClient.connectToGame(user);
             }
             case REFUSE_GAME_COMMAND -> {
-                gameEventService.refuseGame(user);
+//                gameClient.refuseGame(user);
             }
             case UNKNOWN -> throw BusinessLogicException.of(chatId, UNKNOWN_COMMAND);
         }
