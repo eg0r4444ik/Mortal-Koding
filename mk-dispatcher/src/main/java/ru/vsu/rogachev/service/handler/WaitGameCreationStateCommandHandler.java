@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.vsu.rogachev.entity.User;
 import ru.vsu.rogachev.entity.enums.UserState;
 import ru.vsu.rogachev.exception.BusinessLogicException;
-import ru.vsu.rogachev.services.UserService;
+import ru.vsu.rogachev.service.UserService;
 import ru.vsu.rogachev.service.MessageSender;
 
 import java.util.Arrays;

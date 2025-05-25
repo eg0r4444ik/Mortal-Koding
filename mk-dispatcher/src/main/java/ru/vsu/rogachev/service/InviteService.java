@@ -1,4 +1,4 @@
-package ru.vsu.rogachev.services;
+package ru.vsu.rogachev.service;
 
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -20,8 +20,8 @@ public class InviteService {
         inviteRepository.save(invite);
     }
 
-    public void add(@NotNull User user, @NotNull User inviter){
-        inviteRepository.save(new Invite(user, inviter));
+    public void add(@NotNull List<User> users, @NotNull User inviter){
+        inviteRepository.save(new Invite(users, inviter));
     }
 
     @NotNull

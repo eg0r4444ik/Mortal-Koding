@@ -11,8 +11,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -27,11 +31,17 @@ public class Invite {
     private Long id;
 
     @NotNull
-    @OneToOne(fetch = FetchType.EAGER)
-    private User user;
+    @ManyToMany(mappedBy = "invites")
+    private List<User> users = new ArrayList<>();
 
     @NotNull
     @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "inviter_id", nullable = false)
     private User inviter;
+
+    public Invite(@NotNull List<User> users, @NotNull User inviter) {
+        this.users = users;
+        this.inviter = inviter;
+    }
 
 }

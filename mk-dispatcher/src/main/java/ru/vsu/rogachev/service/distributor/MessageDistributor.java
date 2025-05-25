@@ -9,7 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.vsu.rogachev.service.handler.CommandHandler;
 import ru.vsu.rogachev.entity.User;
 import ru.vsu.rogachev.entity.enums.UserState;
-import ru.vsu.rogachev.services.UserService;
+import ru.vsu.rogachev.service.UserService;
 
 import java.util.Map;
 import java.util.Optional;

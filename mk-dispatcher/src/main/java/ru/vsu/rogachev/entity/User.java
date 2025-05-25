@@ -14,8 +14,13 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -69,6 +74,15 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "state", nullable = false)
     private UserState state = UserState.BASIC_STATE;
+
+    @NotNull
+    @ManyToMany
+    @JoinTable(
+            name = "user_invites",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "invite_id")
+    )
+    private List<Invite> invites = new ArrayList<>();
 
     public User(
             @NotNull Long chatId,

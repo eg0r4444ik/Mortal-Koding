@@ -13,7 +13,6 @@ import static ru.vsu.rogachev.client.mk.game.GameEndpoints.GET_GAME_STATE_ENDPOI
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/game")
 public class GameController {
 
     private final GameService gameService;

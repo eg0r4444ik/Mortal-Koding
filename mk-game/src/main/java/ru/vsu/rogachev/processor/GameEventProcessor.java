@@ -41,7 +41,7 @@ public class GameEventProcessor {
         Game game = createGame(gameEvent);
 
         for (String handle : gameEvent.getParticipantsHandles()) {
-            createPlayer(handle, game, PlayerState.NOT_ACTIVE);
+            createPlayer(handle, gameEvent.getOriginatorRating(), game, PlayerState.NOT_ACTIVE);
         }
 
         gameService.save(game);
@@ -64,7 +64,7 @@ public class GameEventProcessor {
     private Game createGame(@NotNull GameEvent gameEvent) {
         GameParameters parameters = getGameParameters(gameEvent);
         Game game = new Game(LocalDateTime.now(), NOT_STARTED, parameters);
-        createPlayer(gameEvent.getOriginatorHandle(), game, PlayerState.ACTIVE);
+        createPlayer(gameEvent.getOriginatorHandle(), gameEvent.getOriginatorRating(), game, PlayerState.ACTIVE);
 
         return game;
     }
@@ -78,10 +78,15 @@ public class GameEventProcessor {
         );
     }
 
-    private void createPlayer(@NotNull String handle, @NotNull Game game, @NotNull PlayerState state) {
+    private void createPlayer(
+            @NotNull String handle,
+            @NotNull Long rating,
+            @NotNull Game game,
+            @NotNull PlayerState state
+    ) {
         CodeforcesUser codeforcesUser = codeforcesClient.getUserInfo(handle)
                 .orElseThrow(() -> BusinessLogicException.of(CODEFORCES_ACCOUNT_NOT_FOUND));
-        Player player = new Player(codeforcesUser.getHandle(), codeforcesUser.getRating(), state, game);
+        Player player = new Player(codeforcesUser.getHandle(), rating, state, game);
         game.addPlayer(player);
     }
 

@@ -1,4 +1,4 @@
-package ru.vsu.rogachev.services;
+package ru.vsu.rogachev.service;
 
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;

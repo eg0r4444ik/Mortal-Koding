@@ -27,7 +27,7 @@ import java.util.Set;
 @Data
 @Entity
 @NoArgsConstructor
-@Table(name = "game")
+@Table(name = "games")
 public class Game {
 
     @Id

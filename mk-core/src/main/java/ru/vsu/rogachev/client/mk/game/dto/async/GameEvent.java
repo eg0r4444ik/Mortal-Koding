@@ -30,6 +30,10 @@ public class GameEvent {
     private String originatorHandle;
 
     @NotNull
+    @JsonProperty("originator_rating")
+    private Long originatorRating;
+
+    @NotNull
     @JsonProperty("parameters")
     private GameParameters parameters;
 
