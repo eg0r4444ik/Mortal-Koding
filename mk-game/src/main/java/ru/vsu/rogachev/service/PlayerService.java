@@ -14,7 +14,7 @@ public class PlayerService {
 
     private final PlayerRepository playerRepository;
 
-    public void add(@NotNull Player player) {
+    public void save(@NotNull Player player) {
         playerRepository.save(player);
     }
 

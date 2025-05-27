@@ -5,13 +5,16 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
+import ru.vsu.rogachev.client.MkGameClient;
 import ru.vsu.rogachev.entity.User;
 import ru.vsu.rogachev.entity.enums.UserState;
 import ru.vsu.rogachev.exception.BusinessLogicException;
-import ru.vsu.rogachev.service.MessageSender;
+import ru.vsu.rogachev.service.message.MessageSender;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -24,6 +27,8 @@ import static ru.vsu.rogachev.exception.BusinessLogicExceptions.UNKNOWN_COMMAND;
 public class DuringTheGameStateCommandHandler implements CommandHandler {
 
     private static final String TIMER_RESULT_MESSAGE = "С начала соревнования прошло: %s минут, %s секунд";
+
+    private final MkGameClient gameClient;
 
     private final MessageSender messageSender;
 
@@ -52,14 +57,10 @@ public class DuringTheGameStateCommandHandler implements CommandHandler {
 
         switch (command) {
             case SHOW_TIMER_COMMAND -> {
-//                gameService.getByPlayerHandle(Objects.requireNonNull(user.getCodeforcesUsername()))
-//                        .ifPresent(game -> {
-//                            Duration time = Duration.between(LocalDateTime.now(), game.getStartTime());
-//                            messageSender.sendMessage(
-//                                    chatId,
-//                                    String.format(TIMER_RESULT_MESSAGE, time.toMinutes(), time.getSeconds() % 60)
-//                            );
-//                        });
+                Duration timeUntilEnd = gameClient.getGameState(Objects.requireNonNull(user.getCodeforcesUsername()))
+                        .getState()
+                        .getTimeUntilEnd();
+                messageSender.sendMessage(chatId, String.format(TIMER_RESULT_MESSAGE, timeUntilEnd.toMinutes(), timeUntilEnd.getSeconds() % 60));
             }
             case UNKNOWN -> throw BusinessLogicException.of(chatId, UNKNOWN_COMMAND);
         }

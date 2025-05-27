@@ -36,6 +36,11 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void setUserRating(@NotNull User user, @NotNull Long newRating) {
+        user.setRating(newRating);
+        userRepository.save(user);
+    }
+
     public void activateUser(@NotNull User user) {
         user.setIsActive(true);
         userRepository.save(user);

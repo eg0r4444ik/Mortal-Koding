@@ -4,19 +4,29 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import ru.vsu.rogachev.client.codeforces.CodeforcesClient;
 import ru.vsu.rogachev.client.codeforces.dto.CodeforcesUser;
+import ru.vsu.rogachev.client.mk.game.dto.async.GameEvent;
+import ru.vsu.rogachev.client.mk.game.dto.async.enums.GameEventType;
+import ru.vsu.rogachev.client.mk.game.dto.async.enums.GameType;
 import ru.vsu.rogachev.entity.User;
 import ru.vsu.rogachev.entity.enums.UserState;
 import ru.vsu.rogachev.exception.BusinessLogicException;
 import ru.vsu.rogachev.service.InviteService;
 import ru.vsu.rogachev.service.UserService;
-import ru.vsu.rogachev.service.MessageSender;
+import ru.vsu.rogachev.service.message.BasicStateMessageSender;
+import ru.vsu.rogachev.service.message.MessageSender;
+import ru.vsu.rogachev.utils.CommonMessageUtils;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -50,11 +60,15 @@ public class WaitOpponentHandleStateCommandHandler implements CommandHandler {
 
     private final MessageSender messageSender;
 
+    private final BasicStateMessageSender basicStateMessageSender;
+
     private final CodeforcesClient codeforcesClient;
     
     private final UserService userService;
 
     private final InviteService inviteService;
+
+    private final KafkaTemplate<String, GameEvent> gameEventKafkaTemplate;
 
     @Getter
     @AllArgsConstructor
@@ -82,7 +96,7 @@ public class WaitOpponentHandleStateCommandHandler implements CommandHandler {
         switch (command) {
             case EXIT_COMMAND -> {
                 userService.setUserState(user, BASIC_STATE);
-                messageSender.sendBasicStateMessage(chatId, CANCEL_CHOOSING_OPPONENT_RESULT_TEXT);
+                basicStateMessageSender.sendMessage(chatId, CANCEL_CHOOSING_OPPONENT_RESULT_TEXT);
             }
             case SELECT_HANDLE_COMMAND -> {
                 // todo добавить кнопку отмены при неверном хэндле
@@ -98,15 +112,30 @@ public class WaitOpponentHandleStateCommandHandler implements CommandHandler {
                     User opponent = opponentOptional.get();
                     validateOpponent(opponent, chatId);
 
-//                    gameEventService.createGame(user, new GameParameters(DEFAULT, 2L ,5L));
-
-                    messageSender.sendMessageWithButtons(
-                            opponent.getChatId(),
-                            String.format(GAME_INVITE_TEXT, user.getUsername(), user.getCodeforcesUsername()),
-                            GAME_INVITE_BUTTON_TEXTS,
-                            GAME_INVITE_BUTTON_CALLBACK_DATA
+                    GameEvent gameEvent = new GameEvent(
+                            LocalDate.now(),
+                            GameEventType.CREATE_GAME,
+                            user.getCodeforcesUsername(),
+                            user.getRating(),
+                            new GameEvent.GameParameters(
+                                    Duration.ofMinutes(15),
+                                    GameType.DEFAULT,
+                                    2L,
+                                    5L
+                            ),
+                            List.of(Objects.requireNonNull(opponent.getCodeforcesUsername()))
                     );
-                    inviteService.add(opponent, user);
+                    gameEventKafkaTemplate.send("game-event-topic", gameEvent);
+
+                    messageSender.sendMessage(
+                            CommonMessageUtils.createMessageWithButtons(
+                                    opponent.getChatId(),
+                                    String.format(GAME_INVITE_TEXT, user.getUsername(), user.getCodeforcesUsername()),
+                                    GAME_INVITE_BUTTON_TEXTS,
+                                    GAME_INVITE_BUTTON_CALLBACK_DATA
+                            )
+                    );
+                    inviteService.add(List.of(opponent), user);
 
                     userService.setUserState(user, WAIT_GAME_CREATION_STATE);
                     messageSender.sendMessage(chatId, SENT_INVITE_RESULT_TEXT);

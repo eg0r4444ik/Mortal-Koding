@@ -1,6 +1,7 @@
 package ru.vsu.rogachev.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -19,11 +20,13 @@ import javax.persistence.Table;
 @Entity
 @NoArgsConstructor
 @RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "players")
 public class Player {
 
     @Id
     @NotNull
+    @EqualsAndHashCode.Include
     @Column(name = "handle", nullable = false)
     private String handle;
 

@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import ru.vsu.rogachev.client.codeforces.CodeforcesClient;
 import ru.vsu.rogachev.client.codeforces.dto.Problems;
 import ru.vsu.rogachev.client.codeforces.dto.Submission;
+import ru.vsu.rogachev.entity.Game;
 import ru.vsu.rogachev.entity.Player;
+import ru.vsu.rogachev.entity.Task;
 import ru.vsu.rogachev.exception.BusinessLogicException;
 import ru.vsu.rogachev.utils.TaskUtils;
 
@@ -26,8 +28,9 @@ public class TaskGenerator {
     private final CodeforcesClient codeforcesClient;
 
     @NotNull
-    public List<String> getContestProblems(@NotNull List<Player> players, @NotNull Long tasksCount) {
-        List<String> result = new ArrayList<>();
+    public List<Task> getContestProblems(@NotNull Game game) {
+        long tasksCount = game.getParameters().getTasksCount();
+        List<Problems.Problem> contestProblems = new ArrayList<>();
 
         List<Problems.Problem> problems = codeforcesClient.getProblemSet()
                 .orElseThrow(() -> BusinessLogicException.of(CODEFORCES_NOT_AVAILABLE))
@@ -35,7 +38,7 @@ public class TaskGenerator {
         Collections.shuffle(problems);
 
         List<Long> ratings = new ArrayList<>();
-        for(Player player : players){
+        for(Player player : game.getPlayers()) {
             ratings.add(player.getRating());
         }
         ratings.sort(Comparator.naturalOrder());
@@ -44,7 +47,7 @@ public class TaskGenerator {
                 Math.max(ratings.get(ratings.size()/2) - tasksCount * TASK_RATING_STEP - TASK_DIFF, MIN_TASK_RATING);
 
         Set<String> used = new HashSet<>();
-        for(Player player : players){
+        for(Player player : game.getPlayers()){
             used.addAll(
                     codeforcesClient.getPlayersSubmissions(player.getHandle())
                             .stream()
@@ -55,21 +58,36 @@ public class TaskGenerator {
         }
 
         long currRating = startTaskRating;
-        while(result.size() < tasksCount) {
+        while(contestProblems.size() < tasksCount) {
             for (Problems.Problem problem : problems) {
-                if (result.size() == tasksCount) {
+                if (contestProblems.size() == tasksCount) {
                     break;
                 }
 
                 String problemUrl = TaskUtils.getProblemUrl(problem);
                 if (problem.getRating() >= currRating && !used.contains(problemUrl)) {
-                    result.add(problemUrl);
+                    contestProblems.add(problem);
                     currRating = problem.getRating() + TASK_RATING_STEP;
                 }
             }
         }
 
-        return result;
+        contestProblems.sort((Comparator.comparing(Problems.Problem::getRating)));
+
+        List<Task> tasks = new ArrayList<>();
+        for (int i = 0; i < contestProblems.size(); i++) {
+            Problems.Problem problem = contestProblems.get(i);
+            tasks.add(
+                    new Task(
+                            TaskUtils.getProblemUrl(problem),
+                            problem.getRating(),
+                            (long) (i + 1),
+                            game
+                    )
+            );
+        }
+
+        return tasks;
     }
 
 }

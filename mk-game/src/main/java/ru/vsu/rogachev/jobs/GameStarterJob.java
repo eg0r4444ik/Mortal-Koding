@@ -10,6 +10,7 @@ import ru.vsu.rogachev.client.mk.game.dto.async.enums.GameStateUpdateEventType;
 import ru.vsu.rogachev.entity.Game;
 import ru.vsu.rogachev.entity.enums.PlayerState;
 import ru.vsu.rogachev.service.GameService;
+import ru.vsu.rogachev.service.TaskGenerator;
 import ru.vsu.rogachev.utils.GameStateUtils;
 
 import java.util.List;
@@ -24,9 +25,11 @@ public class GameStarterJob {
 
     private final GameService gameService;
 
+    private final TaskGenerator taskGenerator;
+
     private final KafkaTemplate<String, GameStateUpdateEvent> gameStateUpdateEventKafkaTemplate;
 
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRate = 5000)
     public void checkForUpdate() {
         List<Game> games = gameService.getAllByState(NOT_STARTED);
 
@@ -36,6 +39,7 @@ public class GameStarterJob {
                     .count();
             if (activePlayersCount == game.getParameters().getPlayersCount()) {
                 game.setState(IN_PROGRESS);
+                game.setTasks(taskGenerator.getContestProblems(game));
                 gameService.save(game);
                 gameStateUpdateEventKafkaTemplate.send("game-state-update-event-topic",
                         GameStateUtils.buildGameStateUpdateEvent(game, GameStateUpdateEventType.START_GAME));

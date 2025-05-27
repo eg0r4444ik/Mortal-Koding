@@ -16,7 +16,11 @@ public class GameStateUpdateConsumer {
 
     @KafkaListener(topics = "game-state-update-event-topic", groupId = "stats-events")
     public void processGameStateUpdateEvent(GameStateUpdateEvent event){
-        processor.process(event);
+        try {
+            processor.process(event);
+        } catch (Exception e) {
+            log.error(e);
+        }
     }
 
 }

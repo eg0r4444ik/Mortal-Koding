@@ -38,6 +38,10 @@ public class GameStateUtils {
 
     @NotNull
     private CurrentGameState buildCurrentGameState(@NotNull Game game) {
+        List<String> tasks = game.getTasks()
+                .stream()
+                .map(Task::getTaskUrl)
+                .toList();
         List<CurrentGameState.PlayersScore> scores = new ArrayList<>();
 
         for (Player player : game.getPlayers()) {
@@ -47,7 +51,7 @@ public class GameStateUtils {
             }
         }
 
-        return new CurrentGameState(scores, Duration.between(LocalDateTime.now(), game.getStartTime()));
+        return new CurrentGameState(scores, tasks, Duration.between(LocalDateTime.now(), game.getStartTime()));
     }
 
     @NotNull

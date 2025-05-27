@@ -19,6 +19,10 @@ public class CurrentGameState {
     private List<PlayersScore> playersScores;
 
     @NotNull
+    @JsonProperty("tasks")
+    private List<String> tasks;
+
+    @NotNull
     @JsonProperty("time_until_end")
     private Duration timeUntilEnd;
 

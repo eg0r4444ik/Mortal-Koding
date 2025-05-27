@@ -18,7 +18,8 @@ public enum BusinessLogicExceptions {
     USER_ALREADY_IN_GAME(-10, "Пользователь с хэндлом %s уже играет"),
     COMMON_LOGIC_EXCEPTION(-11, "Что-то пошло не так, попробуйте еще раз"),
     CODEFORCES_NOT_AVAILABLE(-12, "Codeforces временно недоступен"),
-    USER_NOT_IN_GAME(-13, "Пользователь не играет в данный момент")
+    USER_NOT_IN_GAME(-13, "Пользователь не играет в данный момент"),
+    RATING_RECALCULATION_ERROR(-14, "Произошла ошибка в перерасчете рейтинга")
     ;
 
     private final Integer code;

@@ -9,7 +9,9 @@ import ru.vsu.rogachev.client.MkAuthClient;
 import ru.vsu.rogachev.entity.User;
 import ru.vsu.rogachev.entity.enums.UserState;
 import ru.vsu.rogachev.service.UserService;
-import ru.vsu.rogachev.service.MessageSender;
+import ru.vsu.rogachev.service.message.BasicStateMessageSender;
+import ru.vsu.rogachev.service.message.MessageSender;
+import ru.vsu.rogachev.utils.CommonMessageUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -44,6 +46,8 @@ public class WaitConfirmationCodeStateCommandHandler implements CommandHandler {
             List.of(SEND_AGAIN_COMMAND.getMessage(), CHANGE_HANDLE_COMMAND.getMessage());
 
     private final MessageSender messageSender;
+
+    private final BasicStateMessageSender basicStateMessageSender;
 
     private final UserService userService;
 
@@ -88,18 +92,20 @@ public class WaitConfirmationCodeStateCommandHandler implements CommandHandler {
                 if (isCodeCorrect) {
                     userService.activateUser(user);
                     userService.setUserState(user, BASIC_STATE);
-                    messageSender.sendBasicStateMessage(
+                    basicStateMessageSender.sendMessage(
                             chatId,
                             String.format(SUCCESS_CHECK_CODE_RESULT_TEXT, user.getCodeforcesUsername())
                     );
                     return;
                 }
 
-                messageSender.sendMessageWithButtons(
-                        chatId,
-                        FAILED_CHECK_CODE_RESULT_TEXT,
-                        WAIT_CONFIRMATION_CODE_STATE_BUTTON_TEXTS,
-                        WAIT_CONFIRMATION_CODE_STATE_BUTTON_CALLBACK_DATA
+                messageSender.sendMessage(
+                        CommonMessageUtils.createMessageWithButtons(
+                                chatId,
+                                FAILED_CHECK_CODE_RESULT_TEXT,
+                                WAIT_CONFIRMATION_CODE_STATE_BUTTON_TEXTS,
+                                WAIT_CONFIRMATION_CODE_STATE_BUTTON_CALLBACK_DATA
+                        )
                 );
             }
         }

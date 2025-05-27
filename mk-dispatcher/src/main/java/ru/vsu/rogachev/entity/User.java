@@ -22,6 +22,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ru.vsu.rogachev.config.Constants.DEFAULT_RATING;
+
 @Data
 @Entity
 @NoArgsConstructor
@@ -60,7 +62,7 @@ public class User {
 
     @Nullable
     @Column(name = "rating")
-    private Long rating;
+    private Long rating = DEFAULT_RATING;
 
     @Nullable
     @Column(name = "codeforces_username", unique = true)

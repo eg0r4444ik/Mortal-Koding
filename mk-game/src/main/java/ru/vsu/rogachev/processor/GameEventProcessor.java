@@ -49,16 +49,24 @@ public class GameEventProcessor {
 
     private void processJoinGameEvent(@NotNull GameEvent gameEvent) {
         playerService.getByHandle(gameEvent.getOriginatorHandle())
-                .ifPresentOrElse(p -> p.setState(PlayerState.ACTIVE), () -> {
-                    // todo сначала искать свободную игру
-                    Game game = createGame(gameEvent);
-                    gameService.save(game);
-                });
+                .ifPresentOrElse(
+                        p -> {
+                            p.setState(PlayerState.ACTIVE);
+                            playerService.save(p);
+                        },
+                        () -> {
+                            // todo сначала искать свободную игру
+                            Game game = createGame(gameEvent);
+                            gameService.save(game);
+                        });
     }
 
     private void processRefuseGameEvent(@NotNull GameEvent gameEvent) {
         playerService.getByHandle(gameEvent.getOriginatorHandle())
-                .ifPresent(p -> p.setState(PlayerState.REFUSED));
+                .ifPresent(p -> {
+                    p.setState(PlayerState.REFUSED);
+                    playerService.save(p);
+                });
     }
 
     private Game createGame(@NotNull GameEvent gameEvent) {

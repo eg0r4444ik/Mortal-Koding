@@ -9,19 +9,22 @@ import ru.vsu.rogachev.client.codeforces.dto.CodeforcesResponseContainer;
 import ru.vsu.rogachev.client.codeforces.dto.CodeforcesUser;
 import ru.vsu.rogachev.client.codeforces.dto.Problems;
 import ru.vsu.rogachev.client.codeforces.dto.Submission;
+import ru.vsu.rogachev.client.mk.container.ResponseContainer;
+import ru.vsu.rogachev.client.mk.game.dto.rest.GetGameStateResponse;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
+import static ru.vsu.rogachev.client.mk.auth.AuthEndpoints.SEND_CODE_ENDPOINT;
+import static ru.vsu.rogachev.client.mk.container.ResponseContainer.ResponseStatus.ERROR;
+import static ru.vsu.rogachev.client.mk.game.GameEndpoints.GET_GAME_STATE_ENDPOINT;
 import static ru.vsu.rogachev.config.client.MkGameClientConfig.MK_GAME_CLIENT_NAME;
+import static ru.vsu.rogachev.exception.BusinessLogicExceptions.COMMON_LOGIC_EXCEPTION;
 
 @Service
 public class MkGameClient {
-
-    public static final String GET_USER_INFO = "/user.info?handles={handle}";
-    public static final String GET_USER_SUBMISSIONS = "/user.status?handle={handle}";
-    public static final String GET_PROBLEM_SET = "/problemset.problems";
 
     private final WebClient webClient;
 
@@ -29,34 +32,20 @@ public class MkGameClient {
         this.webClient = webClient;
     }
 
-    public @NotNull Optional<CodeforcesUser> getUserInfo(@NotNull String handle){
-        return webClient.get()
-                .uri(GET_USER_INFO, handle)
+    public GetGameStateResponse getGameState(@NotNull String handle){
+        ResponseContainer<GetGameStateResponse> response = webClient.post()
+                .uri(GET_GAME_STATE_ENDPOINT)
+                .bodyValue(handle)
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<CodeforcesResponseContainer<List<CodeforcesUser>>>() {
-                })
+                .bodyToMono(new ParameterizedTypeReference<ResponseContainer<GetGameStateResponse>>() {})
                 .blockOptional()
-                .map(CodeforcesResponseContainer::getResult)
-                .flatMap(users -> users.stream().findFirst());
-    }
+                .orElse(ResponseContainer.withException(COMMON_LOGIC_EXCEPTION));
 
-    public @NotNull List<Submission> getUserSubmissions(@NotNull String handle){
-        return webClient.get()
-                .uri(GET_USER_SUBMISSIONS, handle)
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<CodeforcesResponseContainer<List<Submission>>>() {})
-                .blockOptional()
-                .map(CodeforcesResponseContainer::getResult)
-                .orElse(Collections.emptyList());
-    }
+        if (response.getStatus() == ERROR) {
+            throw Objects.requireNonNull(response.getException());
+        }
 
-    public @NotNull Optional<Problems> getProblemSet(){
-        return webClient.get()
-                .uri(GET_PROBLEM_SET)
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<CodeforcesResponseContainer<Problems>>() {})
-                .blockOptional()
-                .map(CodeforcesResponseContainer::getResult);
+        return response.getResponse();
     }
 
 }

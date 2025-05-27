@@ -16,7 +16,11 @@ public class GameEventConsumer {
 
     @KafkaListener(topics = "game-event-topic", groupId = "game-events")
     public void processGameEvent(GameEvent event){
-        processor.process(event);
+        try {
+            processor.process(event);
+        } catch (Exception e) {
+            log.error(e);
+        }
     }
 
 }

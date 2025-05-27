@@ -12,7 +12,7 @@ import ru.vsu.rogachev.entity.User;
 import ru.vsu.rogachev.entity.enums.UserState;
 import ru.vsu.rogachev.exception.BusinessLogicException;
 import ru.vsu.rogachev.service.UserService;
-import ru.vsu.rogachev.service.MessageSender;
+import ru.vsu.rogachev.service.message.MessageSender;
 
 import java.util.Arrays;
 import java.util.Map;

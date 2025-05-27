@@ -6,6 +6,7 @@ import io.netty.handler.timeout.WriteTimeoutHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
+import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 import reactor.netty.resources.ConnectionProvider;
@@ -34,10 +35,18 @@ public abstract class CommonClientConfig {
                         connection.addHandlerLast(new ReadTimeoutHandler(properties().getReadTimeoutInSeconds(), TimeUnit.SECONDS))
                                 .addHandlerLast(new WriteTimeoutHandler(properties().getReadTimeoutInSeconds(), TimeUnit.SECONDS)));
 
+        ExchangeStrategies strategies = ExchangeStrategies.builder()
+                .codecs(configurer -> configurer
+                        .defaultCodecs()
+                        .maxInMemorySize(16 * 1024 * 1024)
+                )
+                .build();
+
         // Создание WebClient с базовым URL и кастомным HttpClient
         return WebClient.builder()
                 .baseUrl(properties().getUrl())
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
+                .exchangeStrategies(strategies)
                 .build();
     }
 

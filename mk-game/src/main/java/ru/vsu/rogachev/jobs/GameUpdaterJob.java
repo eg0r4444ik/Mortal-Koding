@@ -43,7 +43,7 @@ public class GameUpdaterJob {
 
     private final KafkaTemplate<String, GameStateUpdateEvent> gameStateUpdateEventKafkaTemplate;
 
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRate = 5000)
     public void checkForUpdate() {
         List<Game> games = gameService.getAllByState(IN_PROGRESS);
 
@@ -71,10 +71,11 @@ public class GameUpdaterJob {
         boolean changeState = false;
         for(Submission submission : submissions){
             String url = TaskUtils.getProblemUrl(submission.getProblem());
-            LocalDateTime submissionTime =
-                    LocalDateTime.ofEpochSecond(submission.getCreationTimeSeconds(), 0, ZoneOffset.UTC);
+            LocalDateTime submissionTime = LocalDateTime
+                    .ofEpochSecond(submission.getCreationTimeSeconds(), 0, ZoneOffset.UTC)
+                    .plusHours(3);
 
-            if (urls.containsKey(url)) continue;
+            if (!urls.containsKey(url)) continue;
 
             Task task = urls.get(url);
             if(submissionTime.isAfter(game.getStartTime())
@@ -84,7 +85,15 @@ public class GameUpdaterJob {
                     && (task.getSolver() == null || submissionTime.isBefore(task.getSolveTime()))
             ){
                 changeState = true;
+                game.getTasks()
+                        .stream()
+                        .filter(t -> t.getTaskUrl().equals(url))
+                        .forEach(t -> {
+                            t.setSolver(player);
+                            t.setSolveTime(submissionTime);
+                        });
                 task.setSolver(player);
+                task.setSolveTime(submissionTime);
             }
         }
 

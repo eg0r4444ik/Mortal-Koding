@@ -15,6 +15,7 @@ import ru.vsu.rogachev.utils.GameStateUtils;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 import static ru.vsu.rogachev.entity.enums.GameState.FINISHED;
 import static ru.vsu.rogachev.entity.enums.GameState.IN_PROGRESS;
@@ -28,12 +29,12 @@ public class GameFinisherJob {
 
     private final KafkaTemplate<String, GameStateUpdateEvent> gameStateUpdateEventKafkaTemplate;
 
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRate = 5000)
     public void checkForUpdate() {
         List<Game> games = gameService.getAllByState(IN_PROGRESS);
 
         for(Game game : games){
-            Duration gameDuration = Duration.between(LocalDateTime.now(), game.getStartTime());
+            Duration gameDuration = Duration.between(Objects.requireNonNull(game.getStartTime()), LocalDateTime.now());
             if(gameDuration.compareTo(game.getParameters().getDuration()) >= 0){
                 game.setState(FINISHED);
                 gameService.save(game);

@@ -4,6 +4,8 @@ import java.util.List;
 
 public class Constants {
 
+    public static final Long DEFAULT_RATING = 1500L;
+
     public static final String SEND_CONFIRMATION_CODE_TEXT = "На почту был отправлен код подтверждения";
 
     public static final String START_GAME_MESSAGE = "Соревнование началось";

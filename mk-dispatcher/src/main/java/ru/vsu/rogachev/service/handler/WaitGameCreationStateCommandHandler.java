@@ -9,7 +9,7 @@ import ru.vsu.rogachev.entity.User;
 import ru.vsu.rogachev.entity.enums.UserState;
 import ru.vsu.rogachev.exception.BusinessLogicException;
 import ru.vsu.rogachev.service.UserService;
-import ru.vsu.rogachev.service.MessageSender;
+import ru.vsu.rogachev.service.message.BasicStateMessageSender;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -27,7 +27,7 @@ public class WaitGameCreationStateCommandHandler implements CommandHandler {
 
     private static final String CANCEL_GAME_RESULT_TEXT = "Ожидание подключения игрока завершено!";
 
-    private final MessageSender messageSender;
+    private final BasicStateMessageSender basicStateMessageSender;
 
     private final UserService userService;
 
@@ -58,7 +58,7 @@ public class WaitGameCreationStateCommandHandler implements CommandHandler {
             case EXIT_COMMAND -> {
                 // todo добавить исчезновение сообщения у второго пользователя
                 userService.setUserState(user, BASIC_STATE);
-                messageSender.sendBasicStateMessage(chatId, CANCEL_GAME_RESULT_TEXT);
+                basicStateMessageSender.sendMessage(chatId, CANCEL_GAME_RESULT_TEXT);
             }
             case UNKNOWN -> throw BusinessLogicException.of(chatId, UNKNOWN_COMMAND);
         }

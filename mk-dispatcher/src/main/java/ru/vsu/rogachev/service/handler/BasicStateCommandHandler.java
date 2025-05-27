@@ -4,21 +4,29 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import ru.vsu.rogachev.client.MkGameClient;
+import ru.vsu.rogachev.client.mk.game.dto.async.GameEvent;
+import ru.vsu.rogachev.client.mk.game.dto.async.enums.GameEventType;
+import ru.vsu.rogachev.client.mk.game.dto.async.enums.GameType;
 import ru.vsu.rogachev.entity.User;
 import ru.vsu.rogachev.entity.enums.UserState;
 import ru.vsu.rogachev.exception.BusinessLogicException;
 import ru.vsu.rogachev.service.UserService;
-import ru.vsu.rogachev.service.MessageSender;
+import ru.vsu.rogachev.service.message.BasicStateMessageSender;
+import ru.vsu.rogachev.service.message.MessageSender;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static ru.vsu.rogachev.entity.enums.UserState.BASIC_STATE;
+import static ru.vsu.rogachev.entity.enums.UserState.WAIT_GAME_CREATION_STATE;
 import static ru.vsu.rogachev.exception.BusinessLogicExceptions.NON_ACTIVE_ACCOUNT;
 import static ru.vsu.rogachev.entity.enums.UserState.WAIT_FOR_HANDLE_STATE;
 import static ru.vsu.rogachev.entity.enums.UserState.WAIT_OPPONENT_HANDLE_STATE;
@@ -39,11 +47,11 @@ public class BasicStateCommandHandler implements CommandHandler {
 
     private final MessageSender messageSender;
 
+    private final BasicStateMessageSender basicStateMessageSender;
+
     private final UserService userService;
 
-    private final MkGameClient gameClient;
-
-//    private final KafkaTemplate<String, GameEvent> gameEventKafkaTemplate;
+    private final KafkaTemplate<String, GameEvent> gameEventKafkaTemplate;
 
     @Getter
     @AllArgsConstructor
@@ -81,12 +89,6 @@ public class BasicStateCommandHandler implements CommandHandler {
 
         switch (command) {
             case START_COMMAND -> {
-
-//                GameEvent gameEvent = new GameEvent(LocalDate.now(), GameEventType.CREATE_GAME, "egor444ik",
-//                        new GameEvent.GameParameters(Duration.ofMinutes(15), GameType.DEFAULT, 2L, 5L),
-//                        List.of("iamdimonis", "destroyer"));
-//                gameEventKafkaTemplate.send("game-event-topic", gameEvent);
-
                 if (!user.getIsActive()) {
                     userService.setUserState(user, WAIT_FOR_HANDLE_STATE);
                 }
@@ -100,16 +102,42 @@ public class BasicStateCommandHandler implements CommandHandler {
                 messageSender.sendMessage(chatId, SET_OPPONENT_HANDLE_MESSAGE);
             }
             case LOOK_RATING_COMMAND -> {
-                messageSender.sendBasicStateMessage(chatId, String.format(GET_RATING_MESSAGE, user.getRating()));
+                basicStateMessageSender.sendMessage(chatId, String.format(GET_RATING_MESSAGE, user.getRating()));
             }
             case LOOK_GAMES_HISTORY_COMMAND -> {
                 throw BusinessLogicException.of(chatId, OPERATION_NOT_SUPPORTED_YET);
             }
             case AGREE_GAME_COMMAND -> {
-//                gameClient.connectToGame(user);
+                GameEvent gameEvent = new GameEvent(
+                        LocalDate.now(),
+                        GameEventType.JOIN_GAME,
+                        user.getCodeforcesUsername(),
+                        user.getRating(),
+                        new GameEvent.GameParameters(
+                                Duration.ofMinutes(15),
+                                GameType.DEFAULT,
+                                2L,
+                                5L
+                        ),
+                        Collections.emptyList()
+                );
+                gameEventKafkaTemplate.send("game-event-topic", gameEvent);
             }
             case REFUSE_GAME_COMMAND -> {
-//                gameClient.refuseGame(user);
+                GameEvent gameEvent = new GameEvent(
+                        LocalDate.now(),
+                        GameEventType.REFUSE_GAME,
+                        user.getCodeforcesUsername(),
+                        user.getRating(),
+                        new GameEvent.GameParameters(
+                                Duration.ofMinutes(15),
+                                GameType.DEFAULT,
+                                2L,
+                                5L
+                        ),
+                        Collections.emptyList()
+                );
+                gameEventKafkaTemplate.send("game-event-topic", gameEvent);
             }
             case UNKNOWN -> throw BusinessLogicException.of(chatId, UNKNOWN_COMMAND);
         }
