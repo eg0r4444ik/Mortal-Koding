@@ -19,7 +19,8 @@ public enum BusinessLogicExceptions {
     COMMON_LOGIC_EXCEPTION(-11, "Что-то пошло не так, попробуйте еще раз"),
     CODEFORCES_NOT_AVAILABLE(-12, "Codeforces временно недоступен"),
     USER_NOT_IN_GAME(-13, "Пользователь не играет в данный момент"),
-    RATING_RECALCULATION_ERROR(-14, "Произошла ошибка в перерасчете рейтинга")
+    RATING_RECALCULATION_ERROR(-14, "Произошла ошибка в перерасчете рейтинга"),
+    NO_DATA_FOR_STATS(-15, "Не хватает данных для отображения статистики")
     ;
 
     private final Integer code;

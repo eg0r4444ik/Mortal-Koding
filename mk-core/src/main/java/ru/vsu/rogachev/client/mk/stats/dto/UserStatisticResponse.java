@@ -1,4 +1,4 @@
-package ru.vsu.rogachev.client.mk.game.dto.rest;
+package ru.vsu.rogachev.client.mk.stats.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

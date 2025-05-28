@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.vsu.rogachev.client.mk.container.ResponseContainer;
-import ru.vsu.rogachev.client.mk.game.dto.rest.UserStatisticResponse;
+import ru.vsu.rogachev.client.mk.stats.dto.UserStatisticResponse;
 import ru.vsu.rogachev.service.StatsService;
 
 import static ru.vsu.rogachev.client.mk.stats.StatsEndpoints.GET_STATISTIC;

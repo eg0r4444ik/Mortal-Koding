@@ -2,6 +2,7 @@ package ru.vsu.rogachev.entity.enums;
 
 public enum UserState {
     BASIC_STATE,
+    CHOOSING_STATS,
     WAIT_FOR_HANDLE_STATE,
     WAIT_CONFIRMATION_CODE_STATE,
     WAIT_OPPONENT_HANDLE_STATE,

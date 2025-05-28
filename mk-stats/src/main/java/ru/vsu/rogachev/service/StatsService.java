@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import ru.vsu.rogachev.client.mk.container.ResponseContainer;
-import ru.vsu.rogachev.client.mk.game.dto.rest.UserStatisticResponse;
+import ru.vsu.rogachev.client.mk.stats.dto.UserStatisticResponse;
 import ru.vsu.rogachev.entity.GameLog;
 
 import java.util.Comparator;

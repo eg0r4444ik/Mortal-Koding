@@ -55,7 +55,7 @@ public class GameStateUpdateProcessor {
         for (String handle : totalScores.keySet()) {
             GameStateUpdateEvent.PlayersRating rating = ratings.get(handle);
             Integer playerPlace = places.get(handle);
-            long performance = calculatePerformance(handle, playerPlace, places, ratings);
+            long performance = calculatePerformance(handle, playerPlace, places, ratings, totalScores);
 
             GameLog gameLog = new GameLog(
                     LocalDateTime.now(),
@@ -74,10 +74,9 @@ public class GameStateUpdateProcessor {
             String playerHandle,
             Integer place,
             Map<String, Integer> places,
-            Map<String, GameStateUpdateEvent.PlayersRating> ratings
+            Map<String, GameStateUpdateEvent.PlayersRating> ratings,
+            Map<String, Long> playerScores
     ) {
-
-        int totalPlayers = places.size();
         long beatenPlayers = places.entrySet().stream()
                 .filter(entry -> !entry.getKey().equals(playerHandle) && entry.getValue() > place)
                 .count();
@@ -86,14 +85,22 @@ public class GameStateUpdateProcessor {
                 .filter(entry -> !entry.getKey().equals(playerHandle) && entry.getValue().equals(place))
                 .count();
 
-        double S_real = (beatenPlayers + 0.5 * tiedPlayers) / (double) (totalPlayers - 1);
+        long playerScore = playerScores.getOrDefault(playerHandle, 0L);
+        long totalScore = playerScores.entrySet().stream()
+                .filter(entry -> !entry.getKey().equals(playerHandle))
+                .mapToLong(Map.Entry::getValue)
+                .sum() + playerScore;
+
+        double scoreRatio = totalScore > 0 ? (double) playerScore / totalScore : 0.0;
+        double scoreRatioBonus = scoreRatio * 0.5;
+
+        double S_real = beatenPlayers + 0.5 * tiedPlayers + scoreRatioBonus;
 
         List<Long> opponentsRatings = ratings.entrySet().stream()
                 .filter(entry -> !entry.getKey().equals(playerHandle))
                 .map(entry -> entry.getValue().getOldRating())
                 .toList();
 
-        // Бинарный поиск performance, где ожидаемый результат ближе всего к S_real
         long low = 100L;
         long high = 3000L;
         long bestPerf = 1500L;
@@ -106,8 +113,6 @@ public class GameStateUpdateProcessor {
             for (long oppRating : opponentsRatings) {
                 expectedScore += 1.0 / (1.0 + Math.pow(10, (oppRating - mid) / 400.0));
             }
-
-            expectedScore /= opponentsRatings.size();
 
             double diff = Math.abs(expectedScore - S_real);
             if (diff < bestDiff) {

@@ -35,7 +35,7 @@ public class TaskGenerator {
         List<Problems.Problem> problems = codeforcesClient.getProblemSet()
                 .orElseThrow(() -> BusinessLogicException.of(CODEFORCES_NOT_AVAILABLE))
                 .getProblems();
-        Collections.shuffle(problems);
+        problems.sort(Comparator.comparing(Problems.Problem::getRating));
 
         List<Long> ratings = new ArrayList<>();
         for(Player player : game.getPlayers()) {

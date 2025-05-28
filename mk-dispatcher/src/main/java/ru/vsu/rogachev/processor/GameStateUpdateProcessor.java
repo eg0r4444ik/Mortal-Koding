@@ -7,6 +7,7 @@ import ru.vsu.rogachev.client.mk.game.dto.async.GameStateUpdateEvent;
 import ru.vsu.rogachev.entity.User;
 import ru.vsu.rogachev.entity.enums.UserState;
 import ru.vsu.rogachev.exception.BusinessLogicException;
+import ru.vsu.rogachev.service.message.BasicStateMessageSender;
 import ru.vsu.rogachev.service.message.MessageSender;
 import ru.vsu.rogachev.service.UserService;
 import ru.vsu.rogachev.utils.GameMessageUtils;
@@ -23,6 +24,8 @@ public class GameStateUpdateProcessor {
     private final UserService userService;
 
     private final MessageSender messageSender;
+
+    private final BasicStateMessageSender basicStateMessageSender;
 
     public void process(@NotNull GameStateUpdateEvent event) {
         event.getState().getPlayersScores()
@@ -59,7 +62,7 @@ public class GameStateUpdateProcessor {
                                 event.getState()
                         )
                 );
-                messageSender.sendMessage(
+                basicStateMessageSender.sendMessage(
                         GameMessageUtils.getRatingChangesMessage(
                                 user.getChatId(),
                                 rating.getOldRating(),

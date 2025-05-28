@@ -88,7 +88,6 @@ public class GameMessageUtils {
         List<String> header = new ArrayList<>();
         header.add("Задача");
         header.addAll(sortedPlayers);
-        header.add("Сумма");
         table.add(header);
 
         for (Long task : sortedTasks) {
@@ -97,19 +96,27 @@ public class GameMessageUtils {
 
             Map<String, Long> scoresForTask = taskPlayerScores.getOrDefault(task, Map.of());
 
-            long sumForTask = 0;
             for (String player : sortedPlayers) {
-                long pts = scoresForTask.getOrDefault(player, 0L);
-                row.add(String.valueOf(pts));
-                sumForTask += pts;
+                row.add(String.valueOf(scoresForTask.getOrDefault(player, 0L)));
             }
-            row.add(String.valueOf(sumForTask));
+
             table.add(row);
         }
 
+        List<String> totalRow = new ArrayList<>();
+        totalRow.add("Сумма");
+
+        for (String player : sortedPlayers) {
+            long sum = sortedTasks.stream()
+                    .map(task -> taskPlayerScores.getOrDefault(task, Map.of()).getOrDefault(player, 0L))
+                    .mapToLong(Long::longValue)
+                    .sum();
+            totalRow.add(String.valueOf(sum));
+        }
+
+        table.add(totalRow);
+
         return table;
     }
-
-
 
 }

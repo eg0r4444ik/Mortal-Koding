@@ -14,6 +14,7 @@ import ru.vsu.rogachev.entity.enums.UserState;
 import ru.vsu.rogachev.exception.BusinessLogicException;
 import ru.vsu.rogachev.service.UserService;
 import ru.vsu.rogachev.service.message.BasicStateMessageSender;
+import ru.vsu.rogachev.service.message.ChoosingStatsStateMessageSender;
 import ru.vsu.rogachev.service.message.MessageSender;
 
 import java.time.Duration;
@@ -26,7 +27,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static ru.vsu.rogachev.entity.enums.UserState.BASIC_STATE;
-import static ru.vsu.rogachev.entity.enums.UserState.WAIT_GAME_CREATION_STATE;
+import static ru.vsu.rogachev.entity.enums.UserState.CHOOSING_STATS;
 import static ru.vsu.rogachev.exception.BusinessLogicExceptions.NON_ACTIVE_ACCOUNT;
 import static ru.vsu.rogachev.entity.enums.UserState.WAIT_FOR_HANDLE_STATE;
 import static ru.vsu.rogachev.entity.enums.UserState.WAIT_OPPONENT_HANDLE_STATE;
@@ -43,11 +44,15 @@ public class BasicStateCommandHandler implements CommandHandler {
 
     private static final String SET_OPPONENT_HANDLE_MESSAGE = "Введите хэндл оппонента с сайта codeforces";
 
+    private static final String CHOOSE_STATS_MESSAGE = "Выберите статистику, которую хотите посмотреть";
+
     private static final String GET_RATING_MESSAGE = "Ваш рейтинг: %s";
 
     private final MessageSender messageSender;
 
     private final BasicStateMessageSender basicStateMessageSender;
+
+    private final ChoosingStatsStateMessageSender choosingStatsStateMessageSender;
 
     private final UserService userService;
 
@@ -60,7 +65,7 @@ public class BasicStateCommandHandler implements CommandHandler {
         FIND_GAME_COMMAND("find_game", "Поиск игры"),
         PLAY_WITH_FRIEND_COMMAND("play_with_friend", "Создание игры с другом"),
         LOOK_RATING_COMMAND("look_rating", "Просмотр своего рейтинга"),
-        LOOK_GAMES_HISTORY_COMMAND("look_games_history", "Посмотреть историю игр"),
+        LOOK_STATS("look_stats", "Посмотреть свою статистику"),
         AGREE_GAME_COMMAND("agree_game", "Согласиться на приглашение к игре"),
         REFUSE_GAME_COMMAND("refuse_game", "Отклонить приглашение к игре"),
         UNKNOWN("unknown", "Неизвестная команда");
@@ -104,8 +109,9 @@ public class BasicStateCommandHandler implements CommandHandler {
             case LOOK_RATING_COMMAND -> {
                 basicStateMessageSender.sendMessage(chatId, String.format(GET_RATING_MESSAGE, user.getRating()));
             }
-            case LOOK_GAMES_HISTORY_COMMAND -> {
-                throw BusinessLogicException.of(chatId, OPERATION_NOT_SUPPORTED_YET);
+            case LOOK_STATS -> {
+                userService.setUserState(user, CHOOSING_STATS);
+                choosingStatsStateMessageSender.sendMessage(chatId, CHOOSE_STATS_MESSAGE);
             }
             case AGREE_GAME_COMMAND -> {
                 GameEvent gameEvent = new GameEvent(
