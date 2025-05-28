@@ -1,0 +1,30 @@
+server:
+  port: 8089
+
+client:
+  codeforces:
+    url: https://codeforces.com/api
+    connections: 30
+    max-retry-attempts: 2
+    connections-timeout-in-seconds: 25
+    read-timeout-in-seconds: 25
+    pending-acquire-timeout-in-seconds: 10
+
+spring:
+  mail:
+    host: smtp.yandex.ru
+    port: 587
+    username: mortal-koding-bot@yandex.ru
+    password: eynmzpqosfbfblni
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mk_db
+    driver-class-name: org.postgresql.Driver
+    username: MK_ADMIN
+    password: QGW5lG5Tl8Hw7oY
+  jpa.hibernate.ddl-auto: update
