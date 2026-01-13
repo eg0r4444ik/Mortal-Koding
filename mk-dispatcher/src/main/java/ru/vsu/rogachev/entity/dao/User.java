@@ -1,4 +1,4 @@
-package ru.vsu.rogachev.entity;
+package ru.vsu.rogachev.entity.dao;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

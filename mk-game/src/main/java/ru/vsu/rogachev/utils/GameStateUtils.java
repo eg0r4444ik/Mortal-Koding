@@ -71,7 +71,7 @@ public class GameStateUtils {
             oldRatings.put(player, player.getRating().doubleValue());
         }
 
-        // Сортировка игроков по набранным очкам (чем выше — тем лучше место)
+        // Сортировка игроков по очкам (лучше — выше)
         List<Player> sortedPlayers = playersScore.entrySet().stream()
                 .sorted(Map.Entry.<Player, Long>comparingByValue().reversed())
                 .map(Map.Entry::getKey)
@@ -79,10 +79,14 @@ public class GameStateUtils {
 
         Map<Player, Double> newRatings = new HashMap<>();
 
+        // Вычислим максимум очков, чтобы нормализовать разницу
+        long maxScore = playersScore.values().stream().max(Long::compareTo).orElse(1L);
+
         for (Player player : sortedPlayers) {
             double rating = oldRatings.get(player);
             double expectedScoreSum = 0.0;
             double actualScoreSum = 0.0;
+            double scoreQualityFactorSum = 0.0;
 
             for (Player opponent : sortedPlayers) {
                 if (opponent == player) continue;
@@ -90,11 +94,11 @@ public class GameStateUtils {
                 double playerRating = oldRatings.get(player);
                 double opponentRating = oldRatings.get(opponent);
 
-                // Ожидаемый результат игрока против оппонента
+                // Ожидаемый результат по рейтингу
                 double expectedScore = 1.0 / (1.0 + Math.pow(10, (opponentRating - playerRating) / 400.0));
                 expectedScoreSum += expectedScore;
 
-                // Фактический результат: победа = 1, проигрыш = 0, ничья = 0.5
+                // Фактический результат по месту
                 int playerPlace = sortedPlayers.indexOf(player);
                 int opponentPlace = sortedPlayers.indexOf(opponent);
 
@@ -104,14 +108,25 @@ public class GameStateUtils {
                 else actualScore = 0.0;
 
                 actualScoreSum += actualScore;
+
+                // Качество выступления (чем ближе счёт — тем выше значение)
+                long playerPts = playersScore.get(player);
+                long opponentPts = playersScore.get(opponent);
+                double scoreRatio = (double) Math.min(playerPts, opponentPts) / Math.max(1, Math.max(playerPts, opponentPts));
+                scoreQualityFactorSum += scoreRatio; // ближе к 1 — ближе игра
             }
 
-            // Обновлённый рейтинг игрока
-            double newRating = rating + K * (actualScoreSum - expectedScoreSum);
+            int opponentsCount = sortedPlayers.size() - 1;
+            double baseDelta = K * (actualScoreSum - expectedScoreSum);
+            double avgSQF = scoreQualityFactorSum / opponentsCount;
+
+            // Усиливаем или смягчаем изменение в зависимости от "качества выступления"
+            double deltaWithQuality = baseDelta * (0.5 + 0.5 * avgSQF); // min 0.5x, max 1.0x при очень близком счёте
+
+            double newRating = rating + deltaWithQuality;
             newRatings.put(player, newRating);
         }
 
-        // Преобразуем в результат
         return sortedPlayers.stream()
                 .map(player -> new GameStateUpdateEvent.PlayersRating(
                         player.getHandle(),
@@ -120,6 +135,5 @@ public class GameStateUtils {
                 ))
                 .toList();
     }
-
 
 }

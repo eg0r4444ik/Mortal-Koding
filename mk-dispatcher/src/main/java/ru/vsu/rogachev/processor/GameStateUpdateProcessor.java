@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.vsu.rogachev.client.mk.game.dto.CurrentGameState;
 import ru.vsu.rogachev.client.mk.game.dto.async.GameStateUpdateEvent;
-import ru.vsu.rogachev.entity.User;
+import ru.vsu.rogachev.entity.dao.User;
 import ru.vsu.rogachev.entity.enums.UserState;
 import ru.vsu.rogachev.exception.BusinessLogicException;
 import ru.vsu.rogachev.service.message.BasicStateMessageSender;

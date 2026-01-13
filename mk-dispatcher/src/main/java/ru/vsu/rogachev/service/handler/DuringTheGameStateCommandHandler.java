@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import ru.vsu.rogachev.client.MkGameClient;
-import ru.vsu.rogachev.entity.User;
+import ru.vsu.rogachev.entity.dao.User;
 import ru.vsu.rogachev.entity.enums.UserState;
 import ru.vsu.rogachev.exception.BusinessLogicException;
 import ru.vsu.rogachev.service.message.MessageSender;

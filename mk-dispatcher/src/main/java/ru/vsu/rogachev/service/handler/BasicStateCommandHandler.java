@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import ru.vsu.rogachev.client.mk.game.dto.async.GameEvent;
 import ru.vsu.rogachev.client.mk.game.dto.async.enums.GameEventType;
 import ru.vsu.rogachev.client.mk.game.dto.async.enums.GameType;
-import ru.vsu.rogachev.entity.User;
+import ru.vsu.rogachev.entity.dao.User;
 import ru.vsu.rogachev.entity.enums.UserState;
 import ru.vsu.rogachev.exception.BusinessLogicException;
 import ru.vsu.rogachev.service.UserService;

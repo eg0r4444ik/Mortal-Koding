@@ -86,7 +86,7 @@ public class GameMessageUtils {
         List<List<String>> table = new ArrayList<>();
 
         List<String> header = new ArrayList<>();
-        header.add("Задача");
+        header.add("Игроки");
         header.addAll(sortedPlayers);
         table.add(header);
 

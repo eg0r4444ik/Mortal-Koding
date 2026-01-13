@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.rogachev.client.codeforces.dto.CodeforcesUser;
-import ru.vsu.rogachev.entity.User;
+import ru.vsu.rogachev.entity.dao.User;
 import ru.vsu.rogachev.entity.enums.UserState;
 import ru.vsu.rogachev.repositories.UserRepository;
 

@@ -1,11 +1,8 @@
 package ru.vsu.rogachev.service.handler;
 
 import org.jetbrains.annotations.NotNull;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import ru.vsu.rogachev.entity.User;
+import ru.vsu.rogachev.entity.dao.User;
 import ru.vsu.rogachev.entity.enums.UserState;
-
-import java.io.IOException;
 
 public interface CommandHandler {
 

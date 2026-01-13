@@ -11,6 +11,7 @@ import java.util.List;
 
 import static ru.vsu.rogachev.service.handler.BasicStateCommandHandler.ProcessedCommand.FIND_GAME_COMMAND;
 import static ru.vsu.rogachev.service.handler.BasicStateCommandHandler.ProcessedCommand.LOOK_RATING_COMMAND;
+import static ru.vsu.rogachev.service.handler.BasicStateCommandHandler.ProcessedCommand.LOOK_STATS;
 import static ru.vsu.rogachev.service.handler.BasicStateCommandHandler.ProcessedCommand.PLAY_WITH_FRIEND_COMMAND;
 
 @Service
@@ -18,10 +19,10 @@ import static ru.vsu.rogachev.service.handler.BasicStateCommandHandler.Processed
 public class BasicStateMessageSender implements MessageSender {
 
     public static final List<String> BASIC_STATE_BUTTON_TEXTS =
-            List.of("Найти дуэль", "Играть с другом", "Посмотреть рейтинг");
+            List.of("Поиск соперника", "Игра с другом", "Рейтинг", "Статистика");
 
     public static final List<String> BASIC_STATE_BUTTON_CALLBACK_DATA =
-            List.of(FIND_GAME_COMMAND.getMessage(), PLAY_WITH_FRIEND_COMMAND.getMessage(), LOOK_RATING_COMMAND.getMessage());
+            List.of(FIND_GAME_COMMAND.getMessage(), PLAY_WITH_FRIEND_COMMAND.getMessage(), LOOK_RATING_COMMAND.getMessage(), LOOK_STATS.getMessage());
 
     private final TelegramBot telegramBot;
 

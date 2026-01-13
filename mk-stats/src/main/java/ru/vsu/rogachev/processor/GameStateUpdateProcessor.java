@@ -77,6 +77,9 @@ public class GameStateUpdateProcessor {
             Map<String, GameStateUpdateEvent.PlayersRating> ratings,
             Map<String, Long> playerScores
     ) {
+        int totalPlayers = places.size();
+        int opponentsCount = totalPlayers - 1;
+
         long beatenPlayers = places.entrySet().stream()
                 .filter(entry -> !entry.getKey().equals(playerHandle) && entry.getValue() > place)
                 .count();
@@ -86,15 +89,21 @@ public class GameStateUpdateProcessor {
                 .count();
 
         long playerScore = playerScores.getOrDefault(playerHandle, 0L);
-        long totalScore = playerScores.entrySet().stream()
+        long maxOpponentScore = playerScores.entrySet().stream()
                 .filter(entry -> !entry.getKey().equals(playerHandle))
                 .mapToLong(Map.Entry::getValue)
-                .sum() + playerScore;
+                .max().orElse(0L);
 
-        double scoreRatio = totalScore > 0 ? (double) playerScore / totalScore : 0.0;
-        double scoreRatioBonus = scoreRatio * 0.5;
+        double scoreRatioBonus = 0.0;
+        if (maxOpponentScore > 0) {
+            scoreRatioBonus = 0.5 * (double) playerScore / maxOpponentScore;
+        }
 
+        // S_real в диапазоне [0, opponentsCount + 0.5 + 0.5] = [0, totalPlayers]
         double S_real = beatenPlayers + 0.5 * tiedPlayers + scoreRatioBonus;
+
+        // Нормируем на число оппонентов
+        S_real /= opponentsCount;
 
         List<Long> opponentsRatings = ratings.entrySet().stream()
                 .filter(entry -> !entry.getKey().equals(playerHandle))
@@ -106,6 +115,12 @@ public class GameStateUpdateProcessor {
         long bestPerf = 1500L;
         double bestDiff = Double.MAX_VALUE;
 
+        // Ограничение на рост performance — не должен быть выше rating + 50 при поражении
+        long playerRating = ratings.get(playerHandle).getOldRating();
+        if (S_real < 0.5) {
+            high = Math.min(high, playerRating + 50);
+        }
+
         while (low <= high) {
             long mid = (low + high) / 2;
 
@@ -113,6 +128,8 @@ public class GameStateUpdateProcessor {
             for (long oppRating : opponentsRatings) {
                 expectedScore += 1.0 / (1.0 + Math.pow(10, (oppRating - mid) / 400.0));
             }
+
+            expectedScore /= opponentsCount;
 
             double diff = Math.abs(expectedScore - S_real);
             if (diff < bestDiff) {
@@ -129,6 +146,5 @@ public class GameStateUpdateProcessor {
 
         return bestPerf;
     }
-
 
 }

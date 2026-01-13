@@ -3,7 +3,7 @@ package ru.vsu.rogachev.repositories;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import ru.vsu.rogachev.entity.User;
+import ru.vsu.rogachev.entity.dao.User;
 
 import java.util.Optional;
 
